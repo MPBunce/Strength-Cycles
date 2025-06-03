@@ -12,12 +12,12 @@ class Cycles {
     
     var dateStarted: Date
     var template: String
-    var trainingSessions: [TrainingSession]
+    var trainingDays: [TrainingDay]
     
-    init( dateStarted: Date, template: String, trainingSessions: [TrainingSession]) {
+    init( dateStarted: Date, template: String, trainingDays: [TrainingDay]) {
         self.dateStarted = dateStarted
         self.template = template
-        self.trainingSessions = trainingSessions
+        self.trainingDays = trainingDays
     }
     
 }

@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+@Model
 class Exercise {
     var id: String { name }
     var name: String
@@ -19,6 +20,7 @@ class Exercise {
     }
 }
 
+@Model
 class Set {
     var weight: Double
     var reps: Int
@@ -26,5 +28,16 @@ class Set {
     init(weight: Double, reps: Int) {
         self.weight = weight
         self.reps = reps
+    }
+}
+
+@Model
+class TrainingDay {
+    var day: [Exercise]
+    var completedDate: Date?
+    
+    init(day: [Exercise], completedDate: Date?) {
+        self.day = day
+        self.completedDate = completedDate
     }
 }

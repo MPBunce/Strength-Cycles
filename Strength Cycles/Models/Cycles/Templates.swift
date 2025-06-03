@@ -12,6 +12,7 @@ struct CycleTemplate: Identifiable {
     let name: String
     let description: String
     let duration: String
+    let trainingDays: [TrainingDay]
 }
 
 // MARK: - Template Definitions
@@ -27,27 +28,31 @@ extension CycleTemplate {
         id: "menzer",
         name: "Menzer Cycle",
         description: "High-intensity training with extended rest periods",
-        duration: "8 weeks"
+        duration: "4 days",
+        trainingDays: MentzerTrainingDays.trainingSessions
     )
     
     static let pushPullLegs = CycleTemplate(
         id: "ppl",
         name: "Push Pull Legs",
         description: "Split training focusing on movement patterns",
-        duration: "12 weeks"
+        duration: "3 days",
+        trainingDays : []
     )
     
     static let upperLowerSplit = CycleTemplate(
         id: "upper_lower",
         name: "Upper Lower Split",
         description: "4-day split alternating upper and lower body",
-        duration: "10 weeks"
+        duration: "4 days",
+        trainingDays : []
     )
     
     static let customTemplate = CycleTemplate(
         id: "custom",
         name: "Custom Cycle",
         description: "Create your own workout program",
-        duration: "Flexible"
+        duration: "Flexible",
+        trainingDays : []
     )
 }

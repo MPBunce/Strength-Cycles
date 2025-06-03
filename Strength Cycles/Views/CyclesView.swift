@@ -77,7 +77,7 @@ struct CycleSelectionSheet: View {
                     }
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        let cycle = Cycles( dateStarted: Date(), template: template.name, trainingSessions: [])
+                        let cycle = Cycles( dateStarted: Date(), template: template.name, trainingDays: template.trainingDays)
                         context.insert(cycle)
                         print("Selected: \(template.name)")
                         dismiss()
