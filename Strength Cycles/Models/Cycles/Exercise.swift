@@ -24,6 +24,7 @@ class Set {
     var reps: Int
     
     init(weight: Double, reps: Int) {
-        self.isEmpty ? preconditionFailure() : ()
+        self.weight = weight
+        self.reps = reps
     }
 }

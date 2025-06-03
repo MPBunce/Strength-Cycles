@@ -1,13 +1,14 @@
 //
-//  Settings.swift
+//  SettingsView.swift
 //  Strength Cycles
 //
-//  Created by Matthew Bunce on 2025-05-28.
+//  Created by Matthew Bunce on 2025-06-01.
 //
+
  
 import SwiftUI
 
-struct Settings: View {
+struct SettingsView: View {
     var body: some View {
         Text("Settings")
     }
@@ -15,6 +16,6 @@ struct Settings: View {
 
 struct Settings_Previews: PreviewProvider {
     static var previews: some View {
-        Settings()
+        SettingsView()
     }
 }

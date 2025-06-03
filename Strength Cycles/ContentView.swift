@@ -10,21 +10,20 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
 
     var body: some View {
         TabView {
-            Progress()
+            ProgressView()
                 .tabItem({
                     Text("Progress")
                     Image(systemName: "chart.bar")
                 })
-            Cycles()
+            CyclesView()
                 .tabItem({
                     Text("Cycles")
                     Image(systemName: "arrow.2.circlepath")
                 })
-            Settings()
+            SettingsView()
                 .tabItem({
                     Text("Settings")
                     Image(systemName: "gear")
@@ -36,5 +35,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .modelContainer(for: Cycles.self, inMemory: true)
 }
