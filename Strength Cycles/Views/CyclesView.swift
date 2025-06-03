@@ -18,10 +18,9 @@ struct CyclesView: View {
         NavigationStack {
             List {
                 ForEach(cycles) { cycle in
-                    CycleCell(cycle: cycle)
-                        .onTapGesture {
-                            selectedCycle = cycle
-                        }
+                    NavigationLink(destination: CyclesDetailView(cycle: cycle)) {
+                        CycleCell(cycle: cycle)
+                    }
                 }
                 .onDelete { indexSet in
                     for index in indexSet{
