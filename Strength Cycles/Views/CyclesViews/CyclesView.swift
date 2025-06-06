@@ -106,10 +106,16 @@ struct CycleCell: View {
     let cycle: Cycles
     var body: some View {
         HStack {
-            Text(cycle.id.uuidString)
-            Text(cycle.template)
-            Text(cycle.dateStarted, format: .dateTime.month(.abbreviated).day())
+            VStack(alignment: .leading, spacing: 2) {
+                Text(cycle.template)
+                    .font(.headline)
+            }            
             Spacer()
+            VStack(alignment: .trailing, spacing: 2) {
+                Text("\(cycle.trainingDays.count) days")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
         }
 
     }
