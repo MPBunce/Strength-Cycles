@@ -105,18 +105,27 @@ struct CycleSelectionSheet: View {
 struct CycleCell: View {
     let cycle: Cycles
     var body: some View {
+        
         HStack {
             VStack(alignment: .leading, spacing: 2) {
                 Text(cycle.template)
                     .font(.headline)
-            }            
-            Spacer()
-            VStack(alignment: .trailing, spacing: 2) {
+                Text(cycle.dateStarted, format: .dateTime.month(.abbreviated).day())
+                    .font(.caption)
+                    .foregroundColor(.secondary)
                 Text("\(cycle.trainingDays.count) days")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
+            Spacer()
+            
+            if cycle.isCompleted {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundColor(.green)
+                    .font(.title2)
+            }
         }
+        .padding(.vertical, 8)
 
     }
 }

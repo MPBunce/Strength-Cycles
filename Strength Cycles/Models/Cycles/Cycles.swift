@@ -21,4 +21,8 @@ class Cycles {
         self.trainingDays = trainingDays
     }
     
+    var isCompleted: Bool {
+        !trainingDays.isEmpty && trainingDays.allSatisfy { $0.completedDate != nil }
+    }
+    
 }
