@@ -3,87 +3,84 @@ import SwiftData
 
 struct CyclesDetailView: View {
     @Environment(\.modelContext) var context
-    let cycle: Cycles // The specific cycle passed from the previous view
     @State private var isShowingItemSheet = false
-    @State private var selectedDayIndex: Int = 0
+    @Query(sort: \Cycles.dateStarted, order: .reverse)
     
+    private var cycles: [Cycles]
+    let cycleId: UUID
+
+    private var selectedCycle: Cycles? {
+        let match = cycles.first { $0.id == cycleId }
+        print("Selected cycle for ID \(cycleId): \(String(describing: match?.template))")
+        return match
+    }
+
+
+    init(cycleId: UUID) {
+        print("Initializing CyclesDetailView with cycleId: \(cycleId)")
+        self.cycleId = cycleId
+        let predicate = #Predicate<Cycles> { cycle in
+            cycle.id == cycleId
+        }
+        self._cycles = Query(filter: predicate)
+    }
+
     var body: some View {
-        VStack(spacing: 0) {
-            // Horizontal scroll for days
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(Array(cycle.trainingDays.enumerated()), id: \.offset) { index, _ in
-                        Button("Day \(index + 1)") {
-                            selectedDayIndex = index
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                        .background(selectedDayIndex == index ? Color.blue : Color.gray.opacity(0.2))
-                        .foregroundColor(selectedDayIndex == index ? .white : .primary)
-                        .cornerRadius(8)
-                    }
-                }
-                .padding()
-            }
-            .background(Color(.systemGray6))
-            
-            // Main content for selected day
-            if selectedDayIndex < cycle.trainingDays.count {
-                let selectedDay = cycle.trainingDays[selectedDayIndex]
-                
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Day \(selectedDayIndex + 1)")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .padding(.horizontal)
-                        
-                        // Show exercises for this day
-                        ForEach(selectedDay.day, id: \.name) { exercise in
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(exercise.name)
-                                    .font(.headline)
-                                
-                                ForEach(Array(exercise.sets.enumerated()), id: \.offset) { setIndex, set in
-                                    HStack {
-                                        Text("Set \(setIndex + 1):")
-                                        Text("\(set.reps) reps")
-                                        if set.weight > 0 {
-                                            Text("@ \(Int(set.weight)) lbs")
+        let cycle = selectedCycle
+
+        return Group {
+            if let cycle = cycle {
+                VStack(spacing: 0) {
+                    if cycle.trainingDays.isEmpty {
+                        ContentUnavailableView(
+                            label: {
+                                Label("No Training Days", systemImage: "calendar.badge.exclamationmark")
+                            },
+                            description: {
+                                Text("This cycle has no training days.")
+                            }
+                        )
+                    } else {
+                        List {
+                            ForEach(Array(cycle.trainingDays.enumerated()), id: \.offset) { dayIndex, day in
+                                Section(header: Text("Day \(dayIndex + 1)").font(.headline)) {
+                                    ForEach(day.day, id: \.name) { exercise in
+                                        VStack(alignment: .leading, spacing: 6) {
+                                            Text(exercise.name)
+                                                .font(.subheadline)
+                                                .bold()
+
+                                            ForEach(exercise.sets.indices, id: \.self) { i in
+                                                let set = exercise.sets[i]
+                                                HStack {
+                                                    Text("Set \(i + 1)")
+                                                    Spacer()
+                                                    Text("\(Int(set.reps)) reps")
+                                                    Text("@ \(set.weight, specifier: "%.1f") lbs")
+                                                }
+                                                .font(.footnote)
+                                                .foregroundColor(.secondary)
+                                            }
                                         }
-                                        Spacer()
+                                        .padding(.vertical, 4)
                                     }
-                                    .font(.subheadline)
                                 }
                             }
-                            .padding()
-                            .background(Color(.systemGray6))
-                            .cornerRadius(8)
-                            .padding(.horizontal)
-                        }
-                        
-                        // Show completion status
-                        if let completedDate = selectedDay.completedDate {
-                            Text("Completed: \(completedDate, style: .date)")
-                                .font(.subheadline)
-                                .foregroundColor(.green)
-                                .padding(.horizontal)
-                        } else {
-                            Button("Mark Complete") {
-                                selectedDay.completedDate = Date()
-                                try? context.save()
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .padding(.horizontal)
                         }
                     }
-                    .padding(.vertical)
                 }
+            } else {
+                ContentUnavailableView(
+                    label: {
+                        Label("Cycle Not Found", systemImage: "exclamationmark.triangle")
+                    },
+                    description: {
+                        Text("The requested cycle could not be found.")
+                    }
+                )
             }
-            
-            Spacer()
         }
-        .navigationTitle("Cycle Detail")
+        .navigationTitle(cycle?.template ?? "Cycle Detail")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $isShowingItemSheet) {
             Text("Item Sheet Content")

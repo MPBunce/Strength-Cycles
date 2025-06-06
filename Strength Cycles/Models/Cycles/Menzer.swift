@@ -1,49 +1,160 @@
 import Foundation
+import SwiftData
 
-struct MentzerTrainingDays {
+@Model
+class MenzerProgram {
+    var trainingDays: [TrainingDay]
     
-    static let trainingSessions: [TrainingDay] = [
-        // Workout 1: Chest & Back
-        TrainingDay(day: [
-            // Chest
-            Exercise(name: "Dumbbell flyes", sets: [Set(weight: 0, reps: 8)]), // 1 × 6–10 reps
-            Exercise(name: "Incline presses", sets: [Set(weight: 0, reps: 2)]), // 1 × 1–3 reps
-            // Back
-            Exercise(name: "Straight-arm pulldowns", sets: [Set(weight: 0, reps: 8)]), // 1 × 6–10 reps
-            Exercise(name: "Palms-up pulldowns", sets: [Set(weight: 0, reps: 8)]), // 1 × 6–10 reps
-            Exercise(name: "Deadlifts", sets: [Set(weight: 0, reps: 8)]) // 1 × 6–10 reps
-        ], completedDate: nil),
-        
-        // Workout 2: Legs & Abs
-        TrainingDay(day: [
-            // Legs
-            Exercise(name: "Leg extensions", sets: [Set(weight: 0, reps: 16)]), // 1 × 12–20
-            Exercise(name: "Leg presses", sets: [Set(weight: 0, reps: 16)]), // 1 × 12–20
-            Exercise(name: "Standing calf raises", sets: [Set(weight: 0, reps: 16)]), // 1 × 12–20
-            // Abs
-            Exercise(name: "Sit-ups", sets: [Set(weight: 0, reps: 16)]) // 1 × 12–20
-        ], completedDate: nil),
-        
-        // Workout 3: Shoulders & Arms
-        TrainingDay(day: [
-            // Shoulders
-            Exercise(name: "Dumbbell lateral raises", sets: [Set(weight: 0, reps: 8)]), // 1 × 6–10 reps
-            Exercise(name: "Bent-over dumbbell laterals", sets: [Set(weight: 0, reps: 8)]), // 1 × 6–10 reps
-            // Biceps
-            Exercise(name: "Palms-up pulldowns", sets: [Set(weight: 0, reps: 8)]), // 1 × 6–10 reps
-            // Triceps
-            Exercise(name: "Triceps pressdowns", sets: [Set(weight: 0, reps: 8)]), // 1 × 6–10 reps
-            Exercise(name: "Dips", sets: [Set(weight: 0, reps: 4)]) // 1 × 3–5 reps
-        ], completedDate: nil),
-        
-        // Workout 4: Legs & Abs
-        TrainingDay(day: [
-            // Legs
-            Exercise(name: "Leg extensions", sets: [Set(weight: 0, reps: 16)]), // 1 × 12–20
-            Exercise(name: "Leg presses", sets: [Set(weight: 0, reps: 16)]), // 1 × 12–20
-            Exercise(name: "Standing calf raises", sets: [Set(weight: 0, reps: 16)]), // 1 × 12–20
-            // Abs
-            Exercise(name: "Sit-ups", sets: [Set(weight: 0, reps: 16)]) // 1 × 12–20
-        ], completedDate: nil)
-    ]
+    func copyTrainingDays() -> [TrainingDay] {
+        return trainingDays.map { $0.copy() }
+    }
+    
+    init() {
+        self.trainingDays = [
+            // Day 1: Chest & Triceps
+            TrainingDay(
+                day: [
+                    Exercise(
+                        name: "Bench Press",
+                        sets: [
+                            ExerciseSet(weight: 135.0, reps: 8),
+                            ExerciseSet(weight: 155.0, reps: 6),
+                            ExerciseSet(weight: 175.0, reps: 4)
+                        ]
+                    ),
+                    Exercise(
+                        name: "Incline Dumbbell Press",
+                        sets: [
+                            ExerciseSet(weight: 60.0, reps: 8),
+                            ExerciseSet(weight: 70.0, reps: 6)
+                        ]
+                    ),
+                    Exercise(
+                        name: "Dips",
+                        sets: [
+                            ExerciseSet(weight: 0.0, reps: 12),
+                            ExerciseSet(weight: 25.0, reps: 8)
+                        ]
+                    ),
+                    Exercise(
+                        name: "Tricep Pushdowns",
+                        sets: [
+                            ExerciseSet(weight: 80.0, reps: 10),
+                            ExerciseSet(weight: 90.0, reps: 8)
+                        ]
+                    )
+                ],
+                completedDate: nil
+            ),
+            
+            // Day 2: Back & Biceps
+            TrainingDay(
+                day: [
+                    Exercise(
+                        name: "Deadlift",
+                        sets: [
+                            ExerciseSet(weight: 185.0, reps: 8),
+                            ExerciseSet(weight: 225.0, reps: 5),
+                            ExerciseSet(weight: 245.0, reps: 3)
+                        ]
+                    ),
+                    Exercise(
+                        name: "Pull-ups",
+                        sets: [
+                            ExerciseSet(weight: 0.0, reps: 10),
+                            ExerciseSet(weight: 0.0, reps: 8),
+                            ExerciseSet(weight: 25.0, reps: 6)
+                        ]
+                    ),
+                    Exercise(
+                        name: "Barbell Rows",
+                        sets: [
+                            ExerciseSet(weight: 135.0, reps: 10),
+                            ExerciseSet(weight: 155.0, reps: 8)
+                        ]
+                    ),
+                    Exercise(
+                        name: "Barbell Curls",
+                        sets: [
+                            ExerciseSet(weight: 70.0, reps: 10),
+                            ExerciseSet(weight: 80.0, reps: 8)
+                        ]
+                    )
+                ],
+                completedDate: nil
+            ),
+            
+            // Day 3: Legs
+            TrainingDay(
+                day: [
+                    Exercise(
+                        name: "Squats",
+                        sets: [
+                            ExerciseSet(weight: 185.0, reps: 10),
+                            ExerciseSet(weight: 225.0, reps: 8),
+                            ExerciseSet(weight: 245.0, reps: 6)
+                        ]
+                    ),
+                    Exercise(
+                        name: "Leg Press",
+                        sets: [
+                            ExerciseSet(weight: 360.0, reps: 12),
+                            ExerciseSet(weight: 450.0, reps: 10)
+                        ]
+                    ),
+                    Exercise(
+                        name: "Romanian Deadlifts",
+                        sets: [
+                            ExerciseSet(weight: 135.0, reps: 12),
+                            ExerciseSet(weight: 155.0, reps: 10)
+                        ]
+                    ),
+                    Exercise(
+                        name: "Calf Raises",
+                        sets: [
+                            ExerciseSet(weight: 225.0, reps: 15),
+                            ExerciseSet(weight: 245.0, reps: 12)
+                        ]
+                    )
+                ],
+                completedDate: nil
+            ),
+            
+            // Day 4: Shoulders
+            TrainingDay(
+                day: [
+                    Exercise(
+                        name: "Overhead Press",
+                        sets: [
+                            ExerciseSet(weight: 95.0, reps: 8),
+                            ExerciseSet(weight: 115.0, reps: 6),
+                            ExerciseSet(weight: 125.0, reps: 4)
+                        ]
+                    ),
+                    Exercise(
+                        name: "Lateral Raises",
+                        sets: [
+                            ExerciseSet(weight: 20.0, reps: 12),
+                            ExerciseSet(weight: 25.0, reps: 10)
+                        ]
+                    ),
+                    Exercise(
+                        name: "Rear Delt Flyes",
+                        sets: [
+                            ExerciseSet(weight: 15.0, reps: 15),
+                            ExerciseSet(weight: 20.0, reps: 12)
+                        ]
+                    ),
+                    Exercise(
+                        name: "Shrugs",
+                        sets: [
+                            ExerciseSet(weight: 135.0, reps: 12),
+                            ExerciseSet(weight: 155.0, reps: 10)
+                        ]
+                    )
+                ],
+                completedDate: nil
+            )
+        ]
+    }
 }

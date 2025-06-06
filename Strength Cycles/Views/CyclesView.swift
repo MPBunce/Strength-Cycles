@@ -18,7 +18,7 @@ struct CyclesView: View {
         NavigationStack {
             List {
                 ForEach(cycles) { cycle in
-                    NavigationLink(destination: CyclesDetailView(cycle: cycle)) {
+                    NavigationLink(destination: CyclesDetailView(cycleId: cycle.id)) {
                         CycleCell(cycle: cycle)
                     }
                 }
@@ -31,9 +31,6 @@ struct CyclesView: View {
             .navigationTitle("Cycles")
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $isShowingItemSheet){ CycleSelectionSheet() }
-            //.sheet(item: $selectedCycle) { expense in
-                //UpdateExpenseSheet(expense: expense)
-            //}
             .toolbar {
                 if !cycles.isEmpty {
                     Button("Add Cycle", systemImage: "plus"){
@@ -64,7 +61,7 @@ struct CycleSelectionSheet: View {
     var body: some View {
         NavigationStack {
             List {
-                ForEach(CycleTemplate.allTemplates) { template in
+                ForEach(Template.loadTemplates()) { template in
                     VStack(alignment: .leading, spacing: 4) {
                         Text(template.name)
                             .font(.headline)
@@ -78,8 +75,17 @@ struct CycleSelectionSheet: View {
                     .contentShape(Rectangle())
                     .onTapGesture {
                         let cycle = Cycles( dateStarted: Date(), template: template.name, trainingDays: template.trainingDays)
+                        
+                        print("🟢 New cycle created:")
+                        print("- ID: \(cycle.id)")
+                        print("- Template: \(cycle.template)")
+                        print("- Training days: \(cycle.trainingDays.count)")
+                        for (i, day) in cycle.trainingDays.enumerated() {
+                            print("  Day \(i + 1): \(day.day.map(\.name))")
+                        }
+                        
                         context.insert(cycle)
-                        print("Selected: \(template.name)")
+                        print("Selected: \(cycle.id.uuidString)")
                         dismiss()
                     }
                 }
@@ -100,10 +106,9 @@ struct CycleCell: View {
     let cycle: Cycles
     var body: some View {
         HStack {
-            
+            Text(cycle.id.uuidString)
             Text(cycle.template)
             Text(cycle.dateStarted, format: .dateTime.month(.abbreviated).day())
-            
             Spacer()
         }
 
