@@ -10,11 +10,18 @@ extension Template {
     static func loadTemplates() -> [Template] {
         return [
             Template(
-                id: "menzer",
-                name: "Menzer Cycle",
+                id: "classic-menzer",
+                name: "Classic Menzer Cycle",
                 description: "High-intensity training with extended rest periods",
                 duration: "4 days",
                 trainingDays: MenzerProgram().copyTrainingDays() // ensure new instances
+            ),
+            Template(
+                id: "modern-menzer",
+                name: "Modern Menzer Cycle",
+                description: "High-intensity training with extended rest periods",
+                duration: "4 days",
+                trainingDays: ModernMenzerProgram().copyTrainingDays() // ensure new instances
             ),
             Template(
                 id: "ppl",
