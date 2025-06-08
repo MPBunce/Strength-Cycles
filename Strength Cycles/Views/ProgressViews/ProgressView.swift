@@ -11,6 +11,8 @@ struct ProgressView: View {
     @Environment(\.modelContext) var context
     @Query(sort: \Cycles.dateStarted, order: .reverse) var cycles: [Cycles]
     
+    @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
+    
     private let daysInWeek = 7
     
     var body: some View {
@@ -28,6 +30,31 @@ struct ProgressView: View {
                             .foregroundColor(.secondary)
                     }
                     .padding(.top)
+                    
+                    // Year selector
+                    if activeYears.count > 1 {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 12) {
+                                ForEach(activeYears.sorted(by: >), id: \.self) { year in
+                                    Button(action: {
+                                        selectedYear = year
+                                    }) {
+                                        Text("\(year)")
+                                            .font(.subheadline)
+                                            .fontWeight(selectedYear == year ? .semibold : .regular)
+                                            .foregroundColor(selectedYear == year ? .white : .primary)
+                                            .padding(.horizontal, 16)
+                                            .padding(.vertical, 8)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 20)
+                                                    .fill(selectedYear == year ? Color.blue : Color(.systemGray5))
+                                            )
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
                     
                     // Activity Grid - Vertical Layout
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -112,14 +139,14 @@ struct ProgressView: View {
                     }
                     .padding(.top, 10)
                     
-                    // Recent activity summary
+                    // Recent activity summary for selected year
                     if !cycles.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Recent Activity")
+                            Text("Activity in \(selectedYear)")
                                 .font(.headline)
                                 .fontWeight(.semibold)
                             
-                            ForEach(recentCompletedDays.prefix(5), id: \.date) { activity in
+                            ForEach(recentCompletedDaysForYear.prefix(5), id: \.date) { activity in
                                 HStack {
                                     Circle()
                                         .fill(Color.green)
@@ -135,6 +162,13 @@ struct ProgressView: View {
                                         .foregroundColor(.secondary)
                                 }
                             }
+                            
+                            if recentCompletedDaysForYear.isEmpty {
+                                Text("No workouts completed in \(selectedYear)")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .italic()
+                            }
                         }
                         .padding()
                         .background(Color(.systemGray6))
@@ -147,11 +181,10 @@ struct ProgressView: View {
             }
             .navigationTitle("Progress")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("About") {
-                        print("About tapped!")
-                    }
+            .onAppear {
+                // Set initial year to the most recent year with activity, or current year
+                if let mostRecentYear = activeYears.max() {
+                    selectedYear = mostRecentYear
                 }
             }
         }
@@ -159,13 +192,36 @@ struct ProgressView: View {
     
     // MARK: - Computed Properties
     
+    private var activeYears: Set<Int> {
+        let calendar = Calendar.current
+        let completedDates = cycles.flatMap { cycle in
+            cycle.trainingDays.compactMap { $0.completedDate }
+        }
+        
+        let years = Set(completedDates.map { calendar.component(.year, from: $0) })
+        
+        // Always include current year if there are any cycles at all
+        let currentYear = calendar.component(.year, from: Date())
+        if !cycles.isEmpty {
+            return years.union([currentYear])
+        }
+        
+        return years.isEmpty ? [currentYear] : years
+    }
+    
     private var weeklyData: [[Date?]] {
         let calendar = Calendar.current
         let today = Date()
-        let startDate = calendar.date(byAdding: .day, value: -365, to: today) ?? today
+        
+        // Create date range for selected year
+        let startOfYear = calendar.date(from: DateComponents(year: selectedYear, month: 1, day: 1)) ?? today
+        let endOfYear = calendar.date(from: DateComponents(year: selectedYear, month: 12, day: 31)) ?? today
+        
+        // Use today if we're looking at current year, otherwise use end of selected year
+        let endDate = selectedYear == calendar.component(.year, from: today) ? today : endOfYear
         
         // Find the start of the first week (Sunday)
-        var weekStart = startDate
+        var weekStart = startOfYear
         while calendar.component(.weekday, from: weekStart) != 1 { // 1 = Sunday
             weekStart = calendar.date(byAdding: .day, value: -1, to: weekStart) ?? weekStart
         }
@@ -173,14 +229,14 @@ struct ProgressView: View {
         var weeks: [[Date?]] = []
         var currentWeekStart = weekStart
         
-        while currentWeekStart <= today {
+        while currentWeekStart <= endDate {
             var week: [Date?] = []
             
             for dayOffset in 0..<7 {
                 let date = calendar.date(byAdding: .day, value: dayOffset, to: currentWeekStart)
                 
-                // Only include dates within our range
-                if let date = date, date >= startDate && date <= today {
+                // Only include dates within our selected year range
+                if let date = date, date >= startOfYear && date <= endDate {
                     week.append(date)
                 } else {
                     week.append(nil)
@@ -195,15 +251,23 @@ struct ProgressView: View {
     }
     
     private var completedWorkoutsCount: Int {
-        cycles.flatMap { cycle in
-            cycle.trainingDays.compactMap { $0.completedDate }
+        let calendar = Calendar.current
+        return cycles.flatMap { cycle in
+            cycle.trainingDays.compactMap { trainingDay -> Int? in
+                guard let completedDate = trainingDay.completedDate else { return nil }
+                let year = calendar.component(.year, from: completedDate)
+                return year == selectedYear ? 1 : nil
+            }
         }.count
     }
     
-    private var recentCompletedDays: [(date: Date, cycleName: String)] {
+    private var recentCompletedDaysForYear: [(date: Date, cycleName: String)] {
+        let calendar = Calendar.current
         let completed = cycles.flatMap { cycle in
-            cycle.trainingDays.compactMap { trainingDay in
-                if let completedDate = trainingDay.completedDate {
+            cycle.trainingDays.compactMap { trainingDay -> (date: Date, cycleName: String)? in
+                guard let completedDate = trainingDay.completedDate else { return nil }
+                let year = calendar.component(.year, from: completedDate)
+                if year == selectedYear {
                     return (date: completedDate, cycleName: cycle.template)
                 }
                 return nil
