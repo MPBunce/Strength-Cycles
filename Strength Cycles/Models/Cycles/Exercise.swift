@@ -39,17 +39,19 @@ class Exercise {
 @Model
 class TrainingDay {
     var dayIndex: Int
+    var dayName: String
     var day: [Exercise]
     var completedDate: Date?
     
-    init(dayIndex: Int, day: [Exercise], completedDate: Date? = nil) {
+    init(dayIndex: Int, dayName: String, day: [Exercise], completedDate: Date? = nil) {
         self.dayIndex = dayIndex
+        self.dayName = dayName
         self.day = day
         self.completedDate = completedDate
     }
     
     func copy() -> TrainingDay {
         let copiedExercises = day.map { $0.copy() }
-        return TrainingDay(dayIndex: dayIndex, day: copiedExercises, completedDate: nil)
+        return TrainingDay(dayIndex: dayIndex, dayName: dayName, day: copiedExercises, completedDate: nil)
     }
 }

@@ -18,9 +18,9 @@ class MenzerProgram {
     
     init() {
         self.trainingDays = [
-            // Day 1: Chest & Back
             TrainingDay(
                 dayIndex: 0,
+                dayName: "Chest & Back",
                 day: [
                     Exercise(
                         exerciseIndex: 0,
@@ -70,6 +70,7 @@ class MenzerProgram {
             // Day 2: Legs
             TrainingDay(
                 dayIndex: 1,
+                dayName: "Legs",
                 day: [
                     Exercise(
                         exerciseIndex: 0,
@@ -111,6 +112,7 @@ class MenzerProgram {
             // Day 3: Shoulders & Arms
             TrainingDay(
                 dayIndex: 2,
+                dayName: "Shoulders & Arms",
                 day: [
                     Exercise(
                         exerciseIndex: 0,
@@ -159,6 +161,7 @@ class MenzerProgram {
             // Day 4: Legs
             TrainingDay(
                 dayIndex: 3,
+                dayName: "Legs",
                 day: [
                     Exercise(
                         exerciseIndex: 0,

@@ -117,7 +117,28 @@ struct CyclesDetailView: View {
     private func exercisesList(for cycle: Cycles) -> some View {
         List {
             if let selectedDay = cycle.trainingDays.first(where: { $0.dayIndex == validSelectedDayIndex }) {
-                Section(header: Text("Day \(selectedDay.dayIndex + 1)").font(.headline)) {
+                Section(header:
+                    HStack {
+                        Text("\(selectedDay.dayName)")
+                            .font(.subheadline)
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            toggleDayCompletion(selectedDay)
+                        }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: selectedDay.completedDate != nil ? "checkmark.circle.fill" : "circle")
+                                    .foregroundColor(selectedDay.completedDate != nil ? .green : .blue)
+                                
+                                Text(selectedDay.completedDate != nil ? "Complete" : "Mark Complete")
+                                    .font(.caption)
+                                    .foregroundColor(selectedDay.completedDate != nil ? .green : .blue)
+                            }
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                ) {
                     ForEach(sortedExercises(for: selectedDay), id: \.exerciseIndex) { exercise in
                         ExerciseRowView(
                             cycle: cycle,
@@ -130,7 +151,15 @@ struct CyclesDetailView: View {
         }
     }
 
-    // MARK: - Helper Methods
+    //Helper Methods
+    private func toggleDayCompletion(_ trainingDay: TrainingDay) {
+        if trainingDay.completedDate != nil {
+            trainingDay.completedDate = nil
+        } else {
+            trainingDay.completedDate = Date()
+        }
+    }
+    
     private func sortedTrainingDays(for cycle: Cycles) -> [TrainingDay] {
         cycle.trainingDays.sorted(by: { $0.dayIndex < $1.dayIndex })
     }
