@@ -13,7 +13,9 @@ struct Strength_CyclesApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
-            Cycles.self
+            Cycles.self,
+            Goal.self,
+            Settings.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

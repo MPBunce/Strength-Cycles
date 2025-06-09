@@ -4,7 +4,7 @@ import SwiftData
 struct ProgressView: View {
     @Environment(\.modelContext) var context
     @Query(sort: \Cycles.dateStarted, order: .reverse) var cycles: [Cycles]
-    
+    @Query var goals: [Goal]
     @State private var selectedTab: ProgressTab = .activity
     
     private let daysInWeek = 7
@@ -98,6 +98,8 @@ struct ProgressView: View {
             cycle.trainingDays.compactMap { $0.completedDate }
         }.count
     }
+    
+    
 }
 
 struct Progress_Previews: PreviewProvider {

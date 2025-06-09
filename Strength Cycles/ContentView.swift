@@ -36,7 +36,8 @@ struct ContentView: View {
     }
 }
 
+
 #Preview {
     ContentView()
-        .modelContainer(for: Cycles.self, inMemory: true)
+        .modelContainer(for: [Cycles.self, Goal.self, Settings.self], inMemory: true)
 }

@@ -74,7 +74,7 @@ class ModernMenzerProgram {
                 day: [
                     Exercise(
                         exerciseIndex: 0,
-                        name: "Squats",
+                        name: "Barbell Squat",
                         sets: [
                             ExerciseSet(setIndex: 0),
                             ExerciseSet(setIndex: 1),
@@ -165,7 +165,7 @@ class ModernMenzerProgram {
                 day: [
                     Exercise(
                         exerciseIndex: 0,
-                        name: "Squats",
+                        name: "Barbell Squat",
                         sets: [
                             ExerciseSet(setIndex: 0),
                             ExerciseSet(setIndex: 1),
