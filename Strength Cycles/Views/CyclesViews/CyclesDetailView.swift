@@ -37,6 +37,8 @@ struct CyclesDetailView: View {
         self._cycles = Query(filter: predicate)
     }
 
+    
+    
     var body: some View {
         let cycle = selectedCycle
 
@@ -61,7 +63,6 @@ struct CyclesDetailView: View {
         }
     }
 
-    // MARK: - Helper Views
     private var emptyStateView: some View {
         ContentUnavailableView(
             label: {
