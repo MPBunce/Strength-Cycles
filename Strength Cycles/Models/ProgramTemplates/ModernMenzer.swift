@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class MenzerProgram {
+class ModernMenzerProgram {
     var trainingDays: [TrainingDay]
     
     func copyTrainingDays() -> [TrainingDay] {
@@ -25,43 +25,27 @@ class MenzerProgram {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Dips",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1)
-                        ]
+                        sets: []
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Incline Dumbbell Press",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1)
-                        ]
+                        sets: []
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Dumbbell Pullovers",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1)
-                        ]
+                        sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Supinated Lat Pulldowns",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1)
-                        ]
+                        sets: []
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Deadlift",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1),
-                            ExerciseSet(setIndex: 2)
-                        ]
+                        sets: []
                     )
                 ],
                 completedDate: nil
@@ -75,35 +59,22 @@ class MenzerProgram {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Barbell Squat",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1),
-                            ExerciseSet(setIndex: 2)
-                        ]
+                        sets: []
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Abs",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1)
-                        ]
+                        sets: []
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Calf Raises",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1)
-                        ]
+                        sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Hamstring Curls",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1)
-                        ]
+                        sets: []
                     )
                 ],
                 completedDate: nil
@@ -117,42 +88,27 @@ class MenzerProgram {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Dips",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1)
-                        ]
+                        sets: []
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Lateral Raises",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1)
-                        ]
+                        sets: []
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Rear Delt Flyes",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1)
-                        ]
+                        sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Barbell Curls",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1)
-                        ]
+                        sets: []
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Tricep Pushdowns",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1)
-                        ]
+                        sets: []
                     )
                 ],
                 completedDate: nil
@@ -166,35 +122,22 @@ class MenzerProgram {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Barbell Squat",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1),
-                            ExerciseSet(setIndex: 2)
-                        ]
+                        sets: []
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Abs",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1)
-                        ]
+                        sets: []
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Calf Raises",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1)
-                        ]
+                        sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Leg Extensions",
-                        sets: [
-                            ExerciseSet(setIndex: 0),
-                            ExerciseSet(setIndex: 1)
-                        ]
+                        sets: []
                     )
                 ],
                 completedDate: nil

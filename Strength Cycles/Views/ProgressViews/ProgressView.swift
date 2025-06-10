@@ -3,7 +3,7 @@ import SwiftData
 
 struct ProgressView: View {
     @Environment(\.modelContext) var context
-    @Query(sort: \Cycles.dateStarted, order: .reverse) var cycles: [Cycles]
+    @Query(sort: \Cycles.startDate, order: .reverse) var cycles: [Cycles]
     @Query var goals: [Goal]
     @State private var selectedTab: ProgressTab = .activity
     

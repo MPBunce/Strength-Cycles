@@ -4,7 +4,7 @@ import Charts
 
 struct ChartsView: View {
     @Environment(\.modelContext) var context
-    @Query(sort: \Cycles.dateStarted, order: .reverse) var cycles: [Cycles]
+    @Query(sort: \Cycles.startDate, order: .reverse) var cycles: [Cycles]
 
     private let targetLifts = [
         "Barbell Squat",

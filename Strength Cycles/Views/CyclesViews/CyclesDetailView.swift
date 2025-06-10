@@ -4,7 +4,8 @@ import SwiftData
 struct CyclesDetailView: View {
     @Environment(\.modelContext) var context
     @State private var isShowingItemSheet = false
-    @Query(sort: \Cycles.dateStarted, order: .reverse)
+    @Query var settings: [Settings]
+    @Query(sort: \Cycles.startDate, order: .reverse)
     private var cycles: [Cycles]
 
     let cycleId: UUID

@@ -10,13 +10,13 @@ import SwiftData
 @Model
 class Cycles {
     @Attribute(.unique) var id: UUID
-    var dateStarted: Date
+    var startDate: Date
     var template: String
     var trainingDays: [TrainingDay]
     
-    init( dateStarted: Date, template: String, trainingDays: [TrainingDay]) {
+    init( startDate: Date, template: String, trainingDays: [TrainingDay]) {
         self.id = UUID()
-        self.dateStarted = dateStarted
+        self.startDate = startDate
         self.template = template
         self.trainingDays = trainingDays
     }

@@ -10,7 +10,8 @@ import SwiftData
 
 struct CyclesView: View {
     @Environment(\.modelContext) var context
-    @Query(sort: \Cycles.dateStarted, order: .reverse) var cycles: [Cycles]
+    @Query var settings: [Settings]
+    @Query(sort: \Cycles.startDate, order: .reverse) var cycles: [Cycles]
     @State private var selectedCycle: Cycles?
     @State private var isShowingItemSheet = false
 
@@ -57,7 +58,21 @@ struct CyclesView: View {
 
 struct CycleSelectionSheet: View {
     @Environment(\.modelContext) var context
+    @Query var settings: [Settings]
     @Environment(\.dismiss) var dismiss
+    
+    private var userSettings: Settings {
+        if let existingSettings = settings.first {
+            return existingSettings
+        } else {
+            // Fallback to default settings
+            let newSettings = Settings.defaultSettings
+            context.insert(newSettings)
+            try? context.save()
+            return newSettings
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             List {
@@ -74,18 +89,11 @@ struct CycleSelectionSheet: View {
                     }
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        let cycle = Cycles( dateStarted: Date(), template: template.name, trainingDays: template.trainingDays)
-                        
-                        print("🟢 New cycle created:")
-                        print("- ID: \(cycle.id)")
-                        print("- Template: \(cycle.template)")
-                        print("- Training days: \(cycle.trainingDays.count)")
-                        for (i, day) in cycle.trainingDays.enumerated() {
-                            print("  Day \(i + 1): \(day.day.map(\.name))")
-                        }
+                        let trainingMaxes = TrainingMaxes(from: userSettings)
+                        let cycle = template.createCycle(with: trainingMaxes)
                         
                         context.insert(cycle)
-                        print("Selected: \(cycle.id.uuidString)")
+                        print("Created cycle: \(cycle.id.uuidString)")
                         dismiss()
                     }
                 }
@@ -110,7 +118,7 @@ struct CycleCell: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(cycle.template)
                     .font(.headline)
-                Text(cycle.dateStarted, format: .dateTime.month(.abbreviated).day())
+                Text(cycle.startDate, format: .dateTime.month(.abbreviated).day())
                     .font(.caption)
                     .foregroundColor(.secondary)
                 Text("\(cycle.trainingDays.count) days")
