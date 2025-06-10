@@ -61,10 +61,10 @@ extension Settings {
             enableProgressPhotos: false,
             enableCloudSync: true,
             showTutorial: true,
-            benchPressMax: 0.0,
-            squatMax: 0.0,
-            deadliftMax: 0.0,
-            overheadPressMax: 0.0
+            benchPressMax: 100.0,
+            squatMax: 135.0,
+            deadliftMax: 135.0,
+            overheadPressMax: 100.0
         )
     }
 }

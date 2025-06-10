@@ -89,8 +89,8 @@ struct CycleSelectionSheet: View {
                     }
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        let trainingMaxes = TrainingMaxes(from: userSettings)
-                        let cycle = template.createCycle(with: trainingMaxes)
+                        let userSettings = UserSettings(from: userSettings)
+                        let cycle = template.createCycle(with: userSettings)
                         
                         context.insert(cycle)
                         print("Created cycle: \(cycle.id.uuidString)")

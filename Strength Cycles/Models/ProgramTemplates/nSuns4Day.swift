@@ -30,7 +30,7 @@ class nSunsFourDayProgram: ProgramProtocol {
             // Monday: Bench + OHP
             TrainingDay(
                 dayIndex: 0,
-                dayName: "Monday - Bench + OHP",
+                dayName: "Bench + OHP",
                 day: [
                     Exercise(
                         exerciseIndex: 0,
@@ -64,7 +64,7 @@ class nSunsFourDayProgram: ProgramProtocol {
             // Tuesday: Squat + Sumo Deadlift
             TrainingDay(
                 dayIndex: 1,
-                dayName: "Tuesday - Squat + Sumo Deadlift",
+                dayName: "Squat + Sumo Deadlift",
                 day: [
                     Exercise(
                         exerciseIndex: 0,
@@ -93,7 +93,7 @@ class nSunsFourDayProgram: ProgramProtocol {
             // Thursday: Bench + Close Grip Bench
             TrainingDay(
                 dayIndex: 2,
-                dayName: "Thursday - Bench + Close Grip Bench",
+                dayName: "Bench + Close Grip Bench",
                 day: [
                     Exercise(
                         exerciseIndex: 0,
@@ -122,7 +122,7 @@ class nSunsFourDayProgram: ProgramProtocol {
             // Friday: Deadlift + Front Squat
             TrainingDay(
                 dayIndex: 3,
-                dayName: "Friday - Deadlift + Front Squat",
+                dayName: "Deadlift + Front Squat",
                 day: [
                     Exercise(
                         exerciseIndex: 0,
