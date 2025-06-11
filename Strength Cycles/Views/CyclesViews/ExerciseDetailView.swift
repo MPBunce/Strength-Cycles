@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 
+// MARK: - Main View
 struct ExerciseDetailView: View {
     let cycle: Cycles
     let dayIndex: Int
@@ -38,11 +39,13 @@ struct ExerciseDetailView: View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: 0) {
-                    // Modern header with stats
-                    headerView
-                    
-                    // Sets section
-                    setsSection
+                    //ExerciseStatsHeader(editingSets: editingSets)
+                    ExerciseSetsSection(
+                        editingSets: $editingSets,
+                        focusedField: $focusedField,
+                        showingAddSetSheet: $showingAddSetSheet,
+                        onDeleteSet: deleteSet
+                    )
                 }
             }
             .background(Color(.systemGroupedBackground))
@@ -50,130 +53,17 @@ struct ExerciseDetailView: View {
             .navigationBarTitleDisplayMode(.large)
             .navigationBarBackButtonHidden(true)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        saveChanges()
-                        dismiss()
-                    }
-                    .fontWeight(.semibold)
-                    .disabled(editingSets.isEmpty)
-                }
+                ExerciseDetailToolbar(
+                    onCancel: { dismiss() },
+                    onSave: { saveChanges(); dismiss() },
+                    isSaveDisabled: editingSets.isEmpty
+                )
             }
             .sheet(isPresented: $showingAddSetSheet) {
                 AddSetView { weight, reps in
                     addSet(weight: weight, reps: reps)
                 }
             }
-        }
-    }
-    
-    private var headerView: some View {
-        VStack(spacing: 16) {
-            // Stats cards
-            HStack(spacing: 12) {
-                StatCard(
-                    title: "Total Sets",
-                    value: "\(editingSets.count)",
-                    color: .blue,
-                    icon: "list.number"
-                )
-                
-                StatCard(
-                    title: "Completed",
-                    value: "\(editingSets.filter { $0.wasSuccessful }.count)",
-                    color: .green,
-                    icon: "checkmark.circle.fill"
-                )
-                
-                StatCard(
-                    title: "Failed",
-                    value: "\(editingSets.filter { $0.completionStatus == .failed }.count)",
-                    color: .red,
-                    icon: "xmark.circle.fill"
-                )
-            }
-            
-            // Progress indicator - replaced ProgressView with custom view
-            if !editingSets.isEmpty {
-                let completedCount = editingSets.filter { $0.isCompleted }.count
-                let progress = Double(completedCount) / Double(editingSets.count)
-                
-                VStack(spacing: 8) {
-                    HStack {
-                        Text("Progress")
-                            .font(.headline)
-                        Spacer()
-                        Text("\(completedCount)/\(editingSets.count)")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    // Custom progress bar
-                    GeometryReader { geometry in
-                        ZStack(alignment: .leading) {
-                            Rectangle()
-                                .fill(Color.gray.opacity(0.3))
-                                .frame(height: 8)
-                                .cornerRadius(4)
-                            
-                            Rectangle()
-                                .fill(Color.blue)
-                                .frame(width: geometry.size.width * progress, height: 8)
-                                .cornerRadius(4)
-                        }
-                    }
-                    .frame(height: 8)
-                }
-                .padding()
-                .background(Color(.systemBackground))
-                .cornerRadius(12)
-            }
-        }
-        .padding()
-    }
-    
-    private var setsSection: some View {
-        VStack(spacing: 0) {
-            // Section header
-            HStack {
-                Text("Sets")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                
-                Spacer()
-                
-                Button(action: { showingAddSetSheet = true }) {
-                    HStack(spacing: 4) {
-                        Image(systemName: "plus")
-                        Text("Add Set")
-                    }
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundColor(.blue)
-                }
-            }
-            .padding(.horizontal)
-            .padding(.vertical, 12)
-            
-            // Sets list
-            LazyVStack(spacing: 1) {
-                ForEach(editingSets.indices, id: \.self) { index in
-                    ModernSetRowView(
-                        setNumber: index + 1,
-                        set: $editingSets[index],
-                        focusedField: $focusedField,
-                        onDelete: { deleteSet(at: index) }
-                    )
-                }
-            }
-            .background(Color(.systemBackground))
-            .cornerRadius(12)
-            .padding(.horizontal)
         }
     }
 
@@ -209,6 +99,199 @@ struct ExerciseDetailView: View {
     }
 }
 
+// MARK: - Toolbar Component
+struct ExerciseDetailToolbar: ToolbarContent {
+    let onCancel: () -> Void
+    let onSave: () -> Void
+    let isSaveDisabled: Bool
+    
+    var body: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarLeading) {
+            Button("Cancel") {
+                onCancel()
+            }
+        }
+        
+        ToolbarItem(placement: .navigationBarTrailing) {
+            Button("Save") {
+                onSave()
+            }
+            .fontWeight(.semibold)
+            .disabled(isSaveDisabled)
+        }
+    }
+}
+
+// MARK: - Stats Header Component
+struct ExerciseStatsHeader: View {
+    let editingSets: [ExerciseSet]
+    
+    var body: some View {
+        VStack(spacing: 16) {
+            ExerciseStatsCards(editingSets: editingSets)
+            
+            if !editingSets.isEmpty {
+                ExerciseProgressIndicator(editingSets: editingSets)
+            }
+        }
+        .padding()
+    }
+}
+
+// MARK: - Stats Cards Component
+struct ExerciseStatsCards: View {
+    let editingSets: [ExerciseSet]
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            StatCard(
+                title: "Total Sets",
+                value: "\(editingSets.count)",
+                color: .blue,
+                icon: "list.number"
+            )
+            
+            StatCard(
+                title: "Completed",
+                value: "\(editingSets.filter { $0.wasSuccessful }.count)",
+                color: .green,
+                icon: "checkmark.circle.fill"
+            )
+            
+            StatCard(
+                title: "Failed",
+                value: "\(editingSets.filter { $0.completionStatus == .failed }.count)",
+                color: .red,
+                icon: "xmark.circle.fill"
+            )
+        }
+    }
+}
+
+// MARK: - Progress Indicator Component
+struct ExerciseProgressIndicator: View {
+    let editingSets: [ExerciseSet]
+    
+    private var progress: Double {
+        let completedCount = editingSets.filter { $0.isCompleted }.count
+        return Double(completedCount) / Double(editingSets.count)
+    }
+    
+    private var completedCount: Int {
+        editingSets.filter { $0.isCompleted }.count
+    }
+    
+    var body: some View {
+        VStack(spacing: 8) {
+            HStack {
+                Text("Progress")
+                    .font(.headline)
+                Spacer()
+                Text("\(completedCount)/\(editingSets.count)")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+            
+            CustomProgressBar(progress: progress)
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
+    }
+}
+
+// MARK: - Custom Progress Bar Component
+struct CustomProgressBar: View {
+    let progress: Double
+    
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(height: 8)
+                    .cornerRadius(4)
+                
+                Rectangle()
+                    .fill(Color.blue)
+                    .frame(width: geometry.size.width * progress, height: 8)
+                    .cornerRadius(4)
+            }
+        }
+        .frame(height: 8)
+    }
+}
+
+// MARK: - Sets Section Component
+struct ExerciseSetsSection: View {
+    @Binding var editingSets: [ExerciseSet]
+    @Binding var focusedField: ExerciseDetailView.FocusField?
+    @Binding var showingAddSetSheet: Bool
+    let onDeleteSet: (Int) -> Void
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            SetsSectionHeader(showingAddSetSheet: $showingAddSetSheet)
+            SetsList(
+                editingSets: $editingSets,
+                focusedField: $focusedField,
+                onDeleteSet: onDeleteSet
+            )
+        }
+    }
+}
+
+// MARK: - Sets Section Header Component
+struct SetsSectionHeader: View {
+    @Binding var showingAddSetSheet: Bool
+    
+    var body: some View {
+        HStack {
+            Text("Sets")
+                .font(.title2)
+                .fontWeight(.bold)
+            
+            Spacer()
+            
+            Button(action: { showingAddSetSheet = true }) {
+                HStack(spacing: 4) {
+                    Image(systemName: "plus")
+                    Text("Add Set")
+                }
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundColor(.blue)
+            }
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 12)
+    }
+}
+
+// MARK: - Sets List Component
+struct SetsList: View {
+    @Binding var editingSets: [ExerciseSet]
+    @Binding var focusedField: ExerciseDetailView.FocusField?
+    let onDeleteSet: (Int) -> Void
+    
+    var body: some View {
+        LazyVStack(spacing: 1) {
+            ForEach(editingSets.indices, id: \.self) { index in
+                ModernSetRowView(
+                    setNumber: index + 1,
+                    set: $editingSets[index],
+                    focusedField: $focusedField,
+                    onDelete: { onDeleteSet(index) }
+                )
+            }
+        }
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
+        .padding(.horizontal)
+    }
+}
+
+// MARK: - Stat Card Component (Unchanged)
 struct StatCard: View {
     let title: String
     let value: String
@@ -236,85 +319,32 @@ struct StatCard: View {
     }
 }
 
+// MARK: - Modern Set Row Component
 struct ModernSetRowView: View {
     let setNumber: Int
     @Binding var set: ExerciseSet
     @Binding var focusedField: ExerciseDetailView.FocusField?
     let onDelete: () -> Void
     
-    @State private var showingActions = false
-    
-    private var statusColor: Color {
-        switch set.completionStatus {
-        case .notStarted: return .secondary
-        case .completedSuccessfully: return .green
-        case .failed: return .red
-        }
-    }
-    
     var body: some View {
         HStack(spacing: 16) {
-            // Set number and status
-            HStack(spacing: 8) {
-                Text("\(setNumber)")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .frame(width: 24)
-                
-                Button(action: toggleSetStatus) {
-                    Image(systemName: statusIcon)
-                        .font(.title2)
-                        .foregroundColor(statusColor)
-                }
-                .buttonStyle(PlainButtonStyle())
-            }
-            .frame(width: 60)
+            SetNumberAndStatus(
+                setNumber: setNumber,
+                set: $set
+            )
             
-            // Input fields
-            HStack(spacing: 12) {
-                InputField(
-                    title: "Reps",
-                    value: $set.reps,
-                    isDisabled: !set.isEditable || set.isCompleted,
-                    keyboardType: .numberPad,
-                    focusValue: .reps(set.setIndex),
-                    focusedField: $focusedField
-                ) {
-                    focusedField = .reps(set.setIndex)
-                }
-                
-                InputField(
-                    title: "Weight",
-                    value: $set.weight,
-                    isDisabled: !set.isEditable || set.isCompleted,
-                    keyboardType: .decimalPad,
-                    formatter: {
-                        let formatter = NumberFormatter()
-                        formatter.numberStyle = .decimal
-                        formatter.maximumFractionDigits = 1
-                        return formatter
-                    }(),
-                    focusValue: .weight(set.setIndex),
-                    focusedField: $focusedField
-                ) {
-                    focusedField = .weight(set.setIndex)
-                }
-            }
+            SetInputFields(
+                set: $set,
+                focusedField: $focusedField
+            )
             
             Spacer()
             
-            // Actions menu
-            Menu {
-                if set.isCompleted {
-                    Button("Reset", action: resetSet)
-                }
-                
-                Button("Delete", role: .destructive, action: onDelete)
-            } label: {
-                Image(systemName: "ellipsis")
-                    .foregroundColor(.secondary)
-                    .padding(8)
-            }
+            SetActionsMenu(
+                set: set,
+                onDelete: onDelete,
+                onReset: { resetSet() }
+            )
         }
         .padding()
         .background(set.isCompleted ? Color.gray.opacity(0.05) : Color.clear)
@@ -332,12 +362,49 @@ struct ModernSetRowView: View {
         }
     }
     
+    private func resetSet() {
+        withAnimation(.spring(response: 0.3)) {
+            set.reset()
+        }
+    }
+}
+
+// MARK: - Set Number and Status Component
+struct SetNumberAndStatus: View {
+    let setNumber: Int
+    @Binding var set: ExerciseSet
+    
+    private var statusColor: Color {
+        switch set.completionStatus {
+        case .notStarted: return .secondary
+        case .completedSuccessfully: return .green
+        case .failed: return .red
+        }
+    }
+    
     private var statusIcon: String {
         switch set.completionStatus {
         case .notStarted: return "circle"
         case .completedSuccessfully: return "checkmark.circle.fill"
         case .failed: return "xmark.circle.fill"
         }
+    }
+    
+    var body: some View {
+        HStack(spacing: 8) {
+            Text("\(setNumber)")
+                .font(.headline)
+                .fontWeight(.bold)
+                .frame(width: 24)
+            
+            Button(action: toggleSetStatus) {
+                Image(systemName: statusIcon)
+                    .font(.title2)
+                    .foregroundColor(statusColor)
+            }
+            .buttonStyle(PlainButtonStyle())
+        }
+        .frame(width: 60)
     }
     
     private func toggleSetStatus() {
@@ -352,14 +419,68 @@ struct ModernSetRowView: View {
             }
         }
     }
+}
+
+// MARK: - Set Input Fields Component
+struct SetInputFields: View {
+    @Binding var set: ExerciseSet
+    @Binding var focusedField: ExerciseDetailView.FocusField?
     
-    private func resetSet() {
-        withAnimation(.spring(response: 0.3)) {
-            set.reset()
+    var body: some View {
+        HStack(spacing: 12) {
+            InputField(
+                title: "Reps",
+                value: $set.reps,
+                isDisabled: !set.isEditable || set.isCompleted,
+                keyboardType: .numberPad,
+                focusValue: .reps(set.setIndex),
+                focusedField: $focusedField
+            ) {
+                focusedField = .reps(set.setIndex)
+            }
+            
+            InputField(
+                title: "Weight",
+                value: $set.weight,
+                isDisabled: !set.isEditable || set.isCompleted,
+                keyboardType: .decimalPad,
+                formatter: {
+                    let formatter = NumberFormatter()
+                    formatter.numberStyle = .decimal
+                    formatter.maximumFractionDigits = 1
+                    return formatter
+                }(),
+                focusValue: .weight(set.setIndex),
+                focusedField: $focusedField
+            ) {
+                focusedField = .weight(set.setIndex)
+            }
         }
     }
 }
 
+// MARK: - Set Actions Menu Component
+struct SetActionsMenu: View {
+    let set: ExerciseSet
+    let onDelete: () -> Void
+    let onReset: () -> Void
+    
+    var body: some View {
+        Menu {
+            if set.isCompleted {
+                Button("Reset", action: onReset)
+            }
+            
+            Button("Delete", role: .destructive, action: onDelete)
+        } label: {
+            Image(systemName: "ellipsis")
+                .foregroundColor(.secondary)
+                .padding(8)
+        }
+    }
+}
+
+// MARK: - Input Field Component (Unchanged)
 struct InputField<T>: View where T: LosslessStringConvertible & Equatable {
     let title: String
     @Binding var value: T?
@@ -396,7 +517,6 @@ struct InputField<T>: View where T: LosslessStringConvertible & Equatable {
                 .font(.caption)
                 .foregroundColor(.secondary)
             
-            // Convert T? to String for TextField
             TextField("0", text: Binding(
                 get: {
                     if let value = value {
@@ -434,6 +554,7 @@ struct InputField<T>: View where T: LosslessStringConvertible & Equatable {
     }
 }
 
+// MARK: - Add Set View (Unchanged)
 struct AddSetView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var weight: String = ""
@@ -503,7 +624,7 @@ struct AddSetView: View {
     }
 }
 
-// Updated ExerciseRowView to show completion status
+// MARK: - Exercise Row View (Refactored)
 struct ExerciseRowView: View {
     let cycle: Cycles
     let dayIndex: Int
@@ -520,84 +641,13 @@ struct ExerciseRowView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text(exercise.name)
-                    .font(.subheadline)
-                    .bold()
-
-                Spacer()
-                
-                // Completion indicators
-                HStack(spacing: 4) {
-                    if exercise.successfulSetsCount > 0 {
-                        HStack(spacing: 2) {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.green)
-                                .font(.caption2)
-                            Text("\(exercise.successfulSetsCount)")
-                                .font(.caption2)
-                                .foregroundColor(.green)
-                        }
-                    }
-                    
-                    if exercise.failedSetsCount > 0 {
-                        HStack(spacing: 2) {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.red)
-                                .font(.caption2)
-                            Text("\(exercise.failedSetsCount)")
-                                .font(.caption2)
-                                .foregroundColor(.red)
-                        }
-                    }
-                    
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+            ExerciseRowHeader(exercise: exercise)
+            
+            if !exercise.sets.isEmpty {
+                ExerciseRowProgress(exercise: exercise)
             }
             
-            // Custom progress bar - replaced ProgressView
-            if !exercise.sets.isEmpty {
-                let progress = exercise.completionPercentage
-                GeometryReader { geometry in
-                    ZStack(alignment: .leading) {
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.3))
-                            .frame(height: 3)
-                            .cornerRadius(1.5)
-                        
-                        Rectangle()
-                            .fill(Color.blue)
-                            .frame(width: geometry.size.width * progress, height: 3)
-                            .cornerRadius(1.5)
-                    }
-                }
-                .frame(height: 3)
-            }
-
-            ForEach(Array(exercise.sets.sorted(by: { $0.setIndex < $1.setIndex }).enumerated()), id: \.element.setIndex) { displayIndex, set in
-                HStack {
-                    HStack(spacing: 4) {
-                        Text("Set \(displayIndex + 1)")
-                        
-                        // Status indicator
-                        Image(systemName: set.completionStatus == .completedSuccessfully ? "checkmark.circle.fill" :
-                              set.completionStatus == .failed ? "xmark.circle.fill" : "circle")
-                            .foregroundColor(set.completionStatus == .completedSuccessfully ? .green :
-                                           set.completionStatus == .failed ? .red : .secondary)
-                            .font(.caption2)
-                    }
-                    
-                    Spacer()
-                    Text("\(set.reps ?? 0) reps")
-                        .foregroundColor(set.reps == nil ? .secondary : .primary)
-                    Text("@ \(set.weight ?? 0, specifier: "%.1f") lbs")
-                        .foregroundColor(set.weight == nil ? .secondary : .primary)
-                }
-                .font(.footnote)
-                .foregroundColor(set.isCompleted ? (set.wasSuccessful ? .primary : .secondary) : .secondary)
-            }
+            ExerciseSetsList(exercise: exercise)
         }
         .padding(.vertical, 4)
         .contentShape(Rectangle())
@@ -611,5 +661,119 @@ struct ExerciseRowView: View {
                 exerciseIndex: exerciseIndex
             )
         }
+    }
+}
+
+// MARK: - Exercise Row Header Component
+struct ExerciseRowHeader: View {
+    let exercise: Exercise
+    
+    var body: some View {
+        HStack {
+            Text(exercise.name)
+                .font(.subheadline)
+                .bold()
+
+            Spacer()
+            
+            ExerciseCompletionIndicators(exercise: exercise)
+            
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+    }
+}
+
+// MARK: - Exercise Completion Indicators Component
+struct ExerciseCompletionIndicators: View {
+    let exercise: Exercise
+    
+    var body: some View {
+        HStack(spacing: 4) {
+            if exercise.successfulSetsCount > 0 {
+                HStack(spacing: 2) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.green)
+                        .font(.caption2)
+                    Text("\(exercise.successfulSetsCount)")
+                        .font(.caption2)
+                        .foregroundColor(.green)
+                }
+            }
+            
+            if exercise.failedSetsCount > 0 {
+                HStack(spacing: 2) {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.red)
+                        .font(.caption2)
+                    Text("\(exercise.failedSetsCount)")
+                        .font(.caption2)
+                        .foregroundColor(.red)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Exercise Row Progress Component
+struct ExerciseRowProgress: View {
+    let exercise: Exercise
+    
+    var body: some View {
+        let progress = exercise.completionPercentage
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(height: 3)
+                    .cornerRadius(1.5)
+                
+                Rectangle()
+                    .fill(Color.blue)
+                    .frame(width: geometry.size.width * progress, height: 3)
+                    .cornerRadius(1.5)
+            }
+        }
+        .frame(height: 3)
+    }
+}
+
+// MARK: - Exercise Sets List Component
+struct ExerciseSetsList: View {
+    let exercise: Exercise
+    
+    var body: some View {
+        ForEach(Array(exercise.sets.sorted(by: { $0.setIndex < $1.setIndex }).enumerated()), id: \.element.setIndex) { displayIndex, set in
+            ExerciseSetRow(displayIndex: displayIndex, set: set)
+        }
+    }
+}
+
+// MARK: - Exercise Set Row Component
+struct ExerciseSetRow: View {
+    let displayIndex: Int
+    let set: ExerciseSet
+    
+    var body: some View {
+        HStack {
+            HStack(spacing: 4) {
+                Text("Set \(displayIndex + 1)")
+                
+                Image(systemName: set.completionStatus == .completedSuccessfully ? "checkmark.circle.fill" :
+                      set.completionStatus == .failed ? "xmark.circle.fill" : "circle")
+                    .foregroundColor(set.completionStatus == .completedSuccessfully ? .green :
+                                   set.completionStatus == .failed ? .red : .secondary)
+                    .font(.caption2)
+            }
+            
+            Spacer()
+            Text("\(set.reps ?? 0) reps")
+                .foregroundColor(set.reps == nil ? .secondary : .primary)
+            Text("@ \(set.weight ?? 0, specifier: "%.1f") lbs")
+                .foregroundColor(set.weight == nil ? .secondary : .primary)
+        }
+        .font(.footnote)
+        .foregroundColor(set.isCompleted ? (set.wasSuccessful ? .primary : .secondary) : .secondary)
     }
 }
