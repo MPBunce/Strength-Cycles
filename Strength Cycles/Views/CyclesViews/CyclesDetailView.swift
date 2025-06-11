@@ -201,4 +201,5 @@ struct CyclesDetailView: View {
     private func sortedExercises(for day: TrainingDay) -> [Exercise] {
         day.day.sorted(by: { $0.exerciseIndex < $1.exerciseIndex })
     }
+    
 }
