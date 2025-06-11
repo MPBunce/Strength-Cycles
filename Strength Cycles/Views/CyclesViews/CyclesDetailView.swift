@@ -38,8 +38,6 @@ struct CyclesDetailView: View {
         self._cycles = Query(filter: predicate)
     }
 
-    
-    
     var body: some View {
         let cycle = selectedCycle
 
@@ -49,7 +47,7 @@ struct CyclesDetailView: View {
                     if cycle.trainingDays.isEmpty {
                         emptyStateView
                     } else {
-                        trainingDaysHeader(for: cycle)
+                        daySelectionDropdown(for: cycle)
                         exercisesList(for: cycle)
                     }
                 }
@@ -86,34 +84,68 @@ struct CyclesDetailView: View {
         )
     }
 
-    private func trainingDaysHeader(for cycle: Cycles) -> some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 20) {
+    private func daySelectionDropdown(for cycle: Cycles) -> some View {
+        HStack {
+            Image(systemName: "calendar")
+                .foregroundColor(.blue)
+                .font(.title3)
+            
+            Text("Training Day:")
+                .font(.headline)
+                .foregroundColor(.primary)
+            
+            Spacer()
+            
+            Menu {
                 ForEach(sortedTrainingDays(for: cycle), id: \.dayIndex) { day in
-                    dayHeaderButton(for: day)
+                    Button(action: {
+                        selectedDayIndex = day.dayIndex
+                    }) {
+                        HStack {
+                            Text("Day \(day.dayIndex + 1): \(day.dayName)")
+                            
+                            if validSelectedDayIndex == day.dayIndex {
+                                Spacer()
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                    }
                 }
+            } label: {
+                HStack(spacing: 8) {
+                    if let selectedDay = cycle.trainingDays.first(where: { $0.dayIndex == validSelectedDayIndex }) {
+                        VStack(alignment: .trailing, spacing: 2) {
+                            Text("Day \(selectedDay.dayIndex + 1)")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.primary)
+                            Text(selectedDay.dayName)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    } else {
+                        Text("Select Day")
+                            .font(.subheadline)
+                            .foregroundColor(.primary)
+                    }
+                    
+                    Image(systemName: "chevron.down")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
+                .contentShape(Rectangle())
             }
-            .padding(.horizontal, 20)
         }
-        .background(Color(.systemGray6))
-        .frame(height: 60)
-    }
-
-    private func dayHeaderButton(for day: TrainingDay) -> some View {
-        let isSelected = validSelectedDayIndex == day.dayIndex
-        return Text("Day \(day.dayIndex + 1)")
-            .font(.headline)
-            .fontWeight(isSelected ? .bold : .medium)
-            .foregroundColor(isSelected ? .primary : .secondary)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(isSelected ? Color(.systemGray4) : Color.clear)
-            )
-            .onTapGesture {
-                selectedDayIndex = day.dayIndex
-            }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 16)
+        .background(Color(.systemBackground))
+        .overlay(
+            Rectangle()
+                .frame(height: 0.5)
+                .foregroundColor(Color(.systemGray4)),
+            alignment: .bottom
+        )
     }
 
     private func exercisesList(for cycle: Cycles) -> some View {

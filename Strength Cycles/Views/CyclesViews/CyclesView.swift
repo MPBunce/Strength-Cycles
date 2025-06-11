@@ -14,6 +14,9 @@ struct CyclesView: View {
     @Query(sort: \Cycles.startDate, order: .reverse) var cycles: [Cycles]
     @State private var selectedCycle: Cycles?
     @State private var isShowingItemSheet = false
+    
+    //Work around for refresh
+    @State private var refreshTrigger = UUID()
 
     var body: some View {
         NavigationStack {
