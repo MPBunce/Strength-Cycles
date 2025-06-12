@@ -14,7 +14,7 @@ struct ContentView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            ProgressView()
+            ChartOnly()
                 .tabItem({
                     Text("Progress")
                     Image(systemName: "chart.bar")

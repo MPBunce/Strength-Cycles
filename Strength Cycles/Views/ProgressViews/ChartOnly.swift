@@ -1,8 +1,15 @@
+//
+//  ChartOnly.swift
+//  Strength Cycles
+//
+//  Created by Matthew Bunce on 2025-06-12.
+//
+
 import SwiftUI
 import SwiftData
 import Charts
 
-struct ChartsView: View {
+struct ChartOnly: View {
     @Environment(\.modelContext) var context
     @Query(sort: \Cycles.startDate, order: .reverse) var cycles: [Cycles]
 
@@ -14,15 +21,18 @@ struct ChartsView: View {
     ]
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                ForEach(targetLifts, id: \.self) { lift in
-                    liftProgressionChart(for: lift)
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    ForEach(targetLifts, id: \.self) { lift in
+                        liftProgressionChart(for: lift)
+                    }
                 }
+                .padding()
             }
-            .padding()
+            .navigationTitle("Progress")
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .navigationTitle("Charts")
     }
 
     // MARK: - 1RM Progression Chart for each lift

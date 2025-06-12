@@ -17,13 +17,8 @@ struct ExerciseDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var editingSets: [ExerciseSet]
     @State private var showingAddSetSheet = false
-    @State private var focusedField: FocusField?
+    @State private var editingSetIndex: Int?
     
-    enum FocusField: Hashable {
-        case reps(Int)
-        case weight(Int)
-    }
-
     private var exercise: Exercise {
         cycle.trainingDays
             .first(where: { $0.dayIndex == dayIndex })?
@@ -48,9 +43,9 @@ struct ExerciseDetailView: View {
                 //ExerciseStatsHeader(editingSets: editingSets)
                 ExerciseSetsSection(
                     editingSets: $editingSets,
-                    focusedField: $focusedField,
                     showingAddSetSheet: $showingAddSetSheet,
-                    onDeleteSet: deleteSet
+                    onDeleteSet: deleteSet,
+                    onEditSet: editSet
                 )
             }
         }
@@ -63,9 +58,22 @@ struct ExerciseDetailView: View {
                 isSaveDisabled: editingSets.isEmpty
             )
         }
-        .sheet(isPresented: $showingAddSetSheet) {
-            AddSetView { weight, reps in
-                addSet(weight: weight, reps: reps)
+        .sheet(isPresented: $showingAddSetSheet, onDismiss: {
+            editingSetIndex = nil
+        }) {
+            if let editingIndex = editingSetIndex {
+                // Edit existing set
+                EditSetView(
+                    initialWeight: editingSets[editingIndex].weight,
+                    initialReps: editingSets[editingIndex].reps
+                ) { weight, reps in
+                    updateSet(at: editingIndex, weight: weight, reps: reps)
+                }
+            } else {
+                // Add new set
+                AddSetView { weight, reps in
+                    addSet(weight: weight, reps: reps)
+                }
             }
         }
     }
@@ -82,6 +90,19 @@ struct ExerciseDetailView: View {
         withAnimation(.spring()) {
             editingSets.append(newSet)
         }
+    }
+    
+    private func editSet(at index: Int) {
+        editingSetIndex = index
+        showingAddSetSheet = true
+    }
+    
+    private func updateSet(at index: Int, weight: Double?, reps: Int?) {
+        withAnimation(.spring()) {
+            editingSets[index].weight = weight
+            editingSets[index].reps = reps
+        }
+        editingSetIndex = nil
     }
 
     private func deleteSet(at index: Int) {
@@ -221,17 +242,17 @@ struct CustomProgressBar: View {
 // MARK: - Sets Section Component
 struct ExerciseSetsSection: View {
     @Binding var editingSets: [ExerciseSet]
-    @Binding var focusedField: ExerciseDetailView.FocusField?
     @Binding var showingAddSetSheet: Bool
     let onDeleteSet: (Int) -> Void
+    let onEditSet: (Int) -> Void
     
     var body: some View {
         VStack(spacing: 0) {
             SetsSectionHeader(showingAddSetSheet: $showingAddSetSheet)
             SetsList(
                 editingSets: $editingSets,
-                focusedField: $focusedField,
-                onDeleteSet: onDeleteSet
+                onDeleteSet: onDeleteSet,
+                onEditSet: onEditSet
             )
         }
     }
@@ -260,24 +281,23 @@ struct SetsSectionHeader: View {
             }
         }
         .padding(.horizontal)
-        .padding(.vertical, 8) // Reduced from 12
+        .padding(.vertical, 8)
     }
 }
 
 // MARK: - Sets List Component
 struct SetsList: View {
     @Binding var editingSets: [ExerciseSet]
-    @Binding var focusedField: ExerciseDetailView.FocusField?
     let onDeleteSet: (Int) -> Void
+    let onEditSet: (Int) -> Void
     
     var body: some View {
-        LazyVStack(spacing: 0) { // Reduced from 1
+        LazyVStack(spacing: 0) {
             ForEach(editingSets.indices, id: \.self) { index in
                 ModernSetRowView(
-                    setNumber: index + 1,
                     set: $editingSets[index],
-                    focusedField: $focusedField,
-                    onDelete: { onDeleteSet(index) }
+                    onDelete: { onDeleteSet(index) },
+                    onEdit: { onEditSet(index) }
                 )
             }
         }
@@ -317,33 +337,27 @@ struct StatCard: View {
 
 // MARK: - Modern Set Row Component
 struct ModernSetRowView: View {
-    let setNumber: Int
     @Binding var set: ExerciseSet
-    @Binding var focusedField: ExerciseDetailView.FocusField?
     let onDelete: () -> Void
+    let onEdit: () -> Void
     
     var body: some View {
-        HStack(spacing: 12) { // Reduced from 16
-            SetNumberAndStatus(
-                setNumber: setNumber,
-                set: $set
-            )
+        HStack(spacing: 16) {
+            SetStatusButton(set: $set)
             
-            SetInputFields(
-                set: $set,
-                focusedField: $focusedField
-            )
+            SetDisplayValues(set: set)
             
             Spacer()
             
             SetActionsMenu(
                 set: set,
                 onDelete: onDelete,
+                onEdit: onEdit,
                 onReset: { resetSet() }
             )
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 8) // Reduced from default padding
+        .padding(.vertical, 12)
         .background(set.isCompleted ? Color.gray.opacity(0.05) : Color.clear)
         .overlay(
             Rectangle()
@@ -354,7 +368,7 @@ struct ModernSetRowView: View {
         .contentShape(Rectangle())
         .onTapGesture {
             if !set.isCompleted {
-                focusedField = set.reps == nil ? .reps(set.setIndex) : .weight(set.setIndex)
+                onEdit()
             }
         }
     }
@@ -366,9 +380,8 @@ struct ModernSetRowView: View {
     }
 }
 
-// MARK: - Set Number and Status Component
-struct SetNumberAndStatus: View {
-    let setNumber: Int
+// MARK: - Set Status Button Component
+struct SetStatusButton: View {
     @Binding var set: ExerciseSet
     
     private var statusColor: Color {
@@ -388,20 +401,12 @@ struct SetNumberAndStatus: View {
     }
     
     var body: some View {
-        HStack(spacing: 6) { // Reduced from 8
-            Text("\(setNumber)")
-                .font(.subheadline) // Reduced from .headline
-                .fontWeight(.semibold) // Reduced from .bold
-                .frame(width: 20) // Reduced from 24
-            
-            Button(action: toggleSetStatus) {
-                Image(systemName: statusIcon)
-                    .font(.title3) // Reduced from .title2
-                    .foregroundColor(statusColor)
-            }
-            .buttonStyle(PlainButtonStyle())
+        Button(action: toggleSetStatus) {
+            Image(systemName: statusIcon)
+                .font(.title2)
+                .foregroundColor(statusColor)
         }
-        .frame(width: 50) // Reduced from 60
+        .buttonStyle(PlainButtonStyle())
     }
     
     private func toggleSetStatus() {
@@ -418,39 +423,36 @@ struct SetNumberAndStatus: View {
     }
 }
 
-// MARK: - Set Input Fields Component
-struct SetInputFields: View {
-    @Binding var set: ExerciseSet
-    @Binding var focusedField: ExerciseDetailView.FocusField?
+// MARK: - Set Display Values Component
+struct SetDisplayValues: View {
+    let set: ExerciseSet
     
     var body: some View {
-        HStack(spacing: 8) { // Reduced from 12
-            InputField(
-                title: "Reps",
-                value: $set.reps,
-                isDisabled: !set.isEditable || set.isCompleted,
-                keyboardType: .numberPad,
-                focusValue: .reps(set.setIndex),
-                focusedField: $focusedField
-            ) {
-                focusedField = .reps(set.setIndex)
+        HStack(spacing: 24) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Weight")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                
+                Text(set.weight != nil ? String(format: "%.1f lbs", set.weight!) : "— lbs")
+                    .font(.body)
+                    .fontWeight(.medium)
+                    .foregroundColor(set.weight != nil ? .primary : .secondary)
             }
             
-            InputField(
-                title: "Weight",
-                value: $set.weight,
-                isDisabled: !set.isEditable || set.isCompleted,
-                keyboardType: .decimalPad,
-                formatter: {
-                    let formatter = NumberFormatter()
-                    formatter.numberStyle = .decimal
-                    formatter.maximumFractionDigits = 1
-                    return formatter
-                }(),
-                focusValue: .weight(set.setIndex),
-                focusedField: $focusedField
-            ) {
-                focusedField = .weight(set.setIndex)
+            Text("for")
+                .font(.body)
+                .foregroundColor(.secondary)
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Reps")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                
+                Text(set.reps != nil ? "\(set.reps!) reps" : "— reps")
+                    .font(.body)
+                    .fontWeight(.medium)
+                    .foregroundColor(set.reps != nil ? .primary : .secondary)
             }
         }
     }
@@ -460,10 +462,13 @@ struct SetInputFields: View {
 struct SetActionsMenu: View {
     let set: ExerciseSet
     let onDelete: () -> Void
+    let onEdit: () -> Void
     let onReset: () -> Void
     
     var body: some View {
         Menu {
+            Button("Edit", action: onEdit)
+            
             if set.isCompleted {
                 Button("Reset", action: onReset)
             }
@@ -472,82 +477,8 @@ struct SetActionsMenu: View {
         } label: {
             Image(systemName: "ellipsis")
                 .foregroundColor(.secondary)
-                .padding(4) // Reduced from 8
+                .padding(8)
         }
-    }
-}
-
-// MARK: - Input Field Component
-struct InputField<T>: View where T: LosslessStringConvertible & Equatable {
-    let title: String
-    @Binding var value: T?
-    let isDisabled: Bool
-    let keyboardType: UIKeyboardType
-    let formatter: NumberFormatter
-    let onTap: () -> Void
-    let focusValue: ExerciseDetailView.FocusField
-    @Binding var focusedField: ExerciseDetailView.FocusField?
-    
-    init(
-        title: String,
-        value: Binding<T?>,
-        isDisabled: Bool = false,
-        keyboardType: UIKeyboardType = .numberPad,
-        formatter: NumberFormatter = NumberFormatter(),
-        focusValue: ExerciseDetailView.FocusField,
-        focusedField: Binding<ExerciseDetailView.FocusField?>,
-        onTap: @escaping () -> Void = {}
-    ) {
-        self.title = title
-        self._value = value
-        self.isDisabled = isDisabled
-        self.keyboardType = keyboardType
-        self.formatter = formatter
-        self.focusValue = focusValue
-        self._focusedField = focusedField
-        self.onTap = onTap
-    }
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 2) { // Reduced from 4
-            Text(title)
-                .font(.caption2) // Reduced from .caption
-                .foregroundColor(.secondary)
-            
-            TextField("0", text: Binding(
-                get: {
-                    if let value = value {
-                        return String(value)
-                    }
-                    return ""
-                },
-                set: { newValue in
-                    if newValue.isEmpty {
-                        value = nil
-                    } else if let converted = T(newValue) {
-                        value = converted
-                    }
-                }
-            ))
-            .textFieldStyle(PlainTextFieldStyle())
-            .font(.callout) // Reduced from .body
-            .fontWeight(.medium)
-            .padding(6) // Reduced from 8
-            .background(
-                RoundedRectangle(cornerRadius: 6) // Reduced from 8
-                    .fill(isDisabled ? Color(.systemGray5) : Color(.systemGray6))
-            )
-            .keyboardType(keyboardType)
-            .disabled(isDisabled)
-            .opacity(isDisabled ? 0.6 : 1.0)
-            .onTapGesture {
-                if !isDisabled {
-                    focusedField = focusValue
-                    onTap()
-                }
-            }
-        }
-        .frame(width: 65) // Reduced from 80
     }
 }
 
@@ -605,6 +536,81 @@ struct AddSetView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(weight.isEmpty && reps.isEmpty)
+                
+                Button("Cancel") {
+                    dismiss()
+                }
+                .buttonStyle(.bordered)
+            }
+            .padding()
+            .onAppear {
+                focusedField = .reps
+            }
+        }
+        .presentationDetents([.medium])
+        .presentationDragIndicator(.visible)
+    }
+}
+
+// MARK: - Edit Set View
+struct EditSetView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var weight: String
+    @State private var reps: String
+    @FocusState private var focusedField: Field?
+    
+    let onSave: (Double?, Int?) -> Void
+    
+    enum Field {
+        case weight, reps
+    }
+    
+    init(initialWeight: Double?, initialReps: Int?, onSave: @escaping (Double?, Int?) -> Void) {
+        self.onSave = onSave
+        self._weight = State(initialValue: initialWeight != nil ? String(format: "%.1f", initialWeight!) : "")
+        self._reps = State(initialValue: initialReps != nil ? "\(initialReps!)" : "")
+    }
+    
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 24) {
+                Text("Edit Set")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .padding(.top)
+                
+                VStack(spacing: 16) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Reps")
+                            .font(.headline)
+                        
+                        TextField("Enter reps", text: $reps)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .keyboardType(.numberPad)
+                            .focused($focusedField, equals: .reps)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Weight (lbs)")
+                            .font(.headline)
+                        
+                        TextField("Enter weight", text: $weight)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .keyboardType(.decimalPad)
+                            .focused($focusedField, equals: .weight)
+                    }
+                }
+                .padding()
+                
+                Spacer()
+                
+                Button("Save Changes") {
+                    let weightValue = weight.isEmpty ? nil : Double(weight)
+                    let repsValue = reps.isEmpty ? nil : Int(reps)
+                    onSave(weightValue, repsValue)
+                    dismiss()
+                }
+                .buttonStyle(.borderedProminent)
                 
                 Button("Cancel") {
                     dismiss()
