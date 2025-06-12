@@ -1,10 +1,17 @@
+//
+//  ChartOnly.swift
+//  Strength Cycles
+//
+//  Created by Matthew Bunce on 2025-06-12.
+//
+
 import SwiftUI
 import SwiftData
 import Charts
 
-struct ChartsView: View {
+struct ChartOnly: View {
     @Environment(\.modelContext) var context
-    @Query(sort: \Cycles.startDate, order: .reverse) var cycles: [Cycles]
+    @Query(sort: \Cycles.startDate, order: .forward) var cycles: [Cycles] // Changed to forward order
 
     private let targetLifts = [
         "Squat",
@@ -14,15 +21,18 @@ struct ChartsView: View {
     ]
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                ForEach(targetLifts, id: \.self) { lift in
-                    liftProgressionChart(for: lift)
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    ForEach(targetLifts, id: \.self) { lift in
+                        liftProgressionChart(for: lift)
+                    }
                 }
+                .padding()
             }
-            .padding()
+            .navigationTitle("Progress")
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .navigationTitle("Charts")
     }
 
     // MARK: - 1RM Progression Chart for each lift
@@ -54,7 +64,7 @@ struct ChartsView: View {
                         y: .value("1RM", dataPoint.oneRM)
                     )
                     .foregroundStyle(.blue)
-                    .symbolSize(30)
+                    .symbolSize(25) // Slightly smaller since we might have more points
                 }
                 .frame(height: 200)
                 .chartYAxis {
@@ -75,17 +85,34 @@ struct ChartsView: View {
                         AxisValueLabel(format: .dateTime.month(.abbreviated).day())
                     }
                 }
+                .chartXScale(domain: .automatic) // Let SwiftUI handle the domain automatically
+                .chartYScale(domain: .automatic)
                 
-                // Show current max
-                if let currentMax = progressionData.last {
+                // Show current max from most recent workout
+                if let mostRecentWorkout = progressionData.last {
                     HStack {
-                        Text("Current Projected 1RM:")
+                        Text("Latest Projected 1RM:")
                             .font(.caption)
                             .foregroundColor(.secondary)
                         Spacer()
-                        Text("\(currentMax.oneRM, specifier: "%.1f") lbs")
+                        Text("\(mostRecentWorkout.oneRM, specifier: "%.1f") lbs")
                             .font(.caption)
                             .bold()
+                    }
+                }
+                
+                // Show overall personal best
+                if let personalBest = progressionData.max(by: { $0.oneRM < $1.oneRM }),
+                   personalBest.oneRM != progressionData.last?.oneRM {
+                    HStack {
+                        Text("Personal Best:")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Text("\(personalBest.oneRM, specifier: "%.1f") lbs")
+                            .font(.caption)
+                            .bold()
+                            .foregroundColor(.green)
                     }
                 }
             }
@@ -106,33 +133,50 @@ struct ChartsView: View {
     private func get1RMProgression(for lift: String) -> [OneRMDataPoint] {
         var dataPoints: [OneRMDataPoint] = []
         
-        // Go through all cycles in chronological order (reverse the reversed query)
-        for cycle in cycles.reversed() {
-            // Go through training days in chronological order
-            for day in cycle.trainingDays.sorted(by: { ($0.completedDate ?? Date.distantPast) < ($1.completedDate ?? Date.distantPast) }) {
-                // Only include completed training days
-                guard let completedDate = day.completedDate else { continue }
+        // Process all cycles in chronological order
+        for cycle in cycles {
+            // Get all completed training days and sort them by completion date
+            let completedTrainingDays = cycle.trainingDays
+                .compactMap { trainingDay -> (trainingDay: TrainingDay, completedDate: Date)? in
+                    guard let completedDate = trainingDay.completedDate else { return nil }
+                    return (trainingDay: trainingDay, completedDate: completedDate)
+                }
+                .sorted { $0.completedDate < $1.completedDate }
+            
+            // Process each completed training day
+            for (trainingDay, completedDate) in completedTrainingDays {
+                var maxOneRMForWorkout: Double = 0
                 
-                var maxOneRMForDay: Double = 0
-                
-                // Find all exercises for this lift on this day
-                for exercise in day.day {
+                // Find all exercises for this lift in this workout
+                for exercise in trainingDay.day {
                     if exercise.name == lift {
-                        // Calculate 1RM for each set and find the maximum
+                        // Calculate 1RM for each set and find the maximum for this exercise
                         for set in exercise.sets {
                             if let weight = set.weight, let reps = set.reps, weight > 0, reps > 0 {
                                 let oneRM = calculate1RM(weight: weight, reps: reps)
-                                maxOneRMForDay = max(maxOneRMForDay, oneRM)
+                                maxOneRMForWorkout = max(maxOneRMForWorkout, oneRM)
                             }
                         }
                     }
                 }
                 
-                // Only add data point if we found a valid 1RM for this day
-                if maxOneRMForDay > 0 {
-                    dataPoints.append(OneRMDataPoint(date: completedDate, oneRM: maxOneRMForDay))
+                // Only add data point if we found a valid 1RM for this workout
+                if maxOneRMForWorkout > 0 {
+                    dataPoints.append(OneRMDataPoint(date: completedDate, oneRM: maxOneRMForWorkout))
                 }
             }
+        }
+        
+        // Sort all data points by date (oldest first) to ensure chronological order
+        dataPoints.sort { $0.date < $1.date }
+        
+        // Debug print to see what we're getting
+        print("DEBUG: Data points for \(lift) (\(dataPoints.count) workouts):")
+        for (index, point) in dataPoints.enumerated() {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .short
+            formatter.timeStyle = .short
+            print("  \(index + 1). Date: \(formatter.string(from: point.date)), 1RM: \(String(format: "%.1f", point.oneRM)) lbs")
         }
         
         return dataPoints

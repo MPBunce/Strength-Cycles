@@ -174,18 +174,112 @@ struct CyclesDetailView: View {
                     }
                 ) {
                     ForEach(sortedExercises(for: selectedDay), id: \.exerciseIndex) { exercise in
-                        ExerciseRowView(
+                        NavigationLink(destination: ExerciseDetailView(
                             cycle: cycle,
                             dayIndex: selectedDay.dayIndex,
                             exerciseIndex: exercise.exerciseIndex
-                        )
+                        )) {
+                            ExerciseRowView(exercise: exercise)
+                        }
                     }
                 }
             }
         }
     }
+    
+    // MARK: - Exercise Row View
+    struct ExerciseRowView: View {
+        let exercise: Exercise
+        
+        var body: some View {
+            VStack(alignment: .leading, spacing: 8) {
+                // Exercise header with name and completion status
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(exercise.name)
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                    }
+                    
+                    Spacer()
+                    
+                    // Completion indicator
+                    if !exercise.sets.isEmpty {
+                        let completedSets = exercise.sets.filter { $0.isCompleted }.count
+                        let totalSets = exercise.sets.count
+                        
+                        HStack(spacing: 4) {
+                            Text("\(completedSets)/\(totalSets)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            
+                            Image(systemName: completedSets == totalSets ? "checkmark.circle.fill" : "circle")
+                                .foregroundColor(completedSets == totalSets ? .green : .secondary)
+                                .font(.caption)
+                        }
+                    }
+                }
+                
+                // Sets preview (show first few sets) - FIXED VERSION
+                if !exercise.sets.isEmpty {
+                    VStack(spacing: 4) {
+                        // Get the first 3 sets safely
+                        let setsToShow = Array(exercise.sets.prefix(3))
+                        
+                        ForEach(setsToShow.indices, id: \.self) { index in
+                            let set = setsToShow[index]  // Now accessing the safe subarray
+                            HStack {
+                                Text("Set \(index + 1):")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                
+                                if let reps = set.reps, let weight = set.weight {
+                                    Text("\(reps) reps @ \(weight, specifier: "%.1f") lbs")
+                                        .font(.caption)
+                                        .foregroundColor(.primary)
+                                } else if let reps = set.reps {
+                                    Text("\(reps) reps")
+                                        .font(.caption)
+                                        .foregroundColor(.primary)
+                                } else if let weight = set.weight {
+                                    Text("\(weight, specifier: "%.1f") lbs")
+                                        .font(.caption)
+                                        .foregroundColor(.primary)
+                                } else {
+                                    Text("Not set")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                
+                                Spacer()
+                                
+                                if set.isCompleted {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(.green)
+                                        .font(.caption)
+                                }
+                            }
+                        }
+                        
+                        // Show "and X more" if there are more than 3 sets
+                        if exercise.sets.count > 3 {
+                            HStack {
+                                Text("and \(exercise.sets.count - 3) more sets...")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .italic()
+                                Spacer()
+                            }
+                        }
+                    }
+                    .padding(.leading, 8)
+                }
+            }
+            .padding(.vertical, 4)
+        }
+    }
 
-    //Helper Methods
+    // MARK: - Helper Methods
     private func toggleDayCompletion(_ trainingDay: TrainingDay) {
         if trainingDay.completedDate != nil {
             trainingDay.completedDate = nil
@@ -201,5 +295,4 @@ struct CyclesDetailView: View {
     private func sortedExercises(for day: TrainingDay) -> [Exercise] {
         day.day.sorted(by: { $0.exerciseIndex < $1.exerciseIndex })
     }
-    
 }
