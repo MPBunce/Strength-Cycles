@@ -199,7 +199,6 @@ struct CyclesDetailView: View {
                         Text(exercise.name)
                             .font(.headline)
                             .foregroundColor(.primary)
-                        
                     }
                     
                     Spacer()
@@ -221,11 +220,14 @@ struct CyclesDetailView: View {
                     }
                 }
                 
-                // Sets preview (show first few sets)
+                // Sets preview (show first few sets) - FIXED VERSION
                 if !exercise.sets.isEmpty {
                     VStack(spacing: 4) {
-                        ForEach(exercise.sets.prefix(3).indices, id: \.self) { index in
-                            let set = exercise.sets[index]
+                        // Get the first 3 sets safely
+                        let setsToShow = Array(exercise.sets.prefix(3))
+                        
+                        ForEach(setsToShow.indices, id: \.self) { index in
+                            let set = setsToShow[index]  // Now accessing the safe subarray
                             HStack {
                                 Text("Set \(index + 1):")
                                     .font(.caption)

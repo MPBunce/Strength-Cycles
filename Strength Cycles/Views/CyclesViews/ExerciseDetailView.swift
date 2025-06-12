@@ -55,12 +55,10 @@ struct ExerciseDetailView: View {
         .toolbar {
             ExerciseDetailToolbar(
                 onSave: { saveChanges(); dismiss() },
-                isSaveDisabled: editingSets.isEmpty
+                isSaveDisabled: false
             )
         }
-        .sheet(isPresented: $showingAddSetSheet, onDismiss: {
-            editingSetIndex = nil
-        }) {
+        .sheet(isPresented: $showingAddSetSheet) {
             if let editingIndex = editingSetIndex {
                 // Edit existing set
                 EditSetView(
@@ -342,7 +340,7 @@ struct ModernSetRowView: View {
     let onEdit: () -> Void
     
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 12) {
             SetStatusButton(set: $set)
             
             SetDisplayValues(set: set)
@@ -428,31 +426,27 @@ struct SetDisplayValues: View {
     let set: ExerciseSet
     
     var body: some View {
-        HStack(spacing: 24) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Weight")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-                
-                Text(set.weight != nil ? String(format: "%.1f lbs", set.weight!) : "— lbs")
-                    .font(.body)
-                    .fontWeight(.medium)
-                    .foregroundColor(set.weight != nil ? .primary : .secondary)
-            }
-            
-            Text("for")
-                .font(.body)
-                .foregroundColor(.secondary)
-            
+        HStack(spacing: 16) {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Reps")
                     .font(.caption2)
                     .foregroundColor(.secondary)
                 
-                Text(set.reps != nil ? "\(set.reps!) reps" : "— reps")
+                Text(set.reps != nil ? "\(set.reps!)" : "—")
                     .font(.body)
                     .fontWeight(.medium)
                     .foregroundColor(set.reps != nil ? .primary : .secondary)
+            }
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Weight")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                
+                Text(set.weight != nil ? String(format: "%.1f", set.weight!) : "—")
+                    .font(.body)
+                    .fontWeight(.medium)
+                    .foregroundColor(set.weight != nil ? .primary : .secondary)
             }
         }
     }
