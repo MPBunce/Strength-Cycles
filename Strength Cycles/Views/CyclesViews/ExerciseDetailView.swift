@@ -59,7 +59,6 @@ struct ExerciseDetailView: View {
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ExerciseDetailToolbar(
-                onCancel: { dismiss() },
                 onSave: { saveChanges(); dismiss() },
                 isSaveDisabled: editingSets.isEmpty
             )
@@ -105,17 +104,10 @@ struct ExerciseDetailView: View {
 
 // MARK: - Toolbar Component
 struct ExerciseDetailToolbar: ToolbarContent {
-    let onCancel: () -> Void
     let onSave: () -> Void
     let isSaveDisabled: Bool
     
     var body: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarLeading) {
-            Button("Cancel") {
-                onCancel()
-            }
-        }
-        
         ToolbarItem(placement: .navigationBarTrailing) {
             Button("Save") {
                 onSave()
@@ -268,7 +260,7 @@ struct SetsSectionHeader: View {
             }
         }
         .padding(.horizontal)
-        .padding(.vertical, 12)
+        .padding(.vertical, 8) // Reduced from 12
     }
 }
 
@@ -279,7 +271,7 @@ struct SetsList: View {
     let onDeleteSet: (Int) -> Void
     
     var body: some View {
-        LazyVStack(spacing: 1) {
+        LazyVStack(spacing: 0) { // Reduced from 1
             ForEach(editingSets.indices, id: \.self) { index in
                 ModernSetRowView(
                     setNumber: index + 1,
@@ -331,7 +323,7 @@ struct ModernSetRowView: View {
     let onDelete: () -> Void
     
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 12) { // Reduced from 16
             SetNumberAndStatus(
                 setNumber: setNumber,
                 set: $set
@@ -350,7 +342,8 @@ struct ModernSetRowView: View {
                 onReset: { resetSet() }
             )
         }
-        .padding()
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8) // Reduced from default padding
         .background(set.isCompleted ? Color.gray.opacity(0.05) : Color.clear)
         .overlay(
             Rectangle()
@@ -395,20 +388,20 @@ struct SetNumberAndStatus: View {
     }
     
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 6) { // Reduced from 8
             Text("\(setNumber)")
-                .font(.headline)
-                .fontWeight(.bold)
-                .frame(width: 24)
+                .font(.subheadline) // Reduced from .headline
+                .fontWeight(.semibold) // Reduced from .bold
+                .frame(width: 20) // Reduced from 24
             
             Button(action: toggleSetStatus) {
                 Image(systemName: statusIcon)
-                    .font(.title2)
+                    .font(.title3) // Reduced from .title2
                     .foregroundColor(statusColor)
             }
             .buttonStyle(PlainButtonStyle())
         }
-        .frame(width: 60)
+        .frame(width: 50) // Reduced from 60
     }
     
     private func toggleSetStatus() {
@@ -431,7 +424,7 @@ struct SetInputFields: View {
     @Binding var focusedField: ExerciseDetailView.FocusField?
     
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 8) { // Reduced from 12
             InputField(
                 title: "Reps",
                 value: $set.reps,
@@ -479,7 +472,7 @@ struct SetActionsMenu: View {
         } label: {
             Image(systemName: "ellipsis")
                 .foregroundColor(.secondary)
-                .padding(8)
+                .padding(4) // Reduced from 8
         }
     }
 }
@@ -516,9 +509,9 @@ struct InputField<T>: View where T: LosslessStringConvertible & Equatable {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 2) { // Reduced from 4
             Text(title)
-                .font(.caption)
+                .font(.caption2) // Reduced from .caption
                 .foregroundColor(.secondary)
             
             TextField("0", text: Binding(
@@ -537,11 +530,11 @@ struct InputField<T>: View where T: LosslessStringConvertible & Equatable {
                 }
             ))
             .textFieldStyle(PlainTextFieldStyle())
-            .font(.body)
+            .font(.callout) // Reduced from .body
             .fontWeight(.medium)
-            .padding(8)
+            .padding(6) // Reduced from 8
             .background(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: 6) // Reduced from 8
                     .fill(isDisabled ? Color(.systemGray5) : Color(.systemGray6))
             )
             .keyboardType(keyboardType)
@@ -554,7 +547,7 @@ struct InputField<T>: View where T: LosslessStringConvertible & Equatable {
                 }
             }
         }
-        .frame(width: 80)
+        .frame(width: 65) // Reduced from 80
     }
 }
 
