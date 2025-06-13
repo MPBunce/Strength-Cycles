@@ -14,10 +14,10 @@ struct ChartOnly: View {
     @Query(sort: \Cycles.startDate, order: .forward) var cycles: [Cycles] // Changed to forward order
 
     private let targetLifts = [
+        "Bench Press",
+        "Overhead Press",
         "Squat",
         "Deadlift",
-        "Bench Press",
-        "Overhead Press"
     ]
 
     var body: some View {
@@ -105,7 +105,7 @@ struct ChartOnly: View {
                 if let personalBest = progressionData.max(by: { $0.oneRM < $1.oneRM }),
                    personalBest.oneRM != progressionData.last?.oneRM {
                     HStack {
-                        Text("Personal Best:")
+                        Text("Highest Projected 1RM:")
                             .font(.caption)
                             .foregroundColor(.secondary)
                         Spacer()

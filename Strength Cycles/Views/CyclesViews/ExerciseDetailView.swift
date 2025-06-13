@@ -74,6 +74,12 @@ struct ExerciseDetailView: View {
                 }
             }
         }
+        .onChange(of: showingAddSetSheet) { _, isShowing in
+            // Reset editingSetIndex when sheet is dismissed
+            if !isShowing {
+                editingSetIndex = nil
+            }
+        }
     }
 
     private func addSet(weight: Double?, reps: Int?) {
@@ -88,6 +94,8 @@ struct ExerciseDetailView: View {
         withAnimation(.spring()) {
             editingSets.append(newSet)
         }
+        // Clear the editing index after adding
+        editingSetIndex = nil
     }
     
     private func editSet(at index: Int) {
@@ -96,6 +104,7 @@ struct ExerciseDetailView: View {
     }
     
     private func updateSet(at index: Int, weight: Double?, reps: Int?) {
+        guard index < editingSets.count else { return }
         withAnimation(.spring()) {
             editingSets[index].weight = weight
             editingSets[index].reps = reps
@@ -104,12 +113,13 @@ struct ExerciseDetailView: View {
     }
 
     private func deleteSet(at index: Int) {
+        guard index < editingSets.count else { return }
         withAnimation(.spring()) {
             editingSets.remove(at: index)
             
             // Reindex remaining sets
-            for (i, set) in editingSets.enumerated() {
-                set.setIndex = i
+            for (i, _) in editingSets.enumerated() {
+                editingSets[i].setIndex = i
             }
         }
     }
@@ -522,19 +532,22 @@ struct AddSetView: View {
                 
                 Spacer()
                 
-                Button("Add Set") {
-                    let weightValue = Double(weight)
-                    let repsValue = Int(reps)
-                    onAdd(weightValue, repsValue)
-                    dismiss()
+                VStack(spacing: 12) {
+                    Button("Add Set") {
+                        let weightValue = weight.isEmpty ? nil : Double(weight)
+                        let repsValue = reps.isEmpty ? nil : Int(reps)
+                        onAdd(weightValue, repsValue)
+                        dismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(weight.isEmpty && reps.isEmpty)
+                    
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                    .buttonStyle(.bordered)
                 }
-                .buttonStyle(.borderedProminent)
-                .disabled(weight.isEmpty && reps.isEmpty)
-                
-                Button("Cancel") {
-                    dismiss()
-                }
-                .buttonStyle(.bordered)
+                .padding(.bottom)
             }
             .padding()
             .onAppear {
@@ -598,18 +611,21 @@ struct EditSetView: View {
                 
                 Spacer()
                 
-                Button("Save Changes") {
-                    let weightValue = weight.isEmpty ? nil : Double(weight)
-                    let repsValue = reps.isEmpty ? nil : Int(reps)
-                    onSave(weightValue, repsValue)
-                    dismiss()
+                VStack(spacing: 12) {
+                    Button("Save Changes") {
+                        let weightValue = weight.isEmpty ? nil : Double(weight)
+                        let repsValue = reps.isEmpty ? nil : Int(reps)
+                        onSave(weightValue, repsValue)
+                        dismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                    .buttonStyle(.bordered)
                 }
-                .buttonStyle(.borderedProminent)
-                
-                Button("Cancel") {
-                    dismiss()
-                }
-                .buttonStyle(.bordered)
+                .padding(.bottom)
             }
             .padding()
             .onAppear {
