@@ -5,7 +5,7 @@
 //  Created by Matthew Bunce on 2025-06-09.
 //
 
-
+import Foundation
 import SwiftData
 
 @Model
@@ -279,7 +279,13 @@ private func createFridayFrontSquatSets(tm: Double) -> [ExerciseSet] {
     }
 }
 
-// MARK: - Helper function to create sets
+// MARK: - Helper function to create sets with weight rounding
 private func createExerciseSet(setIndex: Int, reps: Int, weight: Double) -> ExerciseSet {
-    return ExerciseSet(setIndex: setIndex, weight: weight, reps: reps)
+    let roundedWeight = roundDownToNearest5(weight)
+    return ExerciseSet(setIndex: setIndex, weight: roundedWeight, reps: reps)
+}
+
+// MARK: - Weight rounding function
+private func roundDownToNearest5(_ weight: Double) -> Double {
+    return floor(weight / 5.0) * 5.0
 }

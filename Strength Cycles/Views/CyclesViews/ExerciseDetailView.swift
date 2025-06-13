@@ -375,15 +375,26 @@ struct ModernSetRowView: View {
         )
         .contentShape(Rectangle())
         .onTapGesture {
-            if !set.isCompleted {
-                onEdit()
-            }
+            toggleSetStatus()
         }
     }
     
     private func resetSet() {
         withAnimation(.spring(response: 0.3)) {
             set.reset()
+        }
+    }
+    
+    private func toggleSetStatus() {
+        withAnimation(.spring(response: 0.3)) {
+            switch set.completionStatus {
+            case .notStarted:
+                set.markAsCompleted()
+            case .completedSuccessfully:
+                set.markAsFailed()
+            case .failed:
+                set.markAsCompleted()
+            }
         }
     }
 }
@@ -409,25 +420,9 @@ struct SetStatusButton: View {
     }
     
     var body: some View {
-        Button(action: toggleSetStatus) {
-            Image(systemName: statusIcon)
-                .font(.title2)
-                .foregroundColor(statusColor)
-        }
-        .buttonStyle(PlainButtonStyle())
-    }
-    
-    private func toggleSetStatus() {
-        withAnimation(.spring(response: 0.3)) {
-            switch set.completionStatus {
-            case .notStarted:
-                set.markAsCompleted()
-            case .completedSuccessfully:
-                set.markAsFailed()
-            case .failed:
-                set.reset()
-            }
-        }
+        Image(systemName: statusIcon)
+            .font(.title2)
+            .foregroundColor(statusColor)
     }
 }
 

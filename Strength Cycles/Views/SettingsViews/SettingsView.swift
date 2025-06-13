@@ -88,7 +88,7 @@ struct SettingsView: View {
                     
                     TrainingMaxRow(
                         title: "Overhead Press",
-                        icon: "dumbbell",
+                        icon: "arrow.up.circle",
                         value: Binding(
                             get: { userSettings.overheadPressMax },
                             set: { newValue in
@@ -298,26 +298,20 @@ struct TrainingMaxRow: View {
                 .frame(width: 80)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .onAppear {
-                    textValue = value == 0 ? "" : formatValue(value)
+                    textValue = value == 0 ? "" : String(format: "%.1f", value)
                 }
                 .onChange(of: textValue) { _, newValue in
-                    let filteredValue = filterNumericInput(newValue)
-                    if filteredValue != newValue {
-                        textValue = filteredValue
-                    }
-                    
-                    if let doubleValue = Double(filteredValue) {
+                    if let doubleValue = Double(newValue) {
                         value = doubleValue
-                    } else if filteredValue.isEmpty {
+                    } else if newValue.isEmpty {
                         value = 0.0
                     }
                 }
                 .onSubmit {
                     if let doubleValue = Double(textValue) {
                         value = doubleValue
-                        textValue = formatValue(doubleValue)
                     } else {
-                        textValue = value == 0 ? "" : formatValue(value)
+                        textValue = value == 0 ? "" : String(format: "%.1f", value)
                     }
                 }
             
@@ -325,33 +319,6 @@ struct TrainingMaxRow: View {
                 .foregroundColor(.secondary)
                 .font(.caption)
                 .frame(width: 25, alignment: .leading)
-        }
-    }
-    
-    // MARK: - Helper Functions
-    private func filterNumericInput(_ input: String) -> String {
-        // Allow digits and at most one decimal point
-        let filtered = input.filter { $0.isNumber || $0 == "." }
-        
-        // Ensure only one decimal point
-        let components = filtered.components(separatedBy: ".")
-        if components.count > 2 {
-            return components[0] + "." + components[1...].joined()
-        }
-        
-        // Limit decimal places to 1
-        if components.count == 2 && components[1].count > 1 {
-            return components[0] + "." + String(components[1].prefix(1))
-        }
-        
-        return filtered
-    }
-    
-    private func formatValue(_ value: Double) -> String {
-        if value == floor(value) {
-            return String(format: "%.0f", value)
-        } else {
-            return String(format: "%.1f", value)
         }
     }
 }
