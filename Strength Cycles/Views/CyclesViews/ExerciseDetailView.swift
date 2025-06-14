@@ -534,7 +534,6 @@ struct SetDisplayValues: View {
                         .padding(.vertical, 1)
                         .background(Color.orange.opacity(0.15))
                         .cornerRadius(3)
-                    
                 }
             }
         }
