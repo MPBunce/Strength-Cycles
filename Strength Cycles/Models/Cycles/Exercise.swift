@@ -15,14 +15,16 @@ class ExerciseSet {
     var reps: Int?
     var isEditable: Bool = true
     var isAmrap: Bool = false
+    var amrapTargetReps: Int?
     var completionStatus: SetCompletionStatus
     
-    init(setIndex: Int, weight: Double? = nil, reps: Int? = nil, isEditable: Bool = true, isAmrap: Bool = false, completionStatus: SetCompletionStatus = .notStarted) {
+    init(setIndex: Int, weight: Double? = nil, reps: Int? = nil, isEditable: Bool = true, isAmrap: Bool = false, amrapTargetReps: Int? = nil, completionStatus: SetCompletionStatus = .notStarted) {
         self.setIndex = setIndex
         self.weight = weight
         self.reps = reps
         self.isEditable = isEditable
         self.isAmrap = isAmrap
+        self.amrapTargetReps = amrapTargetReps
         self.completionStatus = completionStatus
     }
     
@@ -33,6 +35,7 @@ class ExerciseSet {
             reps: reps,
             isEditable: isEditable,
             isAmrap: isAmrap,
+            amrapTargetReps: amrapTargetReps,
             completionStatus: .notStarted // Reset completion status on copy
         )
     }

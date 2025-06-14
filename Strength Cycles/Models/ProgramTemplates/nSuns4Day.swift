@@ -182,7 +182,8 @@ private func createMondayBenchSets(tm: Double) -> [ExerciseSet] {
             setIndex: index,
             reps: repCount,
             weight: tm * percentage,
-            isAmrap: isAmrap
+            isAmrap: isAmrap,
+            amrapTargetReps: isAmrap ? repCount : nil
         )
     }
 }
@@ -198,7 +199,8 @@ private func createMondayOHPSets(tm: Double) -> [ExerciseSet] {
             setIndex: index,
             reps: repCount,
             weight: tm * percentage,
-            isAmrap: false
+            isAmrap: false,
+            amrapTargetReps: nil
         )
     }
 }
@@ -217,7 +219,8 @@ private func createTuesdaySquatSets(tm: Double) -> [ExerciseSet] {
             setIndex: index,
             reps: repCount,
             weight: tm * percentage,
-            isAmrap: isAmrap
+            isAmrap: isAmrap,
+            amrapTargetReps: isAmrap ? repCount : nil
         )
     }
 }
@@ -233,7 +236,8 @@ private func createTuesdaySumoSets(tm: Double) -> [ExerciseSet] {
             setIndex: index,
             reps: repCount,
             weight: tm * percentage,
-            isAmrap: false
+            isAmrap: false,
+            amrapTargetReps: nil
         )
     }
 }
@@ -252,7 +256,8 @@ private func createThursdayBenchSets(tm: Double) -> [ExerciseSet] {
             setIndex: index,
             reps: repCount,
             weight: tm * percentage,
-            isAmrap: isAmrap
+            isAmrap: isAmrap,
+            amrapTargetReps: isAmrap ? repCount : nil
         )
     }
 }
@@ -268,7 +273,8 @@ private func createThursdayCloseBenchSets(tm: Double) -> [ExerciseSet] {
             setIndex: index,
             reps: repCount,
             weight: tm * percentage,
-            isAmrap: false
+            isAmrap: false,
+            amrapTargetReps: nil
         )
     }
 }
@@ -283,11 +289,16 @@ private func createFridayDeadliftSets(tm: Double) -> [ExerciseSet] {
     return zip(percentages, reps).enumerated().map { index, data in
         let (percentage, repCount) = data
         let isAmrap = (index == 2 || index == 8) // 1+ and 3+ sets are AMRAP
+        var amrapTargetReps: Int? = nil
+        if isAmrap {
+            amrapTargetReps = repCount
+        }
         return createExerciseSet(
             setIndex: index,
             reps: repCount,
             weight: tm * percentage,
-            isAmrap: isAmrap
+            isAmrap: isAmrap,
+            amrapTargetReps: amrapTargetReps
         )
     }
 }
@@ -303,20 +314,22 @@ private func createFridayFrontSquatSets(tm: Double) -> [ExerciseSet] {
             setIndex: index,
             reps: repCount,
             weight: tm * percentage,
-            isAmrap: false
+            isAmrap: false,
+            amrapTargetReps: nil
         )
     }
 }
 
 // MARK: - Helper function to create sets with weight rounding
-private func createExerciseSet(setIndex: Int, reps: Int, weight: Double, isAmrap: Bool) -> ExerciseSet {
+private func createExerciseSet(setIndex: Int, reps: Int, weight: Double, isAmrap: Bool, amrapTargetReps: Int?) -> ExerciseSet {
     let roundedWeight = roundDownToNearest5(weight)
     return ExerciseSet(
         setIndex: setIndex,
         weight: roundedWeight,
         reps: reps,
         isEditable: false,
-        isAmrap: isAmrap
+        isAmrap: isAmrap,
+        amrapTargetReps: amrapTargetReps
     )
 }
 

@@ -63,21 +63,34 @@ struct ExerciseDetailView: View {
             if let editingIndex = editingSetIndex {
                 // Edit existing set
                 let set = editingSets[editingIndex]
-                EditSetView(
-                    initialWeight: set.weight,
-                    initialReps: set.reps,
-                    isEditable: set.isEditable,
-                    isAmrap: set.isAmrap
-                ) { weight, reps in
-                    updateSet(at: editingIndex, weight: weight, reps: reps)
+
+                if set.isAmrap {
+                    
+                    // Use AMRAP-specific edit view
+                    EditAmrapSetView(
+                        initialReps: set.reps,
+                        weight: set.weight
+                    ) { reps in
+                        updateAmrapSet(at: editingIndex, reps: reps)
+                    }
+                } else {
+                    // Use regular edit view
+                    EditRegularSetView(
+                        initialWeight: set.weight,
+                        initialReps: set.reps,
+                        isEditable: set.isEditable
+                    ) { weight, reps in
+                        updateRegularSet(at: editingIndex, weight: weight, reps: reps)
+                    }
                 }
             } else {
-                // Add new set
+                // Add new set (always regular)
                 AddSetView { weight, reps in
                     addSet(weight: weight, reps: reps)
                 }
             }
         }
+        
     }
 
     private func addSet(weight: Double?, reps: Int?) {
@@ -137,6 +150,21 @@ struct ExerciseDetailView: View {
         guard let day = cycle.trainingDays.first(where: { $0.dayIndex == dayIndex }) else { return }
         guard let exercise = day.day.first(where: { $0.exerciseIndex == exerciseIndex }) else { return }
         exercise.sets = editingSets
+    }
+    
+    private func updateAmrapSet(at index: Int, reps: Int?) {
+        withAnimation(.spring()) {
+            editingSets[index].reps = reps
+        }
+        editingSetIndex = nil
+    }
+
+    private func updateRegularSet(at index: Int, weight: Double?, reps: Int?) {
+        withAnimation(.spring()) {
+            editingSets[index].weight = weight
+            editingSets[index].reps = reps
+        }
+        editingSetIndex = nil
     }
 }
 
@@ -397,16 +425,27 @@ struct ModernSetRowView: View {
         )
         .contentShape(Rectangle())
         .onTapGesture {
-            // Allow tap to edit if not completed AND (editable OR AMRAP)
-            if !set.isCompleted && (set.isEditable || set.isAmrap) {
-                onEdit()
-            }
+            // Tap to toggle completion status
+            toggleSetStatus()
         }
     }
     
     private func resetSet() {
         withAnimation(.spring(response: 0.3)) {
             set.reset()
+        }
+    }
+    
+    private func toggleSetStatus() {
+        withAnimation(.spring(response: 0.3)) {
+            switch set.completionStatus {
+            case .notStarted:
+                set.markAsCompleted()
+            case .completedSuccessfully:
+                set.markAsFailed()
+            case .failed:
+                set.markAsCompleted()
+            }
         }
     }
 }
@@ -460,49 +499,51 @@ struct SetDisplayValues: View {
     let set: ExerciseSet
     
     var body: some View {
-        HStack(spacing: 16) {
-            VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: 4) {
-                    Text("Reps")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                    
-                    if set.isAmrap {
-                        Text("AMRAP")
-                            .font(.caption2)
-                            .fontWeight(.medium)
-                            .foregroundColor(.orange)
-                            .padding(.horizontal, 4)
-                            .padding(.vertical, 1)
-                            .background(Color.orange.opacity(0.15))
-                            .cornerRadius(3)
-                    }
-                }
+        HStack(spacing: 8) {
+            // Main display: weight x reps format
+            HStack(spacing: 4) {
+                Text(set.weight != nil ? String(format: "%.1f", set.weight!) : "—")
+                    .font(.body)
+                    .fontWeight(.medium)
+                    .foregroundColor(set.weight != nil ? .primary : .secondary)
+                
+                Text("×")
+                    .font(.body)
+                    .foregroundColor(.secondary)
                 
                 Text(set.reps != nil ? "\(set.reps!)" : "—")
                     .font(.body)
                     .fontWeight(.medium)
                     .foregroundColor(set.reps != nil ? .primary : .secondary)
-            }
-            
-            VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: 4) {
-                    Text("Weight")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                    
-                    // Show lock if not editable OR if it's AMRAP (weight locked for AMRAP)
-                    if !set.isEditable || set.isAmrap {
-                        Image(systemName: "lock.fill")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                    }
-                }
                 
-                Text(set.weight != nil ? String(format: "%.1f", set.weight!) : "—")
-                    .font(.body)
-                    .fontWeight(.medium)
-                    .foregroundColor(set.weight != nil ? .primary : .secondary)
+                if set.isAmrap {
+                    HStack(spacing: 2) {
+                        Text("+")
+                            .font(.body)
+                            .fontWeight(.bold)
+                        
+                        if let target = set.amrapTargetReps {
+                            Text("Target: \(target)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding(.leading, 4)
+                }
+            }
+
+            // Tags/indicators
+            HStack(spacing: 4) {
+                if set.isAmrap {
+                    Text("AMRAP")
+                        .font(.caption2)
+                        .fontWeight(.medium)
+                        .foregroundColor(.orange)
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 1)
+                        .background(Color.orange.opacity(0.15))
+                        .cornerRadius(3)
+                }
             }
         }
     }
@@ -609,36 +650,22 @@ struct AddSetView: View {
     }
 }
 
-// MARK: - Edit Set View
-struct EditSetView: View {
+// MARK: - Regular Set Edit View
+struct EditRegularSetView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var weight: String
     @State private var reps: String
     @FocusState private var focusedField: Field?
     
     let isEditable: Bool
-    let isAmrap: Bool
     let onSave: (Double?, Int?) -> Void
     
     enum Field {
         case weight, reps
     }
     
-    // Helper computed property to determine if we can edit reps
-    // AMRAP sets can always edit reps, regular sets need to be editable
-    private var canEditReps: Bool {
-        return isAmrap || isEditable
-    }
-    
-    // Helper computed property to determine if we can edit weight
-    // Only regular editable sets can edit weight (AMRAP sets cannot)
-    private var canEditWeight: Bool {
-        return isEditable && !isAmrap
-    }
-    
-    init(initialWeight: Double?, initialReps: Int?, isEditable: Bool, isAmrap: Bool, onSave: @escaping (Double?, Int?) -> Void) {
+    init(initialWeight: Double?, initialReps: Int?, isEditable: Bool, onSave: @escaping (Double?, Int?) -> Void) {
         self.isEditable = isEditable
-        self.isAmrap = isAmrap
         self.onSave = onSave
         self._weight = State(initialValue: initialWeight != nil ? String(format: "%.1f", initialWeight!) : "")
         self._reps = State(initialValue: initialReps != nil ? "\(initialReps!)" : "")
@@ -652,19 +679,7 @@ struct EditSetView: View {
                         .font(.title2)
                         .fontWeight(.bold)
                     
-                    if isAmrap {
-                        HStack {
-                            Image(systemName: "target")
-                                .foregroundColor(.orange)
-                            Text("AMRAP Set - Only reps can be edited")
-                                .font(.caption)
-                                .foregroundColor(.orange)
-                        }
-                        .padding(.horizontal)
-                        .padding(.vertical, 6)
-                        .background(Color.orange.opacity(0.1))
-                        .cornerRadius(8)
-                    } else if !isEditable {
+                    if !isEditable {
                         HStack {
                             Image(systemName: "lock.fill")
                                 .foregroundColor(.secondary)
@@ -689,34 +704,25 @@ struct EditSetView: View {
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .keyboardType(.numberPad)
                             .focused($focusedField, equals: .reps)
-                            .disabled(!canEditReps) // Fixed: Use canEditReps helper
+                            .disabled(!isEditable)
                     }
                     
                     VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            Text("Weight (lbs)")
-                                .font(.headline)
-                            
-                            if isAmrap || !isEditable {
-                                Image(systemName: "lock.fill")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
+                        Text("Weight (lbs)")
+                            .font(.headline)
                         
                         TextField("Enter weight", text: $weight)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .keyboardType(.decimalPad)
                             .focused($focusedField, equals: .weight)
-                            .disabled(!canEditWeight) // Fixed: Use canEditWeight helper
+                            .disabled(!isEditable)
                     }
                 }
                 .padding()
                 
                 Spacer()
                 
-                // Fixed: Allow saving if we can edit either reps or weight
-                if canEditReps || canEditWeight {
+                if isEditable {
                     Button("Save Changes") {
                         let weightValue = weight.isEmpty ? nil : Double(weight)
                         let repsValue = reps.isEmpty ? nil : Int(reps)
@@ -733,11 +739,119 @@ struct EditSetView: View {
             }
             .padding()
             .onAppear {
-                // Fixed: Focus on the field that can be edited
-                if canEditReps {
+                if isEditable {
                     focusedField = .reps
-                } else if canEditWeight {
-                    focusedField = .weight
+                }
+            }
+        }
+        .presentationDetents([.medium])
+        .presentationDragIndicator(.visible)
+    }
+}
+
+// MARK: - AMRAP Set Edit View
+struct EditAmrapSetView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var actualReps: String
+    @FocusState private var isTextFieldFocused: Bool
+    
+    let weight: Double?
+    let onSave: (Int?) -> Void
+    
+    init(initialReps: Int?, weight: Double?, onSave: @escaping (Int?) -> Void) {
+        self.weight = weight
+        self.onSave = onSave
+        self._actualReps = State(initialValue: initialReps != nil ? "\(initialReps!)" : "")
+    }
+    
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 24) {
+                // Header Section
+                VStack(spacing: 12) {
+                    Text("AMRAP Set")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    
+                    // AMRAP Info Card
+                    VStack(spacing: 8) {
+                        HStack {
+                            Image(systemName: "target")
+                                .foregroundColor(.orange)
+                            Text("As Many Reps As Possible")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(.orange)
+                        }
+                        
+                        /*if let target = targetReps {
+                            Text("Target: \(target)+ reps")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }*/
+                        
+                        if let w = weight {
+                            Text("Weight: \(String(format: "%.1f", w)) lbs")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding()
+                    .background(Color.orange.opacity(0.1))
+                    .cornerRadius(12)
+                }
+                .padding(.top)
+                
+                // Input Section
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Actual Reps Achieved")
+                        .font(.headline)
+                    
+                    TextField("Enter reps completed", text: $actualReps)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .keyboardType(.numberPad)
+                        .focused($isTextFieldFocused)
+                        .font(.title3)
+                    
+                    /*// Validation feedback
+                    if let actual = Int(actualReps), let target = targetReps {
+                        HStack {
+                            Image(systemName: actual >= target ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                                .foregroundColor(actual >= target ? .green : .orange)
+                            
+                            Text(actual >= target ? "Great job! You exceeded the target." : "You can do better next time!")
+                                .font(.caption)
+                                .foregroundColor(actual >= target ? .green : .orange)
+                        }
+                        .padding(.top, 4)
+                    }*/
+                }
+                .padding()
+                
+                Spacer()
+                
+                // Action Buttons
+                VStack(spacing: 12) {
+                    Button("Save Reps") {
+                        let repsValue = actualReps.isEmpty ? nil : Int(actualReps)
+                        onSave(repsValue)
+                        dismiss()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(actualReps.isEmpty)
+                    
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                    .buttonStyle(.bordered)
+                }
+                .padding(.bottom)
+            }
+            .padding()
+            .onAppear {
+                // Auto-focus the text field
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    isTextFieldFocused = true
                 }
             }
         }
