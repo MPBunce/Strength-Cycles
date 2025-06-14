@@ -517,23 +517,14 @@ struct SetDisplayValues: View {
                     .foregroundColor(set.reps != nil ? .primary : .secondary)
                 
                 if set.isAmrap {
-                    HStack(spacing: 2) {
                         Text("+")
-                            .font(.body)
-                            .fontWeight(.bold)
-                        
-                        if let target = set.amrapTargetReps {
-                            Text("Target: \(target)")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    .padding(.leading, 4)
+                        .font(.body)
+                        .foregroundColor(.secondary)
                 }
             }
 
             // Tags/indicators
-            HStack(spacing: 4) {
+            HStack(spacing: 6) {
                 if set.isAmrap {
                     Text("AMRAP")
                         .font(.caption2)
@@ -543,6 +534,7 @@ struct SetDisplayValues: View {
                         .padding(.vertical, 1)
                         .background(Color.orange.opacity(0.15))
                         .cornerRadius(3)
+                    
                 }
             }
         }
