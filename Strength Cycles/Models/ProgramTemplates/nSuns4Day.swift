@@ -35,26 +35,31 @@ class nSunsFourDayProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Bench Press",
+                        canAlterSets: false,
                         sets: createMondayBenchSets(tm: benchTM)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Overhead Press",
+                        canAlterSets: false,
                         sets: createMondayOHPSets(tm: ohpTM)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Chest Assistance",
+                        canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Arms Assistance",
+                        canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Back Assistance",
+                        canAlterSets: true,
                         sets: []
                     )
                 ],
@@ -69,21 +74,25 @@ class nSunsFourDayProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Squat",
+                        canAlterSets: false,
                         sets: createTuesdaySquatSets(tm: squatTM)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Sumo Deadlift",
+                        canAlterSets: false,
                         sets: createTuesdaySumoSets(tm: deadliftTM)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Legs Assistance",
+                        canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Abs",
+                        canAlterSets: true,
                         sets: []
                     )
                 ],
@@ -98,21 +107,25 @@ class nSunsFourDayProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Bench Press",
+                        canAlterSets: false,
                         sets: createThursdayBenchSets(tm: benchTM)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Close Grip Bench Press",
+                        canAlterSets: false,
                         sets: createThursdayCloseBenchSets(tm: benchTM)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Arms Assistance",
+                        canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Misc Assistance",
+                        canAlterSets: true,
                         sets: []
                     )
                 ],
@@ -127,21 +140,25 @@ class nSunsFourDayProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Deadlift",
+                        canAlterSets: false,
                         sets: createFridayDeadliftSets(tm: deadliftTM)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Front Squat",
+                        canAlterSets: false,
                         sets: createFridayFrontSquatSets(tm: squatTM)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Back Assistance",
+                        canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Abs",
+                        canAlterSets: true,
                         sets: []
                     )
                 ],
@@ -160,10 +177,12 @@ private func createMondayBenchSets(tm: Double) -> [ExerciseSet] {
     
     return zip(percentages, reps).enumerated().map { index, data in
         let (percentage, repCount) = data
+        let isAmrap = (index == 8) // Last set is AMRAP
         return createExerciseSet(
             setIndex: index,
             reps: repCount,
-            weight: tm * percentage
+            weight: tm * percentage,
+            isAmrap: isAmrap
         )
     }
 }
@@ -178,7 +197,8 @@ private func createMondayOHPSets(tm: Double) -> [ExerciseSet] {
         return createExerciseSet(
             setIndex: index,
             reps: repCount,
-            weight: tm * percentage
+            weight: tm * percentage,
+            isAmrap: false
         )
     }
 }
@@ -192,10 +212,12 @@ private func createTuesdaySquatSets(tm: Double) -> [ExerciseSet] {
     
     return zip(percentages, reps).enumerated().map { index, data in
         let (percentage, repCount) = data
+        let isAmrap = (index == 2 || index == 8) // 1+ and 5+ sets are AMRAP
         return createExerciseSet(
             setIndex: index,
             reps: repCount,
-            weight: tm * percentage
+            weight: tm * percentage,
+            isAmrap: isAmrap
         )
     }
 }
@@ -210,7 +232,8 @@ private func createTuesdaySumoSets(tm: Double) -> [ExerciseSet] {
         return createExerciseSet(
             setIndex: index,
             reps: repCount,
-            weight: tm * percentage
+            weight: tm * percentage,
+            isAmrap: false
         )
     }
 }
@@ -224,10 +247,12 @@ private func createThursdayBenchSets(tm: Double) -> [ExerciseSet] {
     
     return zip(percentages, reps).enumerated().map { index, data in
         let (percentage, repCount) = data
+        let isAmrap = (index == 2 || index == 8) // 1+ and 5+ sets are AMRAP
         return createExerciseSet(
             setIndex: index,
             reps: repCount,
-            weight: tm * percentage
+            weight: tm * percentage,
+            isAmrap: isAmrap
         )
     }
 }
@@ -242,7 +267,8 @@ private func createThursdayCloseBenchSets(tm: Double) -> [ExerciseSet] {
         return createExerciseSet(
             setIndex: index,
             reps: repCount,
-            weight: tm * percentage
+            weight: tm * percentage,
+            isAmrap: false
         )
     }
 }
@@ -256,10 +282,12 @@ private func createFridayDeadliftSets(tm: Double) -> [ExerciseSet] {
     
     return zip(percentages, reps).enumerated().map { index, data in
         let (percentage, repCount) = data
+        let isAmrap = (index == 2 || index == 8) // 1+ and 3+ sets are AMRAP
         return createExerciseSet(
             setIndex: index,
             reps: repCount,
-            weight: tm * percentage
+            weight: tm * percentage,
+            isAmrap: isAmrap
         )
     }
 }
@@ -274,15 +302,22 @@ private func createFridayFrontSquatSets(tm: Double) -> [ExerciseSet] {
         return createExerciseSet(
             setIndex: index,
             reps: repCount,
-            weight: tm * percentage
+            weight: tm * percentage,
+            isAmrap: false
         )
     }
 }
 
 // MARK: - Helper function to create sets with weight rounding
-private func createExerciseSet(setIndex: Int, reps: Int, weight: Double) -> ExerciseSet {
+private func createExerciseSet(setIndex: Int, reps: Int, weight: Double, isAmrap: Bool) -> ExerciseSet {
     let roundedWeight = roundDownToNearest5(weight)
-    return ExerciseSet(setIndex: setIndex, weight: roundedWeight, reps: reps)
+    return ExerciseSet(
+        setIndex: setIndex,
+        weight: roundedWeight,
+        reps: reps,
+        isEditable: false,
+        isAmrap: isAmrap
+    )
 }
 
 // MARK: - Weight rounding function

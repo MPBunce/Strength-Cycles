@@ -13,14 +13,16 @@ class ExerciseSet {
     var setIndex: Int
     var weight: Double?
     var reps: Int?
-    var isEditable: Bool
+    var isEditable: Bool = true
+    var isAmrap: Bool = false
     var completionStatus: SetCompletionStatus
     
-    init(setIndex: Int, weight: Double? = nil, reps: Int? = nil, isEditable: Bool = true, completionStatus: SetCompletionStatus = .notStarted) {
+    init(setIndex: Int, weight: Double? = nil, reps: Int? = nil, isEditable: Bool = true, isAmrap: Bool = false, completionStatus: SetCompletionStatus = .notStarted) {
         self.setIndex = setIndex
         self.weight = weight
         self.reps = reps
         self.isEditable = isEditable
+        self.isAmrap = isAmrap
         self.completionStatus = completionStatus
     }
     
@@ -30,6 +32,7 @@ class ExerciseSet {
             weight: weight,
             reps: reps,
             isEditable: isEditable,
+            isAmrap: isAmrap,
             completionStatus: .notStarted // Reset completion status on copy
         )
     }
@@ -60,20 +63,57 @@ class ExerciseSet {
 class Exercise {
     var exerciseIndex: Int
     var name: String
+    var canAlterSets: Bool = true  // Combined add/delete permission
     var sets: [ExerciseSet]
     
-    init(exerciseIndex: Int, name: String, sets: [ExerciseSet]) {
+    init(exerciseIndex: Int, name: String, canAlterSets: Bool = true, sets: [ExerciseSet]) {
         self.exerciseIndex = exerciseIndex
         self.name = name
+        self.canAlterSets = canAlterSets
         self.sets = sets
     }
     
     func copy() -> Exercise {
         let copiedSets = sets.map { $0.copy() }
-        return Exercise(exerciseIndex: exerciseIndex, name: name, sets: copiedSets)
+        return Exercise(
+            exerciseIndex: exerciseIndex,
+            name: name,
+            canAlterSets: canAlterSets,
+            sets: copiedSets
+        )
     }
     
-    // Convenience methods for exercise completion
+    // MARK: - Set Management Methods
+    func addSet(isEditable: Bool = true, isAmrap: Bool = false) -> ExerciseSet? {
+        guard canAlterSets else { return nil }
+        
+        let newSet = ExerciseSet(
+            setIndex: sets.count,
+            isEditable: isEditable,
+            isAmrap: isAmrap
+        )
+        sets.append(newSet)
+        return newSet
+    }
+    
+    func deleteSet(at index: Int) -> Bool {
+        guard canAlterSets && index >= 0 && index < sets.count else { return false }
+        
+        sets.remove(at: index)
+        
+        // Reindex remaining sets
+        for (newIndex, set) in sets.enumerated() {
+            set.setIndex = newIndex
+        }
+        
+        return true
+    }
+    
+    func canDeleteSet(at index: Int) -> Bool {
+        return canAlterSets && index >= 0 && index < sets.count
+    }
+    
+    // MARK: - Convenience methods for exercise completion
     var completedSetsCount: Int {
         return sets.filter { $0.isCompleted }.count
     }
@@ -94,6 +134,19 @@ class Exercise {
         guard !sets.isEmpty else { return 0.0 }
         return Double(completedSetsCount) / Double(sets.count)
     }
+    
+    // MARK: - Additional validation properties
+    var hasAmrapSets: Bool {
+        return sets.contains { $0.isAmrap }
+    }
+    
+    var editableSetsCount: Int {
+        return sets.filter { $0.isEditable }.count
+    }
+    
+    var nonEditableSetsCount: Int {
+        return sets.filter { !$0.isEditable }.count
+    }
 }
 
 @Model
@@ -102,7 +155,7 @@ class TrainingDay {
     var dayName: String
     var day: [Exercise]
     var completedDate: Date?
-    var canAddAccessory: Bool
+    var canAddAccessory: Bool = true
     
     init(dayIndex: Int, dayName: String, day: [Exercise], completedDate: Date? = nil, canAddAccessory: Bool = false) {
         self.dayIndex = dayIndex

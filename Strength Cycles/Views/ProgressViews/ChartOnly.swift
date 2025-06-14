@@ -14,8 +14,8 @@ struct ChartOnly: View {
     @Query(sort: \Cycles.startDate, order: .forward) var cycles: [Cycles] // Changed to forward order
 
     private let targetLifts = [
-        "Bench Press",
         "Overhead Press",
+        "Bench Press",
         "Squat",
         "Deadlift",
     ]
