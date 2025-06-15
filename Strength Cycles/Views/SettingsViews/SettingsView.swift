@@ -27,23 +27,32 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             List {
+                // About Section
+                Section {
+                    NavigationLink(destination: AboutView()) {
+                        HStack {
+                            Image(systemName: "info.circle")
+                                .foregroundColor(.blue)
+                                .frame(width: 20)
+                            Text("About")
+                        }
+                    }
+                }
+                
                 // Units Section
                 Section("Units") {
                     HStack {
                         Image(systemName: "scalemass")
-                            .foregroundColor(.blue)
+                            .foregroundColor(.gray)
                             .frame(width: 20)
                         Text("Weight Unit")
+                            .foregroundColor(.gray)
                         Spacer()
-                        Toggle("", isOn: Binding(
-                            get: { userSettings.usesKilograms },
-                            set: { newValue in
-                                updateSetting { userSettings.usesKilograms = newValue }
-                            }
-                        ))
-                        .labelsHidden()
+                        Toggle("", isOn: .constant(userSettings.usesKilograms))
+                            .disabled(true)
+                            .labelsHidden()
                         Text(userSettings.usesKilograms ? "kg" : "lbs")
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.gray)
                             .font(.caption)
                     }
                 }
@@ -88,7 +97,7 @@ struct SettingsView: View {
                     
                     TrainingMaxRow(
                         title: "Overhead Press",
-                        icon: "arrow.up.circle",
+                        icon: "dumbbell",
                         value: Binding(
                             get: { userSettings.overheadPressMax },
                             set: { newValue in
@@ -103,33 +112,32 @@ struct SettingsView: View {
                 Section("Workout") {
                     HStack {
                         Image(systemName: "timer")
-                            .foregroundColor(.orange)
+                            .foregroundColor(.gray)
                             .frame(width: 20)
                         Text("Default Rest Time")
+                            .foregroundColor(.gray)
                         Spacer()
                         Menu("\(userSettings.defaultRestTime)s") {
                             ForEach([60, 90, 120, 180, 300], id: \.self) { seconds in
                                 Button("\(seconds) seconds") {
-                                    updateSetting { userSettings.defaultRestTime = seconds }
+                                    // Disabled
                                 }
                             }
                         }
-                        .foregroundColor(.blue)
+                        .disabled(true)
+                        .foregroundColor(.gray)
                     }
                     
                     HStack {
                         Image(systemName: "speaker.wave.2")
-                            .foregroundColor(.purple)
+                            .foregroundColor(.gray)
                             .frame(width: 20)
                         Text("Rest Timer Sound")
+                            .foregroundColor(.gray)
                         Spacer()
-                        Toggle("", isOn: Binding(
-                            get: { userSettings.enableRestTimerSound },
-                            set: { newValue in
-                                updateSetting { userSettings.enableRestTimerSound = newValue }
-                            }
-                        ))
-                        .labelsHidden()
+                        Toggle("", isOn: .constant(userSettings.enableRestTimerSound))
+                            .disabled(true)
+                            .labelsHidden()
                     }
                 }
                 
@@ -137,17 +145,14 @@ struct SettingsView: View {
                 Section("Notifications") {
                     HStack {
                         Image(systemName: "bell")
-                            .foregroundColor(.red)
+                            .foregroundColor(.gray)
                             .frame(width: 20)
                         Text("Workout Reminders")
+                            .foregroundColor(.gray)
                         Spacer()
-                        Toggle("", isOn: Binding(
-                            get: { userSettings.enableNotifications },
-                            set: { newValue in
-                                updateSetting { userSettings.enableNotifications = newValue }
-                            }
-                        ))
-                        .labelsHidden()
+                        Toggle("", isOn: .constant(userSettings.enableNotifications))
+                            .disabled(true)
+                            .labelsHidden()
                     }
                 }
                 
@@ -155,32 +160,26 @@ struct SettingsView: View {
                 Section("Data & Privacy") {
                     HStack {
                         Image(systemName: "photo")
-                            .foregroundColor(.green)
+                            .foregroundColor(.gray)
                             .frame(width: 20)
                         Text("Progress Photos")
+                            .foregroundColor(.gray)
                         Spacer()
-                        Toggle("", isOn: Binding(
-                            get: { userSettings.enableProgressPhotos },
-                            set: { newValue in
-                                updateSetting { userSettings.enableProgressPhotos = newValue }
-                            }
-                        ))
-                        .labelsHidden()
+                        Toggle("", isOn: .constant(userSettings.enableProgressPhotos))
+                            .disabled(true)
+                            .labelsHidden()
                     }
                     
                     HStack {
                         Image(systemName: "icloud")
-                            .foregroundColor(.blue)
+                            .foregroundColor(.gray)
                             .frame(width: 20)
                         Text("iCloud Sync")
+                            .foregroundColor(.gray)
                         Spacer()
-                        Toggle("", isOn: Binding(
-                            get: { userSettings.enableCloudSync },
-                            set: { newValue in
-                                updateSetting { userSettings.enableCloudSync = newValue }
-                            }
-                        ))
-                        .labelsHidden()
+                        Toggle("", isOn: .constant(userSettings.enableCloudSync))
+                            .disabled(true)
+                            .labelsHidden()
                     }
                 }
                 
@@ -191,28 +190,25 @@ struct SettingsView: View {
                             .foregroundColor(.gray)
                             .frame(width: 20)
                         Text("Show Tutorial")
+                            .foregroundColor(.gray)
                         Spacer()
-                        Toggle("", isOn: Binding(
-                            get: { userSettings.showTutorial },
-                            set: { newValue in
-                                updateSetting { userSettings.showTutorial = newValue }
-                            }
-                        ))
-                        .labelsHidden()
+                        Toggle("", isOn: .constant(userSettings.showTutorial))
+                            .disabled(true)
+                            .labelsHidden()
                     }
                     
                     Button(action: {
-                        // Reset all settings to default
-                        resetToDefaults()
+                        // Disabled
                     }) {
                         HStack {
                             Image(systemName: "arrow.clockwise")
-                                .foregroundColor(.orange)
+                                .foregroundColor(.gray)
                                 .frame(width: 20)
                             Text("Reset to Defaults")
-                                .foregroundColor(.primary)
+                                .foregroundColor(.gray)
                         }
                     }
+                    .disabled(true)
                 }
             }
             .navigationTitle("Settings")

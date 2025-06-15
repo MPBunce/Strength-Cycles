@@ -46,19 +46,19 @@ class nSunsFourDayProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Chest Assistance",
+                        name: "Chin Ups",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Arms Assistance",
+                        name: "Barbell Curls",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 4,
-                        name: "Back Assistance",
+                        name: "Tricep Push Downs",
                         canAlterSets: true,
                         sets: []
                     )
@@ -85,7 +85,7 @@ class nSunsFourDayProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Legs Assistance",
+                        name: "Dumbbell Row",
                         canAlterSets: true,
                         sets: []
                     ),
@@ -118,13 +118,19 @@ class nSunsFourDayProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Arms Assistance",
+                        name: "Chin Ups",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Misc Assistance",
+                        name: "Barbell Curls",
+                        canAlterSets: true,
+                        sets: []
+                    ),
+                    Exercise(
+                        exerciseIndex: 4,
+                        name: "Tricep Push Downs",
                         canAlterSets: true,
                         sets: []
                     )
@@ -151,7 +157,7 @@ class nSunsFourDayProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Back Assistance",
+                        name: "Dumbbell Row",
                         canAlterSets: true,
                         sets: []
                     ),
