@@ -64,6 +64,8 @@ enum ProgramType {
     case nSuns5Days
     case nSuns6DaysSquat
     case nSuns6DaysDeadlift
+    case fiveThreeOneBBBProgram
+    case greySkull
     
     func createProgram(with settings: UserSettings) -> ProgramProtocol {
         switch self {
@@ -81,6 +83,10 @@ enum ProgramType {
             return nSunsSixDaySquatProgram(benchTM: settings.bench, squatTM: settings.squat, deadliftTM: settings.deadlift, ohpTM: settings.press)
         case .nSuns6DaysDeadlift:
             return nSunsSixDayDeadliftProgram(benchTM: settings.bench, squatTM: settings.squat, deadliftTM: settings.deadlift, ohpTM: settings.press)
+        case .fiveThreeOneBBBProgram:
+            return FiveThreeOneBBBProgram(benchTM: settings.bench, squatTM: settings.squat, deadliftTM: settings.deadlift, ohpTM: settings.press)
+        case .greySkull:
+            return GreyskullLPProgram()
         }
     }
 }
@@ -128,16 +134,32 @@ extension Template {
                 id: "nSuns6DaySquat",
                 name: "nSuns 6 Day Squat",
                 description: "6-day nSuns Squat Program",
-                duration: "4 days",
+                duration: "6 days",
                 programType: .nSuns6DaysSquat
             ),
             Template(
                 id: "nSuns6DayDeadlift",
-                name: "nSuns 6 Day",
+                name: "nSuns 6 Day Deadlift",
                 description: "6-day nSuns Deadlift Program",
                 duration: "6 days",
                 programType: .nSuns6DaysDeadlift
+            ),
+            Template(
+                id: "FiveThreeOneBBBProgram",
+                name: "5/3/1 Big But Boring",
+                description: "4 Week 5/3/1 Program",
+                duration: "4 Weeks",
+                programType: .fiveThreeOneBBBProgram
+            ),
+            Template(
+                id: "GreySkull",
+                name: "Greyskull LP",
+                description: "Full Body 3x A Week",
+                duration: "2 Weeks",
+                programType: .greySkull
             )
         ]
     }
 }
+
+
