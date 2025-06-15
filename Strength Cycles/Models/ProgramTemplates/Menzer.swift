@@ -58,7 +58,7 @@ class MenzerProgram: ProgramProtocol {
                 day: [
                     Exercise(
                         exerciseIndex: 0,
-                        name: "Barbell Squat",
+                        name: "Squat",
                         sets: []
                     ),
                     Exercise(
@@ -121,7 +121,7 @@ class MenzerProgram: ProgramProtocol {
                 day: [
                     Exercise(
                         exerciseIndex: 0,
-                        name: "Barbell Squat",
+                        name: "Squat",
                         sets: []
                     ),
                     Exercise(
