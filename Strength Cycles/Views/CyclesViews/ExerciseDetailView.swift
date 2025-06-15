@@ -65,26 +65,26 @@ struct ExerciseDetailView: View {
                 addSet(weight: weight, reps: reps)
             }
         }
-        .sheet(isPresented: $showingEditSetSheet) {
-            if let editingIndex = editingSetIndex, editingIndex >= 0 && editingIndex < editingSets.count {
-                let currentSet = editingSets[editingIndex]
-                EditSetSheetView(
-                    set: currentSet,
-                    setIndex: editingIndex,
-                    onUpdateAmrap: updateAmrapSet,
-                    onUpdateRegular: updateRegularSet,
-                    onCancel: {
-                        editingSetIndex = nil
-                        showingEditSetSheet = false
-                    }
-                )
-            } else {
-                ErrorSheetView {
+        .sheet(isPresented: Binding(
+            get: { showingEditSetSheet && editingSetIndex != nil && editingSetIndex! >= 0 && editingSetIndex! < editingSets.count },
+            set: { newValue in
+                showingEditSetSheet = newValue
+                if !newValue { editingSetIndex = nil }
+            }
+        )) {
+            let currentSet = editingSets[editingSetIndex!]
+            EditSetSheetView(
+                set: currentSet,
+                setIndex: editingSetIndex!,
+                onUpdateAmrap: updateAmrapSet,
+                onUpdateRegular: updateRegularSet,
+                onCancel: {
                     editingSetIndex = nil
                     showingEditSetSheet = false
                 }
-            }
+            )
         }
+
 
     }
 
@@ -121,14 +121,11 @@ struct ExerciseDetailView: View {
         print("✅ Setting editingSetIndex to \(index)")
         print("✅ Set data: weight=\(set.weight?.description ?? "nil"), reps=\(set.reps?.description ?? "nil"), isAmrap=\(set.isAmrap)")
         
-        // Set the index first, then show the sheet after a brief delay to ensure state is updated
-        editingSetIndex = index
-        
-        // Use a small delay to ensure the state update has been processed
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            print("✅ Showing edit sheet for index \(index)")
+        DispatchQueue.main.async {
+            editingSetIndex = index
             showingEditSetSheet = true
         }
+        
     }
     
     private func deleteSet(at index: Int) {
