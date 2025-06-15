@@ -61,6 +61,9 @@ enum ProgramType {
     case pushPullLegs
     case upperLower
     case nSuns4Days
+    case nSuns5Days
+    case nSuns6DaysSquat
+    case nSuns6DaysDeadlift
     
     func createProgram(with settings: UserSettings) -> ProgramProtocol {
         switch self {
@@ -72,6 +75,12 @@ enum ProgramType {
             return UpperLowerProgram()
         case .nSuns4Days:
             return nSunsFourDayProgram(benchTM: settings.bench, squatTM: settings.squat, deadliftTM: settings.deadlift, ohpTM: settings.press)
+        case .nSuns5Days:
+            return nSunsFiveDayProgram(benchTM: settings.bench, squatTM: settings.squat, deadliftTM: settings.deadlift, ohpTM: settings.press)
+        case .nSuns6DaysSquat:
+            return nSunsSixDaySquatProgram(benchTM: settings.bench, squatTM: settings.squat, deadliftTM: settings.deadlift, ohpTM: settings.press)
+        case .nSuns6DaysDeadlift:
+            return nSunsSixDayDeadliftProgram(benchTM: settings.bench, squatTM: settings.squat, deadliftTM: settings.deadlift, ohpTM: settings.press)
         }
     }
 }
@@ -102,11 +111,32 @@ extension Template {
                 programType: .upperLower
             ),
             Template(
-                id: "nSuns",
+                id: "nSuns4Day",
                 name: "nSuns 4 Day",
                 description: "4-day nSuns Program",
                 duration: "4 days",
                 programType: .nSuns4Days
+            ),
+            Template(
+                id: "nSuns5Day",
+                name: "nSuns 5 Day",
+                description: "5-day nSuns Program",
+                duration: "5 days",
+                programType: .nSuns5Days
+            ),
+            Template(
+                id: "nSuns6DaySquat",
+                name: "nSuns 6 Day Squat",
+                description: "6-day nSuns Squat Program",
+                duration: "4 days",
+                programType: .nSuns6DaysSquat
+            ),
+            Template(
+                id: "nSuns6DayDeadlift",
+                name: "nSuns 6 Day",
+                description: "6-day nSuns Deadlift Program",
+                duration: "6 days",
+                programType: .nSuns6DaysDeadlift
             )
         ]
     }
