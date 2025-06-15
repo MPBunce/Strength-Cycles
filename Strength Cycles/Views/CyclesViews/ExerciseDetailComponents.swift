@@ -215,7 +215,7 @@ struct StatCard: View {
     }
 }
 
-// MARK: - Modern Set Row Component
+// MARK: - Modern Set Row Component (Updated)
 struct ModernSetRowView: View {
     @Binding var set: ExerciseSet
     let canDelete: Bool
@@ -233,7 +233,7 @@ struct ModernSetRowView: View {
             SetActionsMenu(
                 set: set,
                 canDelete: canDelete,
-                canEdit: set.isEditable || set.isAmrap, // Allow editing for AMRAP sets too
+                canEdit: set.isEditable || set.isAmrap,
                 onDelete: onDelete,
                 onEdit: onEdit,
                 onReset: { resetSet() }
@@ -250,8 +250,10 @@ struct ModernSetRowView: View {
         )
         .contentShape(Rectangle())
         .onTapGesture {
-            // Tap to toggle completion status
-            toggleSetStatus()
+            // Only allow manual toggle for non-AMRAP sets
+            if !set.isAmrap {
+                toggleSetStatus()
+            }
         }
     }
     
@@ -275,7 +277,7 @@ struct ModernSetRowView: View {
     }
 }
 
-// MARK: - Set Status Button Component
+// MARK: - Set Status Button Component (Updated)
 struct SetStatusButton: View {
     @Binding var set: ExerciseSet
     
@@ -288,6 +290,11 @@ struct SetStatusButton: View {
     }
     
     private var statusIcon: String {
+        if set.isAmrap && set.completionStatus == .notStarted {
+            // Show a different icon for incomplete AMRAP sets
+            return "circle.dashed"
+        }
+        
         switch set.completionStatus {
         case .notStarted: return "circle"
         case .completedSuccessfully: return "checkmark.circle.fill"
@@ -302,9 +309,13 @@ struct SetStatusButton: View {
                 .foregroundColor(statusColor)
         }
         .buttonStyle(PlainButtonStyle())
+        .disabled(set.isAmrap) // Disable manual toggle for AMRAP sets
     }
     
     private func toggleSetStatus() {
+        // Only allow manual toggle for non-AMRAP sets
+        guard !set.isAmrap else { return }
+        
         withAnimation(.spring(response: 0.3)) {
             switch set.completionStatus {
             case .notStarted:
@@ -340,11 +351,6 @@ struct SetDisplayValues: View {
                     .fontWeight(.medium)
                     .foregroundColor(set.reps != nil ? .primary : .secondary)
                 
-                if set.isAmrap {
-                        Text("+")
-                        .font(.body)
-                        .foregroundColor(.secondary)
-                }
             }
 
             // Tags/indicators
@@ -360,7 +366,7 @@ struct SetDisplayValues: View {
                         .cornerRadius(3)
                 }
                 if let target = set.amrapTargetReps {
-                    Text("Target: \(target)")
+                    Text("Target: \(target)+")
                         .font(.body)
                         .foregroundColor(.secondary)
                 }
@@ -570,7 +576,7 @@ struct EditRegularSetView: View {
     }
 }
 
-// MARK: - Edit Set Sheet View (Completely Rewritten)
+// MARK: - Edit Set Sheet View (Updated)
 struct EditSetSheetView: View {
     let set: ExerciseSet
     let setIndex: Int
@@ -579,16 +585,34 @@ struct EditSetSheetView: View {
     let onCancel: () -> Void
     
     var body: some View {
-        // Add debugging
         let _ = print("🟢 EditSetSheetView created for index \(setIndex), isAmrap: \(set.isAmrap)")
         
         if set.isAmrap {
             EditAmrapSetView(
                 initialReps: set.reps,
                 weight: set.weight,
+                targetReps: set.amrapTargetReps,
                 onSave: { reps in
                     print("🟢 AMRAP save called with reps: \(reps?.description ?? "nil")")
+                    
+                    // Update the reps first
                     onUpdateAmrap(setIndex, reps)
+                    
+                    // Then set the completion status based on target achievement
+                    let currentSet = set // Reference to the set being edited
+                    if let actualReps = reps, let target = currentSet.amrapTargetReps {
+                        if actualReps >= target {
+                            currentSet.completionStatus = .completedSuccessfully
+                        } else {
+                            currentSet.completionStatus = .failed
+                        }
+                    } else if reps != nil {
+                        // If no target set but reps recorded, mark as successful
+                        currentSet.completionStatus = .completedSuccessfully
+                    } else {
+                        // No reps recorded
+                        currentSet.completionStatus = .notStarted
+                    }
                 },
                 onCancel: {
                     print("🟢 AMRAP cancel called")
@@ -613,18 +637,20 @@ struct EditSetSheetView: View {
     }
 }
 
-// MARK: - AMRAP Set Edit View
+// MARK: - AMRAP Set Edit View (Updated)
 struct EditAmrapSetView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var actualReps: String
     @FocusState private var isTextFieldFocused: Bool
     
     let weight: Double?
+    let targetReps: Int?
     let onSave: (Int?) -> Void
     let onCancel: () -> Void
     
-    init(initialReps: Int?, weight: Double?, onSave: @escaping (Int?) -> Void, onCancel: @escaping () -> Void) {
+    init(initialReps: Int?, weight: Double?, targetReps: Int?, onSave: @escaping (Int?) -> Void, onCancel: @escaping () -> Void) {
         self.weight = weight
+        self.targetReps = targetReps
         self.onSave = onSave
         self.onCancel = onCancel
         self._actualReps = State(initialValue: initialReps != nil ? "\(initialReps!)" : "")
@@ -650,10 +676,18 @@ struct EditAmrapSetView: View {
                                 .foregroundColor(.orange)
                         }
                         
-                        if let w = weight {
-                            Text("Weight: \(String(format: "%.1f", w)) lbs")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                        HStack(spacing: 16) {
+                            if let w = weight {
+                                Text("Weight: \(String(format: "%.1f", w)) lbs")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            if let target = targetReps {
+                                Text("Target: \(target)+ reps")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
                     .padding()
@@ -672,6 +706,18 @@ struct EditAmrapSetView: View {
                         .keyboardType(.numberPad)
                         .focused($isTextFieldFocused)
                         .font(.title3)
+                    
+                    // Show target achievement status
+                    if let target = targetReps, let current = Int(actualReps), !actualReps.isEmpty {
+                        HStack {
+                            Image(systemName: current >= target ? "checkmark.circle.fill" : "xmark.circle.fill")
+                                .foregroundColor(current >= target ? .green : .red)
+                            Text(current >= target ? "Target achieved!" : "Below target")
+                                .font(.caption)
+                                .foregroundColor(current >= target ? .green : .red)
+                        }
+                        .padding(.top, 4)
+                    }
                 }
                 .padding()
                 
