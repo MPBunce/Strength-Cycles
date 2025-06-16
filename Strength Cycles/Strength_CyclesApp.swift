@@ -12,7 +12,6 @@ import SwiftData
 struct Strength_CyclesApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
             Cycles.self,
             Goal.self,
             Settings.self
