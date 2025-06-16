@@ -57,24 +57,34 @@ struct Template: Identifiable {
 
 // MARK: - Program Types
 enum ProgramType {
+
+    case fiveThreeOneBBBProgram
+    case fiveThreeOneBasicProgram
+    
+    case arnoldProgram
+    case greySkull
+    case garciaProgram
     case menzer
-    case pushPullLegs
-    case upperLower
+
     case nSuns4Days
     case nSuns5Days
     case nSuns6DaysSquat
     case nSuns6DaysDeadlift
-    case fiveThreeOneBBBProgram
-    case greySkull
-    
+
+    case pushPullLegs
+    case upperLowerFourDay
+    case upperLowerFiveDay
+
     func createProgram(with settings: UserSettings) -> ProgramProtocol {
         switch self {
         case .menzer:
             return MenzerProgram()
         case .pushPullLegs:
             return PPLProgram()
-        case .upperLower:
+        case .upperLowerFourDay:
             return UpperLowerProgram()
+        case .upperLowerFiveDay:
+            return FiveDayUpperLowerProgram()
         case .nSuns4Days:
             return nSunsFourDayProgram(benchTM: settings.bench, squatTM: settings.squat, deadliftTM: settings.deadlift, ohpTM: settings.press)
         case .nSuns5Days:
@@ -85,8 +95,15 @@ enum ProgramType {
             return nSunsSixDayDeadliftProgram(benchTM: settings.bench, squatTM: settings.squat, deadliftTM: settings.deadlift, ohpTM: settings.press)
         case .fiveThreeOneBBBProgram:
             return FiveThreeOneBBBProgram(benchTM: settings.bench, squatTM: settings.squat, deadliftTM: settings.deadlift, ohpTM: settings.press)
+        case .fiveThreeOneBasicProgram:
+            return FiveThreeOneBasicProgram(benchTM: settings.bench, squatTM: settings.squat, deadliftTM: settings.deadlift, ohpTM: settings.press)
         case .greySkull:
             return GreyskullLPProgram()
+        case .garciaProgram:
+            return GarciaProgram()
+        case .arnoldProgram:
+            return ArnoldSplit()
+
         }
     }
 }
@@ -95,6 +112,44 @@ enum ProgramType {
 extension Template {
     static func loadTemplates() -> [Template] {
         return [
+            // 5/3/1 Programs
+            Template(
+                id: "FiveThreeOneBasicProgram",
+                name: "5/3/1",
+                description: "4 Week 5/3/1 Program",
+                duration: "4 Weeks",
+                programType: .fiveThreeOneBasicProgram
+            ),
+            Template(
+                id: "FiveThreeOneBBBProgram",
+                name: "5/3/1 Big But Boring",
+                description: "4 Week 5/3/1 BBB Program",
+                duration: "4 Weeks",
+                programType: .fiveThreeOneBBBProgram
+            ),
+            
+            // Individual Programs
+            Template(
+                id: "ArnoldProgram",
+                name: "Arnold Split",
+                description: "Classic Arnold Schwarzenegger split routine",
+                duration: "6 days",
+                programType: .arnoldProgram
+            ),
+            Template(
+                id: "GreySkull",
+                name: "Greyskull LP",
+                description: "Full Body 3x A Week",
+                duration: "2 Weeks",
+                programType: .greySkull
+            ),
+            Template(
+                id: "GarciaProgram",
+                name: "Garcia Fullbody Program",
+                description: "Full Body A/B Split",
+                duration: "6 Days",
+                programType: .garciaProgram
+            ),
             Template(
                 id: "classic-menzer",
                 name: "Classic Menzer Cycle",
@@ -102,20 +157,8 @@ extension Template {
                 duration: "4 days",
                 programType: .menzer
             ),
-            Template(
-                id: "ppl",
-                name: "Push Pull Legs",
-                description: "Split training focusing on movement patterns",
-                duration: "3 days",
-                programType: .pushPullLegs
-            ),
-            Template(
-                id: "upper_lower",
-                name: "Upper Lower Split",
-                description: "4-day split alternating upper and lower body",
-                duration: "4 days",
-                programType: .upperLower
-            ),
+
+            // nSuns Programs
             Template(
                 id: "nSuns4Day",
                 name: "nSuns 4 Day",
@@ -144,22 +187,29 @@ extension Template {
                 duration: "6 days",
                 programType: .nSuns6DaysDeadlift
             ),
+
+            // Split Programs
             Template(
-                id: "FiveThreeOneBBBProgram",
-                name: "5/3/1 Big But Boring",
-                description: "4 Week 5/3/1 Program",
-                duration: "4 Weeks",
-                programType: .fiveThreeOneBBBProgram
+                id: "ppl",
+                name: "Push Pull Legs",
+                description: "Split training focusing on movement patterns",
+                duration: "3 days",
+                programType: .pushPullLegs
             ),
             Template(
-                id: "GreySkull",
-                name: "Greyskull LP",
-                description: "Full Body 3x A Week",
-                duration: "2 Weeks",
-                programType: .greySkull
+                id: "upper_lower_four",
+                name: "Upper Lower Split",
+                description: "4-day split alternating upper and lower body",
+                duration: "4 days",
+                programType: .upperLowerFourDay
+            ),
+            Template(
+                id: "upper_lower_five",
+                name: "Upper Lower Split",
+                description: "5-day split alternating upper and lower body",
+                duration: "5 days",
+                programType: .upperLowerFiveDay
             )
         ]
     }
 }
-
-

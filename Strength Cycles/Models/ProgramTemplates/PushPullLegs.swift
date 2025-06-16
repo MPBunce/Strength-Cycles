@@ -25,7 +25,8 @@ class PPLProgram: ProgramProtocol {
                     Exercise(exerciseIndex: 1, name: "Overhead Press", sets: []),
                     Exercise(exerciseIndex: 2, name: "Incline Dumbbell Press", sets: []),
                     Exercise(exerciseIndex: 3, name: "Tricep Pushdowns", sets: []),
-                    Exercise(exerciseIndex: 4, name: "Lateral Raises", sets: [])
+                    Exercise(exerciseIndex: 4, name: "Lateral Raises", sets: []),
+                    Exercise(exerciseIndex: 5, name: "Front Raises", sets: [])
                 ],
                 completedDate: nil
             ),
@@ -37,7 +38,7 @@ class PPLProgram: ProgramProtocol {
                     Exercise(exerciseIndex: 1, name: "Pull-ups", sets: []),
                     Exercise(exerciseIndex: 2, name: "Barbell Rows", sets: []),
                     Exercise(exerciseIndex: 3, name: "Barbell Curls", sets: []),
-                    Exercise(exerciseIndex: 4, name: "Face Pulls", sets: [])
+                    Exercise(exerciseIndex: 4, name: "Rear Delt Flys", sets: [])
                 ],
                 completedDate: nil
             ),
@@ -49,7 +50,8 @@ class PPLProgram: ProgramProtocol {
                     Exercise(exerciseIndex: 1, name: "Romanian Deadlift", sets: []),
                     Exercise(exerciseIndex: 2, name: "Leg Press", sets: []),
                     Exercise(exerciseIndex: 3, name: "Leg Curls", sets: []),
-                    Exercise(exerciseIndex: 4, name: "Calf Raises", sets: [])
+                    Exercise(exerciseIndex: 4, name: "Calf Raises", sets: []),
+                    Exercise(exerciseIndex: 5, name: "Abs", sets: [])
                 ],
                 completedDate: nil
             )
