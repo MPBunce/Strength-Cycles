@@ -118,13 +118,13 @@ class nSunsFiveDayProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Lateral Raises",
+                        name: "Rear Delt Flys",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Dips",
+                        name: "Dumbbell Curls",
                         canAlterSets: true,
                         sets: []
                     )
@@ -184,7 +184,7 @@ class nSunsFiveDayProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Barbell Curls",
+                        name: "Chin Ups",
                         canAlterSets: true,
                         sets: []
                     ),
@@ -193,7 +193,13 @@ class nSunsFiveDayProgram: ProgramProtocol {
                         name: "Tricep Push Downs",
                         canAlterSets: true,
                         sets: []
-                    )
+                    ),
+                    Exercise(
+                        exerciseIndex: 4,
+                        name: "Barbell Curls",
+                        canAlterSets: true,
+                        sets: []
+                    ),
                 ],
                 completedDate: nil
             )

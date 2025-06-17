@@ -47,7 +47,7 @@ class FiveThreeOneBasicProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Curls",
+                        name: "Barbell Curls",
                         canAlterSets: true,
                         sets: []
                     ),
@@ -125,25 +125,25 @@ class FiveThreeOneBasicProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Curl",
+                        name: "Barbell Curls",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Tri",
+                        name: "Tricep Extensions",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 4,
-                        name: "Lateral",
+                        name: "Lateral Raises",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 5,
-                        name: "Rear Delt",
+                        name: "Rear Delt Flys",
                         canAlterSets: true,
                         sets: []
                     )
@@ -203,7 +203,7 @@ class FiveThreeOneBasicProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Curls",
+                        name: "Barbell Curls",
                         canAlterSets: true,
                         sets: []
                     ),
@@ -281,25 +281,25 @@ class FiveThreeOneBasicProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Curl",
+                        name: "Barbell Curls",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Tri",
+                        name: "Tricep Extensions",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 4,
-                        name: "Lateral",
+                        name: "Lateral Raises",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 5,
-                        name: "Rear Delt",
+                        name: "Rear Delt Flys",
                         canAlterSets: true,
                         sets: []
                     )
@@ -359,7 +359,7 @@ class FiveThreeOneBasicProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Curls",
+                        name: "Barbell Curls",
                         canAlterSets: true,
                         sets: []
                     ),
@@ -437,25 +437,25 @@ class FiveThreeOneBasicProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Curl",
+                        name: "Barbell Curls",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Tri",
+                        name: "Tricep Extensions",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 4,
-                        name: "Lateral",
+                        name: "Lateral Raises",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 5,
-                        name: "Rear Delt",
+                        name: "Rear Delt Flys",
                         canAlterSets: true,
                         sets: []
                     )
@@ -515,7 +515,7 @@ class FiveThreeOneBasicProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Curls",
+                        name: "Barbell Curls",
                         canAlterSets: true,
                         sets: []
                     ),
@@ -593,25 +593,25 @@ class FiveThreeOneBasicProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Curl",
+                        name: "Barbell Curls",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Tri",
+                        name: "Tricep Extensions",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 4,
-                        name: "Lateral",
+                        name: "Lateral Raises",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 5,
-                        name: "Rear Delt",
+                        name: "Rear Delt Flys",
                         canAlterSets: true,
                         sets: []
                     )

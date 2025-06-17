@@ -46,19 +46,19 @@ class nSunsSixDaySquatProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Chest Accessory",
+                        name: "Dumbbell Rows",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Arms Accessory",
+                        name: "Barbell Curls",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 4,
-                        name: "Back Accessory",
+                        name: "Rear Delt Flys",
                         canAlterSets: true,
                         sets: []
                     )
@@ -85,13 +85,13 @@ class nSunsSixDaySquatProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Legs Accessory",
+                        name: "Bulgarian Split Squats",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Abs",
+                        name: "Hanging Leg Raises",
                         canAlterSets: true,
                         sets: []
                     )
@@ -118,13 +118,19 @@ class nSunsSixDaySquatProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Shoulders Accessory",
+                        name: "Chin Ups",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Chest Accessory",
+                        name: "Barbell Curls",
+                        canAlterSets: true,
+                        sets: []
+                    ),
+                    Exercise(
+                        exerciseIndex: 5,
+                        name: "Skullcrushers",
                         canAlterSets: true,
                         sets: []
                     )
@@ -151,13 +157,13 @@ class nSunsSixDaySquatProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Back Accessory",
+                        name: "T-Bar Rows",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Abs",
+                        name: "Plank",
                         canAlterSets: true,
                         sets: []
                     )
@@ -184,13 +190,13 @@ class nSunsSixDaySquatProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Arms Accessory",
+                        name: "Barbell Curls",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Other Accessory",
+                        name: "Face Pulls",
                         canAlterSets: true,
                         sets: []
                     )
@@ -211,19 +217,19 @@ class nSunsSixDaySquatProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 1,
-                        name: "Front Squat",
+                        name: "Sumo Deadlift",
                         canAlterSets: false,
-                        sets: createSaturdayFrontSquatSets(tm: squatTM)
+                        sets: createSaturdaySumoSets(tm: deadliftTM)
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Upper Back Accessory",
+                        name: "Shrugs",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Legs Accessory",
+                        name: "Abs",
                         canAlterSets: true,
                         sets: []
                     )
@@ -439,7 +445,7 @@ private func createSaturdaySquatSets(tm: Double) -> [ExerciseSet] {
     }
 }
 
-private func createSaturdayFrontSquatSets(tm: Double) -> [ExerciseSet] {
+private func createSaturdaySumoSets(tm: Double) -> [ExerciseSet] {
     // 55x3, 55x3, 55x3, 55x3, 55x3, 55x3
     let percentages = [0.55, 0.55, 0.55, 0.55, 0.55, 0.55]
     let reps = [3, 3, 3, 3, 3, 3]

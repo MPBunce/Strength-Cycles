@@ -130,6 +130,12 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 4,
+                        name: "Barbell Curls",
+                        canAlterSets: true,
+                        sets: []
+                    ),
+                    Exercise(
+                        exerciseIndex: 5,
                         name: "Lateral Raises",
                         canAlterSets: true,
                         sets: []
@@ -280,6 +286,12 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 4,
+                        name: "Barbell Curls",
+                        canAlterSets: true,
+                        sets: []
+                    ),
+                    Exercise(
+                        exerciseIndex: 5,
                         name: "Lateral Raises",
                         canAlterSets: true,
                         sets: []
@@ -430,6 +442,12 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 4,
+                        name: "Barbell Curls",
+                        canAlterSets: true,
+                        sets: []
+                    ),
+                    Exercise(
+                        exerciseIndex: 5,
                         name: "Lateral Raises",
                         canAlterSets: true,
                         sets: []
@@ -580,6 +598,12 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 4,
+                        name: "Barbell Curls",
+                        canAlterSets: true,
+                        sets: []
+                    ),
+                    Exercise(
+                        exerciseIndex: 5,
                         name: "Lateral Raises",
                         canAlterSets: true,
                         sets: []

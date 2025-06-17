@@ -46,19 +46,19 @@ class nSunsSixDayDeadliftProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Chest Accessory",
+                        name: "Chin Ups",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Arms Accessory",
+                        name: "Barbell Curls",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 4,
-                        name: "Back Accessory",
+                        name: "Tricep Push Downs",
                         canAlterSets: true,
                         sets: []
                     )
@@ -85,7 +85,7 @@ class nSunsSixDayDeadliftProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Back Accessory",
+                        name: "Dumbbell Row",
                         canAlterSets: true,
                         sets: []
                     ),
@@ -118,13 +118,19 @@ class nSunsSixDayDeadliftProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Shoulders Accessory",
+                        name: "Chin Ups",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Chest Accessory",
+                        name: "Barbell Curls",
+                        canAlterSets: true,
+                        sets: []
+                    ),
+                    Exercise(
+                        exerciseIndex: 4,
+                        name: "Tricep Push Downs",
                         canAlterSets: true,
                         sets: []
                     )
@@ -151,7 +157,7 @@ class nSunsSixDayDeadliftProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Legs Accessory",
+                        name: "Dumbbell Row",
                         canAlterSets: true,
                         sets: []
                     ),
@@ -184,13 +190,19 @@ class nSunsSixDayDeadliftProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Arms Accessory",
+                        name: "Chin Ups",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Other Accessory",
+                        name: "Barbell Curls",
+                        canAlterSets: true,
+                        sets: []
+                    ),
+                    Exercise(
+                        exerciseIndex: 4,
+                        name: "Tricep Push Downs",
                         canAlterSets: true,
                         sets: []
                     )
@@ -217,13 +229,13 @@ class nSunsSixDayDeadliftProgram: ProgramProtocol {
                     ),
                     Exercise(
                         exerciseIndex: 2,
-                        name: "Upper Back Accessory",
+                        name: "Dumbbell Row",
                         canAlterSets: true,
                         sets: []
                     ),
                     Exercise(
                         exerciseIndex: 3,
-                        name: "Legs Accessory",
+                        name: "Abs",
                         canAlterSets: true,
                         sets: []
                     )
