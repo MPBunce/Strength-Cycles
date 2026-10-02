@@ -10,13 +10,14 @@ import SwiftUI
 import SwiftData
 
 enum ActivityMetric: CaseIterable, Identifiable {
-    case workout, steps, dailyWork, stretching
+    case workout, running, steps, dailyWork, stretching
 
     var id: Self { self }
 
     var title: String {
         switch self {
         case .workout: return "Worked Out"
+        case .running: return "Ran"
         case .steps: return "Step Goal"
         case .dailyWork: return "Daily Work"
         case .stretching: return "Stretching"
@@ -26,6 +27,7 @@ enum ActivityMetric: CaseIterable, Identifiable {
     var icon: String {
         switch self {
         case .workout: return "dumbbell.fill"
+        case .running: return "figure.run"
         case .steps: return "figure.walk"
         case .dailyWork: return "checklist"
         case .stretching: return "figure.flexibility"
@@ -35,6 +37,7 @@ enum ActivityMetric: CaseIterable, Identifiable {
     var color: Color {
         switch self {
         case .workout: return .orange
+        case .running: return .red
         case .steps: return .green
         case .dailyWork: return .blue
         case .stretching: return .purple
@@ -47,6 +50,8 @@ enum ActivityMetric: CaseIterable, Identifiable {
 /// Works out which days each habit was completed from the app's data.
 struct ActivityRecords {
     let cycles: [Cycles]
+    var runPlans: [RunPlan] = []
+    var races: [RaceResult] = []
     let dailyItems: [DailyWorkItem]
     let dailyEntries: [DailyWorkEntry]
     let stretchEntries: [StretchEntry]
@@ -59,6 +64,9 @@ struct ActivityRecords {
         switch metric {
         case .workout:
             return Set(cycles.flatMap { $0.trainingDays.compactMap(\.completedDate) }.map(calendar.startOfDay))
+        case .running:
+            let planRuns = runPlans.flatMap { $0.sessions.compactMap(\.completedDate) }
+            return Set((planRuns + races.map(\.date)).map(calendar.startOfDay))
         case .steps:
             return Set(stepsByDay.filter { $0.value >= stepGoal }.keys)
         case .stretching:
@@ -106,6 +114,8 @@ private func weekColumns(count: Int, endingWeeksAgo offset: Int = 0) -> [[Date]]
 
 struct ActivityView: View {
     @Query private var cycles: [Cycles]
+    @Query private var runPlans: [RunPlan]
+    @Query private var races: [RaceResult]
     @Query private var dailyItems: [DailyWorkItem]
     @Query private var dailyEntries: [DailyWorkEntry]
     @Query private var stretchEntries: [StretchEntry]
@@ -120,7 +130,7 @@ struct ActivityView: View {
     private var stepGoal: Int { settings.first?.dailyStepGoal ?? 10000 }
 
     private var records: ActivityRecords {
-        ActivityRecords(cycles: cycles, dailyItems: dailyItems, dailyEntries: dailyEntries,
+        ActivityRecords(cycles: cycles, runPlans: runPlans, races: races, dailyItems: dailyItems, dailyEntries: dailyEntries,
                         stretchEntries: stretchEntries, stepsByDay: stepsByDay, stepGoal: stepGoal)
     }
 
@@ -161,6 +171,8 @@ struct ActivityHistoryView: View {
     let metric: ActivityMetric
 
     @Query private var cycles: [Cycles]
+    @Query private var runPlans: [RunPlan]
+    @Query private var races: [RaceResult]
     @Query private var dailyItems: [DailyWorkItem]
     @Query private var dailyEntries: [DailyWorkEntry]
     @Query private var stretchEntries: [StretchEntry]
@@ -175,7 +187,7 @@ struct ActivityHistoryView: View {
     private let calendar = Calendar.current
 
     var body: some View {
-        let records = ActivityRecords(cycles: cycles, dailyItems: dailyItems, dailyEntries: dailyEntries,
+        let records = ActivityRecords(cycles: cycles, runPlans: runPlans, races: races, dailyItems: dailyItems, dailyEntries: dailyEntries,
                                       stretchEntries: stretchEntries, stepsByDay: stepsByDay,
                                       stepGoal: settings.first?.dailyStepGoal ?? 10000)
         let completed = records.completedDays(for: metric)
@@ -187,9 +199,13 @@ struct ActivityHistoryView: View {
         List {
             Section {
                 HStack {
-                    stat("Total", value: completed.count)
+                    stat(metric == .running ? "Run days" : "Total", value: completed.count)
                     Divider()
-                    if metric.usesYearlyCount {
+                    if metric.badgesUseDistance {
+                        stat("km this year", value: Int(runKilometres(in: .year)))
+                        Divider()
+                        stat("km this month", value: Int(runKilometres(in: .month)))
+                    } else if metric.usesYearlyCount {
                         stat("This year", value: thisYear)
                         Divider()
                         stat("This month", value: count(completed, in: .month))
@@ -206,9 +222,11 @@ struct ActivityHistoryView: View {
                 StepsInsightsSection(stepsByDay: stepsByDay, goal: settings.first?.dailyStepGoal ?? 10000)
             }
 
+            let badgeProgress = metric.badgesUseDistance ? Int(runKilometres(in: .year))
+                : metric.usesYearlyCount ? thisYear : current
             StreakBadgesSection(metric: metric,
-                                progress: metric.usesYearlyCount ? thisYear : current,
-                                best: metric.usesYearlyCount ? thisYear : longest)
+                                progress: badgeProgress,
+                                best: metric.usesYearlyCount ? badgeProgress : longest)
 
             Section("History") {
                 ForEach(historyChunks(earliest: days.last), id: \.self) { offset in
@@ -252,6 +270,16 @@ struct ActivityHistoryView: View {
         let weeks = (calendar.dateComponents([.weekOfYear], from: firstWeek, to: thisWeek).weekOfYear ?? 0) + 1
         let blocks = max(1, Int((Double(weeks) / Double(ActivityView.weekCount)).rounded(.up)))
         return (0..<blocks).map { $0 * ActivityView.weekCount }
+    }
+
+    /// Kilometres from runs completed in the current calendar year or month.
+    private func runKilometres(in component: Calendar.Component) -> Double {
+        let inPeriod: (Date) -> Bool = { calendar.isDate($0, equalTo: Date(), toGranularity: component) }
+        let planKm = runPlans.flatMap(\.sessions)
+            .filter { $0.completedDate.map(inPeriod) ?? false }
+            .reduce(0) { $0 + $1.coveredKilometres }
+        let raceKm = races.filter { inPeriod($0.date) }.reduce(0) { $0 + $1.distance.kilometres }
+        return planKm + raceKm
     }
 
     /// Completed days in the current calendar year or month.

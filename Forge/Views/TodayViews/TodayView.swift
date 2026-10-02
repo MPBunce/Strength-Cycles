@@ -23,6 +23,7 @@ struct TodayView: View {
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 0))
                 StepsSection(steps: steps)
+                RunSection(day: today)
                 DailyWorkSection(day: today)
                 StretchingSection(day: today)
                 ChallengesSection()

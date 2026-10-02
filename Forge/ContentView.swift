@@ -41,5 +41,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [Cycles.self, Goal.self, Settings.self, CustomTemplate.self, DailyWorkItem.self, DailyWorkEntry.self, StretchEntry.self, Challenge.self], inMemory: true)
+        .modelContainer(for: [Cycles.self, Goal.self, Settings.self, CustomTemplate.self, DailyWorkItem.self, DailyWorkEntry.self, StretchEntry.self, RunPlan.self, RaceResult.self, Challenge.self], inMemory: true)
 }

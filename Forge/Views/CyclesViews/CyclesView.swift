@@ -9,46 +9,79 @@ import SwiftUI
 import SwiftData
 
 struct CyclesView: View {
-    @Environment(\.modelContext) var context
-    @Query(sort: \Cycles.startDate, order: .reverse) var cycles: [Cycles]
-    @State private var isShowingItemSheet = false
+    enum Kind: String, CaseIterable, Identifiable {
+        case strength = "Strength"
+        case running = "Running"
+        var id: Self { self }
+    }
+
+    @State private var kind: Kind = .strength
+    @State private var showingAddStrength = false
+    @State private var showingAddRun = false
+    @Query private var cycles: [Cycles]
+    @Query private var runPlans: [RunPlan]
 
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(cycles) { cycle in
-                    NavigationLink(destination: CyclesDetailView(cycleId: cycle.id)) {
-                        CycleCell(cycle: cycle)
-                    }
+            VStack(spacing: 0) {
+                Picker("Type", selection: $kind) {
+                    ForEach(Kind.allCases) { Text($0.rawValue).tag($0) }
                 }
-                .onDelete { indexSet in
-                    for index in indexSet{
-                        context.delete(cycles[index])
-                    }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+
+                switch kind {
+                case .strength:
+                    StrengthCyclesList(showingAddCycle: $showingAddStrength)
+                case .running:
+                    RunPlansList(showingAddPlan: $showingAddRun)
                 }
             }
             .navigationTitle("Cycles")
             .navigationBarTitleDisplayMode(.inline)
-            .sheet(isPresented: $isShowingItemSheet){ CycleSelectionSheet() }
             .toolbar {
-                if !cycles.isEmpty {
-                    Button("Add Cycle", systemImage: "plus"){
-                        isShowingItemSheet = true
+                // The empty states have their own add button.
+                if kind == .strength ? !cycles.isEmpty : !runPlans.isEmpty {
+                    Button(kind == .strength ? "Add Cycle" : "Add Running Plan", systemImage: "plus") {
+                        if kind == .strength { showingAddStrength = true } else { showingAddRun = true }
                     }
                 }
             }
-            .overlay {
-                if cycles.isEmpty{
-                    ContentUnavailableView( label: {
-                            Label("No Cycles", systemImage: "list.bullet.rectangle.portrait")
-                        }, description: {
-                            Text("Start an exercise routine by adding a cycle!")
-                        }, actions: {
-                            Button("Add A Cycle") { isShowingItemSheet = true}
-                        }
-                    )
-                    .offset(y: -60)
+        }
+    }
+}
+
+/// Strength training cycles.
+struct StrengthCyclesList: View {
+    @Environment(\.modelContext) var context
+    @Query(sort: \Cycles.startDate, order: .reverse) var cycles: [Cycles]
+    @Binding var showingAddCycle: Bool
+
+    var body: some View {
+        List {
+            ForEach(cycles) { cycle in
+                NavigationLink(destination: CyclesDetailView(cycleId: cycle.id)) {
+                    CycleCell(cycle: cycle)
                 }
+            }
+            .onDelete { indexSet in
+                for index in indexSet {
+                    context.delete(cycles[index])
+                }
+            }
+        }
+        .sheet(isPresented: $showingAddCycle) { CycleSelectionSheet() }
+        .overlay {
+            if cycles.isEmpty {
+                ContentUnavailableView(label: {
+                    Label("No Cycles", systemImage: "list.bullet.rectangle.portrait")
+                }, description: {
+                    Text("Start an exercise routine by adding a cycle!")
+                }, actions: {
+                    Button("Add A Cycle") { showingAddCycle = true }
+                })
+                .offset(y: -60)
             }
         }
     }

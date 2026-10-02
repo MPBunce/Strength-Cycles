@@ -27,6 +27,8 @@ struct GoalsView: View {
                         goalRow(for: goal)
                     }
                 }
+
+                RunningGoalsSection()
             }
             .padding()
         }

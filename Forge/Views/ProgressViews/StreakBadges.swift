@@ -11,13 +11,17 @@ import SwiftUI
 extension ActivityMetric {
     /// Workouts and steps are counted per year; daily habits are about unbroken streaks.
     var usesYearlyCount: Bool {
-        self == .workout || self == .steps
+        self == .workout || self == .running || self == .steps
     }
 
-    /// Badge thresholds: days completed this year, or days in a row.
+    /// Running badges are kilometres this year rather than days.
+    var badgesUseDistance: Bool { self == .running }
+
+    /// Badge thresholds: days completed this year, km run this year, or days in a row.
     var badgeMilestones: [Int] {
         switch self {
         case .workout: return [10, 25, 50, 75, 100, 150, 200, 250]
+        case .running: return [10, 25, 50, 100, 250, 500, 750, 1000]
         case .steps: return [10, 30, 60, 100, 150, 200, 300, 365]
         case .dailyWork, .stretching: return [3, 7, 14, 30, 60, 100, 180, 365]
         }
@@ -61,12 +65,22 @@ struct StreakBadgesSection: View {
     }
 
     private func caption(for days: Int) -> String {
+        if metric.badgesUseDistance { return "\(days) km" }
         if metric.usesYearlyCount { return "\(days) days" }
         return days == 365 ? "1 year" : "\(days) in a row"
     }
 
     private var footer: String {
-        let unit = metric == .workout ? "workout" : "goal"
+        let unit: String
+        switch metric {
+        case .workout: unit = "workout"
+        case .running: unit = "run"
+        default: unit = "goal"
+        }
+        if metric.badgesUseDistance {
+            guard let next = nextMilestone else { return "Every \(year) badge earned. Distance resets on January 1." }
+            return "\(progress) km run so far in \(year). \(next - progress) km more for the \(next) km badge. Distance resets on January 1."
+        }
         if metric.usesYearlyCount {
             guard let next = nextMilestone else { return "Every \(year) badge earned. Counts reset on January 1." }
             let toGo = next - progress
