@@ -38,6 +38,14 @@ struct SettingsView: View {
                             Text("About")
                         }
                     }
+                    NavigationLink(destination: GuideView()) {
+                        HStack {
+                            Image(systemName: "book")
+                                .foregroundColor(.blue)
+                                .frame(width: 20)
+                            Text("How Forge Works")
+                        }
+                    }
                 }
                 
                 // Appearance Section

@@ -44,7 +44,7 @@ Under Training › Running, separate from strength cycles.
 - Equipment: barbell weight and smallest plate, used to round calculated weights.
 - Appearance: System, Light or Dark.
 
-A full in-app guide lives under Settings › About › How Forge Works.
+A full in-app guide lives under Settings › How Forge Works.
 
 ## Requirements
 

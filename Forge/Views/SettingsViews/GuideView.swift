@@ -2,7 +2,7 @@
 //  GuideView.swift
 //  Forge
 //
-//  "How Forge Works": a short guide to each part of the app, reached from About.
+//  "How Forge Works": a short guide to each part of the app, reached from Settings.
 //
 
 import SwiftUI

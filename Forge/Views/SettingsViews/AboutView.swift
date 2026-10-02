@@ -28,32 +28,6 @@ struct AboutView: View {
                         .foregroundColor(.secondary)
                 }
                 
-                // Guide
-                NavigationLink {
-                    GuideView()
-                } label: {
-                    HStack {
-                        Image(systemName: "book")
-                            .font(.title3)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("How Forge Works")
-                                .font(.headline)
-                            Text("A guide to every part of the app")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.caption)
-                            .foregroundStyle(.tertiary)
-                    }
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(12)
-                    .padding(.horizontal)
-                }
-                .buttonStyle(.plain)
-
                 // Developer Info Section
                 VStack(spacing: 20) {
                     Text("Developer Info")
