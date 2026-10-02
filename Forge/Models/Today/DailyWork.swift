@@ -83,6 +83,8 @@ class DailyWorkItem {
 
     static let presets: [(name: String, method: DailyWorkMethod, reps: Int)] = [
         ("Chin-ups/Pull-ups", .totalReps, 25),
+        // For lifters who can't do a full chin-up yet: jump to the top, lower slowly (3-5 sec).
+        ("Chin-up Negatives", .totalReps, 10),
         ("Push-ups", .totalReps, 50),
         ("Dips", .totalReps, 30),
         ("Bodyweight Squats", .totalReps, 50),

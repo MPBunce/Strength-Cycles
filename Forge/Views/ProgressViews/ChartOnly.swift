@@ -18,22 +18,45 @@ struct ChartOnly: View {
     private var showKilograms: Bool { settings.first?.usesKilograms ?? false }
     private var unit: String { showKilograms ? "kg" : "lbs" }
 
-    private let targetLifts = [
-        "Overhead Press",
-        "Bench Press",
-        "Squat",
-        "Deadlift",
-    ]
+    @AppStorage(PreferenceKeys.trackedLifts) private var trackedLiftsStorage = TrackedLifts.defaultStorage
+    @State private var showingLiftPicker = false
+
+    private var targetLifts: [String] { TrackedLifts.decode(trackedLiftsStorage) }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
+                if targetLifts.isEmpty {
+                    ContentUnavailableView {
+                        Label("No Lifts Chosen", systemImage: "chart.xyaxis.line")
+                    } description: {
+                        Text("Pick the lifts you want to track.")
+                    } actions: {
+                        Button("Choose Lifts") { showingLiftPicker = true }
+                    }
+                }
                 ForEach(targetLifts, id: \.self) { lift in
                     liftProgressionChart(for: lift)
                 }
             }
             .padding()
         }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Lifts", systemImage: "slider.horizontal.3") { showingLiftPicker = true }
+            }
+        }
+        .sheet(isPresented: $showingLiftPicker) {
+            LiftPickerSheet(selected: Binding(
+                get: { targetLifts },
+                set: { trackedLiftsStorage = TrackedLifts.encode($0) }
+            ), available: allExerciseNames)
+        }
+    }
+
+    /// Only the Greyskull LP exercise-index lifts can be charted.
+    private var allExerciseNames: [String] {
+        TrackedLifts.catalog.map(\.name)
     }
 
     // MARK: - 1RM Progression Chart for each lift
@@ -152,7 +175,7 @@ struct ChartOnly: View {
                 
                 // Find all exercises for this lift in this workout
                 for exercise in trainingDay.day {
-                    if exercise.name == lift {
+                    if TrackedLifts.lift(named: lift)?.matches(exercise.name) ?? (exercise.name == lift) {
                         // Only sets actually completed count; the planned numbers on skipped
                         // or failed sets would otherwise show progress that never happened.
                         for set in exercise.sets where set.wasSuccessful {
@@ -188,5 +211,74 @@ struct ChartOnly: View {
         // Epley formula: 1RM = weight × (1 + reps/30)
         // For 1 rep, this returns the weight itself
         return weight * (1.0 + Double(reps) / 30.0)
+    }
+}
+
+// MARK: - Lift picker
+/// Choose and order the lifts charted on the Progress tab.
+private struct LiftPickerSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding var selected: [String]
+    let available: [String]
+    @State private var search = ""
+
+    private var unselected: [String] {
+        available.filter { !selected.contains($0) }
+            .filter { search.isEmpty || $0.localizedCaseInsensitiveContains(search) }
+    }
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Section {
+                    if selected.isEmpty {
+                        Text("No lifts selected.").foregroundStyle(.secondary)
+                    }
+                    ForEach(selected, id: \.self) { lift in
+                        Button {
+                            selected.removeAll { $0 == lift }
+                        } label: {
+                            Label(lift, systemImage: "checkmark.circle.fill")
+                        }
+                        .tint(.primary)
+                    }
+                    .onMove { selected.move(fromOffsets: $0, toOffset: $1) }
+                } header: {
+                    Text("Charted")
+                } footer: {
+                    Text("Tap to remove. Use Edit to reorder.")
+                }
+
+                Section {
+                    ForEach(unselected, id: \.self) { lift in
+                        Button {
+                            selected.append(lift)
+                        } label: {
+                            Label(lift, systemImage: "circle")
+                        }
+                        .tint(.primary)
+                    }
+                    if unselected.isEmpty && !search.isEmpty {
+                        Text("No matching lifts.").foregroundStyle(.secondary)
+                    } else if unselected.isEmpty {
+                        Text("Every lift is already charted.")
+                            .foregroundStyle(.secondary)
+                    }
+                } header: {
+                    Text("Add a lift")
+                } footer: {
+                    Text("Lifts from the Greyskull LP exercise index.")
+                }
+            }
+            .searchable(text: $search, prompt: "Search exercises")
+            .navigationTitle("Progress Lifts")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { EditButton() }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }.fontWeight(.semibold)
+                }
+            }
+        }
     }
 }

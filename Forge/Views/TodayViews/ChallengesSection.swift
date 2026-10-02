@@ -126,6 +126,7 @@ private struct NewChallengeSheet: View {
                                     .foregroundStyle(.secondary)
                             }
                         }
+                        .tint(.primary)
                     }
                 }
             }

@@ -4,6 +4,7 @@ import SwiftData
 struct GoalsView: View {
     @Environment(\.modelContext) var context
     @Query(sort: \Goal.order) var goals: [Goal]
+    @Query private var cycles: [Cycles]
     
     var body: some View {
         ScrollView {
@@ -13,7 +14,7 @@ struct GoalsView: View {
                     Text("Strength Goals")
                         .font(.title2)
                         .bold()
-                    Text("Track your progress towards these common strength milestones")
+                    Text("Lift goals tick themselves off when you log a set at the target weight. Tick the rest off yourself.")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
@@ -31,6 +32,7 @@ struct GoalsView: View {
         }
         .onAppear {
             initializeDefaultGoalsIfNeeded()
+            checkAutoGoals()
         }
     }
     
@@ -59,6 +61,15 @@ struct GoalsView: View {
                     Text("Completed on \(completionDate, formatter: dateFormatter)")
                         .font(.caption)
                         .foregroundColor(.green)
+                } else if goal.isAutoTracked, let target = goal.targetLbs {
+                    let best = bestLbs(for: goal)?.lbs ?? 0
+                    VStack(alignment: .leading, spacing: 4) {
+                        Label("Best: \(WeightConverter.format(best.rounded())) / \(WeightConverter.format(target)) lbs",
+                              systemImage: "bolt.horizontal.circle")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        SwiftUI.ProgressView(value: min(best / target, 1))
+                    }
                 }
             }
             
@@ -70,6 +81,50 @@ struct GoalsView: View {
         .animation(.easeInOut(duration: 0.2), value: goal.isCompleted)
     }
     
+    // MARK: - Auto-tracked goals
+
+    /// Heaviest successful set (any reps) for one lift, in lbs, and the day it was logged.
+    private func bestSet(for liftName: String) -> (lbs: Double, date: Date?)? {
+        guard let lift = TrackedLifts.lift(named: liftName) else { return nil }
+        var best: (lbs: Double, date: Date?)?
+        for cycle in cycles {
+            for day in cycle.trainingDays {
+                for exercise in day.day where lift.matches(exercise.name) {
+                    for set in exercise.sets where set.wasSuccessful && (set.reps ?? 0) > 0 {
+                        guard let weight = set.weight, weight > 0 else { continue }
+                        let lbs = cycle.usesKilograms ? WeightConverter.kgToLbs(weight) : weight
+                        if lbs > (best?.lbs ?? 0) { best = (lbs, day.completedDate) }
+                    }
+                }
+            }
+        }
+        return best
+    }
+
+    /// Best progress toward a goal: a single lift, or the sum of the three for the total.
+    private func bestLbs(for goal: Goal) -> (lbs: Double, date: Date?)? {
+        guard let lift = goal.autoLift else { return nil }
+        guard lift == Goal.totalLift else { return bestSet(for: lift) }
+        let bests = Goal.totalLifts.compactMap { bestSet(for: $0) }
+        guard !bests.isEmpty else { return nil }
+        // The total counts from the day its last lift was hit.
+        return (bests.reduce(0) { $0 + $1.lbs }, bests.compactMap(\.date).max())
+    }
+
+    /// Ticks off goals the logged sets have reached. Never unticks: that stays the user's call.
+    private func checkAutoGoals() {
+        for goal in goals {
+            goal.backfillAutoTarget()
+            guard !goal.isCompleted, let target = goal.targetLbs, let best = bestLbs(for: goal) else { continue }
+            let needsAllLifts = goal.autoLift == Goal.totalLift
+            let hasAllLifts = Goal.totalLifts.allSatisfy { bestSet(for: $0) != nil }
+            if best.lbs >= target && (!needsAllLifts || hasAllLifts) {
+                goal.isCompleted = true
+                goal.completionDate = best.date ?? Date()
+            }
+        }
+    }
+
     // MARK: - Goal Management Functions
     private func initializeDefaultGoalsIfNeeded() {
         // Only initialize if no goals exist

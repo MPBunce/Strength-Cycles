@@ -18,6 +18,7 @@ struct ForgeApp: App {
             CustomTemplate.self,
             DailyWorkItem.self,
             DailyWorkEntry.self,
+            StretchEntry.self,
             Challenge.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
@@ -30,6 +31,7 @@ struct ForgeApp: App {
     }()
 
     @State private var showingSplash = true
+    @AppStorage(PreferenceKeys.appearance) private var appearance = AppearanceMode.system.rawValue
 
     var body: some Scene {
         WindowGroup {
@@ -42,6 +44,7 @@ struct ForgeApp: App {
                         .onTapGesture { dismissSplash() }
                 }
             }
+            .preferredColorScheme(AppearanceMode(rawValue: appearance)?.colorScheme)
             .task {
                 try? await Task.sleep(for: .seconds(3))
                 dismissSplash()

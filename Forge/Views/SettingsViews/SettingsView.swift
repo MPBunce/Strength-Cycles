@@ -11,6 +11,7 @@ import SwiftData
 struct SettingsView: View {
     @Environment(\.modelContext) var context
     @Query var settings: [Settings]
+    @AppStorage(PreferenceKeys.appearance) private var appearance = AppearanceMode.system.rawValue
     
     private var userSettings: Settings {
         if let existingSettings = settings.first {
@@ -36,6 +37,17 @@ struct SettingsView: View {
                                 .frame(width: 20)
                             Text("About")
                         }
+                    }
+                }
+                
+                // Appearance Section
+                Section("Appearance") {
+                    Picker(selection: $appearance) {
+                        ForEach(AppearanceMode.allCases) { mode in
+                            Text(mode.title).tag(mode.rawValue)
+                        }
+                    } label: {
+                        Label("Theme", systemImage: "circle.lefthalf.filled")
                     }
                 }
                 

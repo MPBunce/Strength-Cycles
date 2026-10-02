@@ -51,32 +51,50 @@ final class StepCounter {
         }
     }
 
+    /// Step totals per day (keyed by start of day) for any range, e.g. a month on the Activity grid.
+    /// Returns an empty result if Health isn't available or access was declined.
+    func dailySteps(from start: Date, to end: Date) async -> [Date: Int] {
+        guard HKHealthStore.isHealthDataAvailable(), start < end else { return [:] }
+        do {
+            try await store.requestAuthorization(toShare: [], read: [stepType])
+            return try await stepTotals(from: start, to: end)
+        } catch {
+            return [:]
+        }
+    }
+
     private func fetchLastSevenDays() async throws -> [Day] {
         let calendar = Calendar.current
         let todayStart = calendar.startOfDay(for: Date())
         guard let start = calendar.date(byAdding: .day, value: -6, to: todayStart),
               let end = calendar.date(byAdding: .day, value: 1, to: todayStart) else { return [] }
 
+        let totals = try await stepTotals(from: start, to: end)
+        // Health only returns days that have samples; fill the gaps with zero.
+        return (0..<7).compactMap { offset in
+            guard let date = calendar.date(byAdding: .day, value: offset, to: start) else { return nil }
+            return Day(date: date, steps: totals[date] ?? 0)
+        }
+    }
+
+    private func stepTotals(from start: Date, to end: Date) async throws -> [Date: Int] {
+        let calendar = Calendar.current
         let descriptor = HKStatisticsCollectionQueryDescriptor(
             predicate: HKSamplePredicate.quantitySample(
                 type: stepType,
                 predicate: HKQuery.predicateForSamples(withStart: start, end: end)
             ),
             options: .cumulativeSum,
-            anchorDate: todayStart,
+            anchorDate: calendar.startOfDay(for: start),
             intervalComponents: DateComponents(day: 1)
         )
         let collection = try await descriptor.result(for: store)
 
-        var days: [Day] = []
+        var totals: [Date: Int] = [:]
         collection.enumerateStatistics(from: start, to: end) { statistics, _ in
             let steps = statistics.sumQuantity()?.doubleValue(for: .count()) ?? 0
-            days.append(Day(date: statistics.startDate, steps: Int(steps)))
+            totals[calendar.startOfDay(for: statistics.startDate)] = Int(steps)
         }
-        // Health only returns days that have samples; fill the gaps with zero.
-        return (0..<7).compactMap { offset in
-            guard let date = calendar.date(byAdding: .day, value: offset, to: start) else { return nil }
-            return days.first { calendar.isDate($0.date, inSameDayAs: date) } ?? Day(date: date, steps: 0)
-        }
+        return totals
     }
 }

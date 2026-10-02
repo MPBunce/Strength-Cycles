@@ -24,6 +24,7 @@ struct TodayView: View {
                     .listRowInsets(EdgeInsets(top: 0, leading: 4, bottom: 0, trailing: 0))
                 StepsSection(steps: steps)
                 DailyWorkSection(day: today)
+                StretchingSection(day: today)
                 ChallengesSection()
             }
             .navigationTitle("Today")
@@ -40,5 +41,5 @@ struct TodayView: View {
 
 #Preview {
     TodayView()
-        .modelContainer(for: [Settings.self, DailyWorkItem.self, DailyWorkEntry.self, Challenge.self], inMemory: true)
+        .modelContainer(for: [Settings.self, DailyWorkItem.self, DailyWorkEntry.self, StretchEntry.self, Challenge.self], inMemory: true)
 }
