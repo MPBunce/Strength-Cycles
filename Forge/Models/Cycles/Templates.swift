@@ -24,13 +24,18 @@ struct UserSettings {
     let deadlift: Double
     let press: Double
     let useKilograms: Bool
-    
+    let rounding: WeightRounding
+
+    /// Training maxes are stored in lbs; programs get them in the lifter's own unit
+    /// so percentages are taken and rounded once, in the unit they'll load.
     init(from settings: Settings) {
-        self.squat = settings.squatMax
-        self.bench = settings.benchPressMax
-        self.deadlift = settings.deadliftMax
-        self.press = settings.overheadPressMax
+        let unit: (Double) -> Double = settings.usesKilograms ? WeightConverter.lbsToKg : { $0 }
+        self.squat = unit(settings.squatMax)
+        self.bench = unit(settings.benchPressMax)
+        self.deadlift = unit(settings.deadliftMax)
+        self.press = unit(settings.overheadPressMax)
         self.useKilograms = settings.usesKilograms
+        self.rounding = settings.weightRounding
     }
 }
 
@@ -46,12 +51,10 @@ struct Template: Identifiable {
         let program = programType.createProgram(with: settings)
         let trainingDays = program.generateDays(with: settings)
         
-        // Programs calculate in pounds (training maxes are stored in lbs); convert for kg users.
-        if settings.useKilograms {
-            for set in trainingDays.flatMap({ $0.day }).flatMap({ $0.sets }) {
-                if let lbs = set.weight {
-                    set.weight = WeightConverter.roundToAppropriateIncrement(WeightConverter.lbsToKg(lbs), isKilograms: true)
-                }
+        // Programs return exact percentages of the training max; round them to loadable weights.
+        for set in trainingDays.flatMap({ $0.day }).flatMap({ $0.sets }) {
+            if let weight = set.weight {
+                set.weight = settings.rounding.round(weight)
             }
         }
         

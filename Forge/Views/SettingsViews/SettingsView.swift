@@ -68,6 +68,40 @@ struct SettingsView: View {
                     Text("Existing cycles keep the unit they were created with.")
                 }
                 
+                // Equipment Section
+                Section {
+                    Picker(selection: Binding(
+                        get: { userSettings.usesKilograms ? userSettings.barbellKg : userSettings.barbellLbs },
+                        set: { newValue in updateSetting {
+                            if userSettings.usesKilograms { userSettings.barbellKg = newValue } else { userSettings.barbellLbs = newValue }
+                        } }
+                    )) {
+                        ForEach(userSettings.usesKilograms ? WeightRounding.barbellOptionsKg : WeightRounding.barbellOptionsLbs, id: \.self) { weight in
+                            Text("\(WeightConverter.format(weight)) \(userSettings.weightUnitString)").tag(weight)
+                        }
+                    } label: {
+                        Label("Barbell", systemImage: "line.horizontal.3")
+                    }
+
+                    Picker(selection: Binding(
+                        get: { userSettings.usesKilograms ? userSettings.smallestPlateKg : userSettings.smallestPlateLbs },
+                        set: { newValue in updateSetting {
+                            if userSettings.usesKilograms { userSettings.smallestPlateKg = newValue } else { userSettings.smallestPlateLbs = newValue }
+                        } }
+                    )) {
+                        ForEach(userSettings.usesKilograms ? WeightRounding.plateOptionsKg : WeightRounding.plateOptionsLbs, id: \.self) { plate in
+                            Text("\(WeightConverter.format(plate)) \(userSettings.weightUnitString)").tag(plate)
+                        }
+                    } label: {
+                        Label("Smallest Plate", systemImage: "circle.circle")
+                    }
+                } header: {
+                    Text("Equipment")
+                } footer: {
+                    let rounding = userSettings.weightRounding
+                    Text("Calculated weights round down to the nearest \(WeightConverter.format(rounding.increment)) \(userSettings.weightUnitString) (one smallest plate per side) and never go below the \(WeightConverter.format(rounding.barbell)) \(userSettings.weightUnitString) bar. Applies to new cycles.")
+                }
+
                 // Daily Steps Section
                 Section {
                     Stepper(value: Binding(
@@ -225,7 +259,7 @@ struct TrainingMaxRow: View {
     @Binding var value: Double
     let unit: String
     @State private var textValue: String = ""
-    @State private var isEditing: Bool = false
+    @FocusState private var isFocused: Bool
     
     var body: some View {
         HStack {
@@ -240,10 +274,14 @@ struct TrainingMaxRow: View {
                 .multilineTextAlignment(.trailing)
                 .frame(width: 80)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .focused($isFocused)
                 .onAppear {
                     textValue = value == 0 ? "" : WeightConverter.format(value)
                 }
                 .onChange(of: textValue) { _, newValue in
+                    // Only save what the user types. Filling the field with the (rounded) display
+                    // value must not write back, or each lbs/kg switch nudges the stored max.
+                    guard isFocused else { return }
                     if let doubleValue = Double(newValue) {
                         value = doubleValue
                     } else if newValue.isEmpty {

@@ -13,6 +13,31 @@ extension EnvironmentValues {
     @Entry var weightUnit: String = "lbs"
 }
 
+// MARK: - Plate rounding
+
+/// Rounds calculated working weights to what can actually be loaded:
+/// down to the nearest pair of the smallest plates, and never below the empty bar.
+struct WeightRounding {
+    let increment: Double
+    let barbell: Double
+
+    init(smallestPlate: Double, barbell: Double) {
+        self.increment = max(smallestPlate * 2, 0.01)
+        self.barbell = barbell
+    }
+
+    func round(_ weight: Double) -> Double {
+        // Small epsilon so 85.0000001% style float noise doesn't drop a whole jump.
+        let loadable = floor((weight + 1e-6) / increment) * increment
+        return max(barbell, (loadable * 100).rounded() / 100)
+    }
+
+    static let plateOptionsLbs: [Double] = [1.25, 2.5, 5]
+    static let plateOptionsKg: [Double] = [0.5, 1.25, 2.5]
+    static let barbellOptionsLbs: [Double] = [25, 35, 45, 55]
+    static let barbellOptionsKg: [Double] = [10, 15, 20, 25]
+}
+
 // MARK: - Unit Conversion Utilities
 struct WeightConverter {
     static func lbsToKg(_ lbs: Double) -> Double {
@@ -23,11 +48,9 @@ struct WeightConverter {
         return kg * 2.20462
     }
     
-    /// "65" rather than "65.0", but keeps real fractions like "67.5".
+    /// "65" rather than "65.0", keeping real fractions like "67.5" and "1.25".
     static func format(_ weight: Double) -> String {
-        weight.truncatingRemainder(dividingBy: 1) == 0
-            ? String(format: "%.0f", weight)
-            : String(format: "%.1f", weight)
+        weight.formatted(.number.precision(.fractionLength(0...2)).grouping(.never))
     }
 
     static func roundToAppropriateIncrement(_ weight: Double, isKilograms: Bool) -> Double {
@@ -51,6 +74,13 @@ class Settings {
     var enableCloudSync: Bool
     var showTutorial: Bool
     var dailyStepGoal: Int = 10000
+
+    // Equipment, kept per unit so switching lbs/kg keeps sensible values.
+    /// Smallest plate the lifter owns (one plate, loaded on each side).
+    var smallestPlateLbs: Double = 2.5
+    var smallestPlateKg: Double = 1.25
+    var barbellLbs: Double = 45
+    var barbellKg: Double = 20
     
     // Training Maxes - Always stored in pounds for consistency
     var benchPressMax: Double
@@ -171,6 +201,13 @@ extension Settings {
         displayTrainingMaxString(overheadPressMax)
     }
     
+    /// Rounding for the unit currently in use.
+    var weightRounding: WeightRounding {
+        usesKilograms
+            ? WeightRounding(smallestPlate: smallestPlateKg, barbell: barbellKg)
+            : WeightRounding(smallestPlate: smallestPlateLbs, barbell: barbellLbs)
+    }
+
     var weightUnitString: String {
         usesKilograms ? "kg" : "lbs"
     }

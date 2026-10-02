@@ -468,12 +468,12 @@ private func createSaturdayFrontSquatSets(tm: Double) -> [ExerciseSet] {
     }
 }
 
-// MARK: - Helper function to create sets with weight rounding
+// MARK: - Helper function to create sets
 private func createExerciseSet(setIndex: Int, reps: Int, weight: Double, isAmrap: Bool, amrapTargetReps: Int?) -> ExerciseSet {
-    let roundedWeight = roundDownToNearest5(weight)
+    // Exact percentage; Template.createCycle rounds to the lifter's plates and bar.
     return ExerciseSet(
         setIndex: setIndex,
-        weight: roundedWeight,
+        weight: weight,
         reps: reps,
         isEditable: false,
         isAmrap: isAmrap,
@@ -481,7 +481,3 @@ private func createExerciseSet(setIndex: Int, reps: Int, weight: Double, isAmrap
     )
 }
 
-// MARK: - Weight rounding function
-private func roundDownToNearest5(_ weight: Double) -> Double {
-    return floor(weight / 5.0) * 5.0
-}
