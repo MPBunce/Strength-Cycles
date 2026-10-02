@@ -166,3 +166,117 @@ struct LogRaceSheet: View {
         .clipped()
     }
 }
+
+// MARK: - Single runs
+
+/// One-off runs outside a plan.
+struct SingleRunsSection: View {
+    @Environment(\.modelContext) private var context
+    @Query(sort: \LoggedRun.date, order: .reverse) private var runs: [LoggedRun]
+    @State private var showingLog = false
+
+    var body: some View {
+        Section {
+            Button {
+                showingLog = true
+            } label: {
+                Label("Log a Run", systemImage: "figure.run")
+            }
+            ForEach(runs) { run in
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(RunSegment.formatKm(run.kilometres))
+                            .font(.headline)
+                        Text(run.date.formatted(.dateTime.month(.abbreviated).day().year()))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    if let seconds = run.seconds {
+                        VStack(alignment: .trailing, spacing: 2) {
+                            Text(RaceTime.format(seconds))
+                                .font(.headline.monospacedDigit())
+                            if let pace = RaceTime.pace(seconds: seconds, kilometres: run.kilometres) {
+                                Text(pace)
+                                    .font(.caption.monospacedDigit())
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                }
+                .padding(.vertical, 2)
+            }
+            .onDelete { offsets in
+                for index in offsets { context.delete(runs[index]) }
+            }
+        } header: {
+            Text("Runs")
+        } footer: {
+            Text("Log any run outside a plan. It counts on the Ran grid and towards your distance badges.")
+        }
+        .sheet(isPresented: $showingLog) {
+            LogRunSheet()
+        }
+    }
+}
+
+private struct LogRunSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
+    @State private var date = Date()
+    @State private var distanceText = ""
+    @State private var timeText = ""
+
+    private var kilometres: Double? {
+        Double(distanceText.replacingOccurrences(of: ",", with: ".")).flatMap { $0 > 0 ? $0 : nil }
+    }
+    private var seconds: Int? { timeText.isEmpty ? nil : RaceTime.parse(timeText) }
+    private var isValid: Bool { kilometres != nil && (timeText.isEmpty || seconds != nil) }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    DatePicker("Date", selection: $date, in: ...Date(), displayedComponents: .date)
+                    LabeledContent("Distance") {
+                        HStack(spacing: 4) {
+                            TextField("0", text: $distanceText)
+                                .keyboardType(.decimalPad)
+                                .multilineTextAlignment(.trailing)
+                                .frame(minWidth: 120)
+                            Text("km").foregroundStyle(.secondary)
+                        }
+                    }
+                    LabeledContent("Time") {
+                        TextField("Optional, h:mm:ss", text: $timeText)
+                            .keyboardType(.numbersAndPunctuation)
+                            .multilineTextAlignment(.trailing)
+                            .frame(minWidth: 160)
+                    }
+                } footer: {
+                    if let kilometres, let seconds, let pace = RaceTime.pace(seconds: seconds, kilometres: kilometres) {
+                        Text("Pace \(pace)")
+                    } else if !timeText.isEmpty && seconds == nil {
+                        Text("Enter time as minutes:seconds or hours:minutes:seconds, e.g. 28:45.")
+                    }
+                }
+            }
+            .navigationTitle("Log a Run")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        if let kilometres {
+                            context.insert(LoggedRun(date: date, kilometres: kilometres, seconds: seconds))
+                        }
+                        dismiss()
+                    }
+                    .fontWeight(.semibold)
+                    .disabled(!isValid)
+                }
+            }
+        }
+        .presentationDetents([.medium])
+    }
+}

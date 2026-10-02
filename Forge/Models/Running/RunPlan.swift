@@ -62,6 +62,8 @@ struct RunSession: Codable, Hashable, Identifiable {
     var completedDate: Date? = nil
     /// Distance actually run, entered by the user. Optional so older saved plans still decode.
     var loggedKilometres: Double? = nil
+    /// Finish time for distance runs, entered by the user.
+    var loggedSeconds: Int? = nil
 
     var isCompleted: Bool { completedDate != nil }
 
@@ -134,6 +136,11 @@ class RunPlan {
     func setCompleted(_ sessionID: UUID, on date: Date?) {
         guard let index = sessions.firstIndex(where: { $0.id == sessionID }) else { return }
         sessions[index].completedDate = date
+    }
+
+    func setTime(_ sessionID: UUID, seconds: Int?) {
+        guard let index = sessions.firstIndex(where: { $0.id == sessionID }) else { return }
+        sessions[index].loggedSeconds = seconds
     }
 
     func setDistance(_ sessionID: UUID, kilometres: Double?) {

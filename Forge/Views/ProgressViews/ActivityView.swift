@@ -52,6 +52,7 @@ struct ActivityRecords {
     let cycles: [Cycles]
     var runPlans: [RunPlan] = []
     var races: [RaceResult] = []
+    var singleRuns: [LoggedRun] = []
     let dailyItems: [DailyWorkItem]
     let dailyEntries: [DailyWorkEntry]
     let stretchEntries: [StretchEntry]
@@ -66,7 +67,7 @@ struct ActivityRecords {
             return Set(cycles.flatMap { $0.trainingDays.compactMap(\.completedDate) }.map(calendar.startOfDay))
         case .running:
             let planRuns = runPlans.flatMap { $0.sessions.compactMap(\.completedDate) }
-            return Set((planRuns + races.map(\.date)).map(calendar.startOfDay))
+            return Set((planRuns + races.map(\.date) + singleRuns.map(\.date)).map(calendar.startOfDay))
         case .steps:
             return Set(stepsByDay.filter { $0.value >= stepGoal }.keys)
         case .stretching:
@@ -116,6 +117,7 @@ struct ActivityView: View {
     @Query private var cycles: [Cycles]
     @Query private var runPlans: [RunPlan]
     @Query private var races: [RaceResult]
+    @Query private var singleRuns: [LoggedRun]
     @Query private var dailyItems: [DailyWorkItem]
     @Query private var dailyEntries: [DailyWorkEntry]
     @Query private var stretchEntries: [StretchEntry]
@@ -130,7 +132,7 @@ struct ActivityView: View {
     private var stepGoal: Int { settings.first?.dailyStepGoal ?? 10000 }
 
     private var records: ActivityRecords {
-        ActivityRecords(cycles: cycles, runPlans: runPlans, races: races, dailyItems: dailyItems, dailyEntries: dailyEntries,
+        ActivityRecords(cycles: cycles, runPlans: runPlans, races: races, singleRuns: singleRuns, dailyItems: dailyItems, dailyEntries: dailyEntries,
                         stretchEntries: stretchEntries, stepsByDay: stepsByDay, stepGoal: stepGoal)
     }
 
@@ -173,6 +175,7 @@ struct ActivityHistoryView: View {
     @Query private var cycles: [Cycles]
     @Query private var runPlans: [RunPlan]
     @Query private var races: [RaceResult]
+    @Query private var singleRuns: [LoggedRun]
     @Query private var dailyItems: [DailyWorkItem]
     @Query private var dailyEntries: [DailyWorkEntry]
     @Query private var stretchEntries: [StretchEntry]
@@ -187,7 +190,7 @@ struct ActivityHistoryView: View {
     private let calendar = Calendar.current
 
     var body: some View {
-        let records = ActivityRecords(cycles: cycles, runPlans: runPlans, races: races, dailyItems: dailyItems, dailyEntries: dailyEntries,
+        let records = ActivityRecords(cycles: cycles, runPlans: runPlans, races: races, singleRuns: singleRuns, dailyItems: dailyItems, dailyEntries: dailyEntries,
                                       stretchEntries: stretchEntries, stepsByDay: stepsByDay,
                                       stepGoal: settings.first?.dailyStepGoal ?? 10000)
         let completed = records.completedDays(for: metric)
@@ -279,7 +282,8 @@ struct ActivityHistoryView: View {
             .filter { $0.completedDate.map(inPeriod) ?? false }
             .reduce(0) { $0 + $1.coveredKilometres }
         let raceKm = races.filter { inPeriod($0.date) }.reduce(0) { $0 + $1.distance.kilometres }
-        return planKm + raceKm
+        let singleKm = singleRuns.filter { inPeriod($0.date) }.reduce(0) { $0 + $1.kilometres }
+        return planKm + raceKm + singleKm
     }
 
     /// Completed days in the current calendar year or month.

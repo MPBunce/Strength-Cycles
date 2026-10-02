@@ -18,21 +18,33 @@ The home tab for the current day.
   Log reps with the quick-add button or set an exact count. Logs reset each day.
 - **Challenges**: one-off goals you tick off when done. Start from presets (Villain Challenge stages, 20-Minute Aerobic Solution, 60s dead hang) or write your own.
 
-### Cycles
+### Training
 - Start a cycle from a built-in program: 5/3/1, 5/3/1 Boring But Big, nSuns (4, 5 and 6 day), Greyskull LP, Garcia, Menzer, Arnold Split, Push Pull Legs, or Upper Lower (4 and 5 day).
 - 5/3/1 and nSuns calculate working weights from your training maxes. The other programs leave weights blank for you to fill in.
 - **Custom templates**: build your own program with named days and exercises prescribed as sets × reps, with an optional AMRAP last set. Find them under *My Templates* when adding a cycle; swipe to edit or delete.
 - Tick off sets as you go: tap once for done, twice for failed, three times to reset. AMRAP sets open a sheet to log the reps you hit.
 
+### Running
+Under Training › Running, separate from strength cycles.
+
+- Plans: Couch to 5K, 5K to 10K and Half Marathon. Interval runs have a guided timer with spoken run/walk cues.
+- Log distance and (for distance runs) time after each run; log single runs outside a plan.
+- Log race results for 5K, 10K, half and full marathon, with pace and personal bests.
+
 ### Progress
 - **Charts**: estimated one-rep max over time for squat, bench, deadlift and overhead press, using sets marked done on completed training days.
 - **Activity**: a calendar of completed training days.
-- **Goals**: common strength milestones to tick off.
+- **Goals**: strength milestones that tick themselves off from logged sets, and running goals for each race distance, including a fixed top-5% time.
+- **Badges**: workouts and step days per year, kilometres run per year, and unbroken streaks for daily work and stretching.
 
 ### Settings
 - Weight unit (lbs or kg). Each cycle keeps the unit it was created with.
 - Training maxes for squat, bench, deadlift and overhead press.
 - Daily step goal.
+- Equipment: barbell weight and smallest plate, used to round calculated weights.
+- Appearance: System, Light or Dark.
+
+A full in-app guide lives under Settings › About › How Forge Works.
 
 ## Requirements
 
@@ -53,7 +65,7 @@ To run on your own device, set your development team under *Signing & Capabiliti
 ```
 Forge/
 ├── ForgeApp.swift          App entry point and SwiftData container
-├── ContentView.swift       Tab bar: Today, Cycles, Progress, Settings
+├── ContentView.swift       Tab bar: Today, Training, Progress, Settings
 ├── Models/
 │   ├── Cycles/             Cycles, training days, exercises, sets, custom templates
 │   ├── ProgramTemplates/   Built-in programs and default set schemes

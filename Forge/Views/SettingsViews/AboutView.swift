@@ -15,7 +15,7 @@ struct AboutView: View {
             VStack(spacing: 30) {
                 // App Icon and Title
                 VStack(spacing: 15) {
-                    Image(systemName: "dumbbell.fill")
+                    Image(systemName: "hammer.fill")
                         .font(.system(size: 60))
                         .foregroundColor(.blue)
                     
@@ -28,26 +28,32 @@ struct AboutView: View {
                         .foregroundColor(.secondary)
                 }
                 
-                // Coming Soon Section
-                VStack(spacing: 20) {
-                    Text("🚧 Coming Soon 🚧")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.orange)
-                    
-                    Text("Additional settings and features are currently in development and will be available in future updates.")
-                        .font(.body)
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal)
-                    
-                    Text("For now, you can set your training maxes to get started with your strength training cycles.")
-                        .font(.callout)
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal)
+                // Guide
+                NavigationLink {
+                    GuideView()
+                } label: {
+                    HStack {
+                        Image(systemName: "book")
+                            .font(.title3)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("How Forge Works")
+                                .font(.headline)
+                            Text("A guide to every part of the app")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
+                    .padding()
+                    .background(Color(.secondarySystemBackground))
+                    .cornerRadius(12)
+                    .padding(.horizontal)
                 }
-                
+                .buttonStyle(.plain)
+
                 // Developer Info Section
                 VStack(spacing: 20) {
                     Text("Developer Info")

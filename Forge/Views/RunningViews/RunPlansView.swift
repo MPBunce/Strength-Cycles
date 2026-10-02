@@ -16,6 +16,7 @@ struct RunPlansList: View {
 
     var body: some View {
         List {
+            SingleRunsSection()
             RacesSection()
 
             Section("Plans") {
@@ -220,6 +221,7 @@ struct RunSessionSheet: View {
     @State private var guiding = false
     @State private var loggingRace = false
     @State private var distanceText = ""
+    @State private var timeText = ""
     @FocusState private var distanceFocused: Bool
 
     private var session: RunSession? { plan.sessions.first { $0.id == sessionID } }
@@ -249,7 +251,7 @@ struct RunSessionSheet: View {
                         if session.isCompleted {
                             LabeledContent {
                                 HStack(spacing: 4) {
-                                    TextField(session.isTimed ? "Enter" : RunSegment.formatKm(session.runningKilometres),
+                                    TextField(session.isTimed ? "Enter" : session.runningKilometres.formatted(.number.precision(.fractionLength(0...1))),
                                               text: $distanceText)
                                         .keyboardType(.decimalPad)
                                         .multilineTextAlignment(.trailing)
@@ -259,6 +261,20 @@ struct RunSessionSheet: View {
                                 }
                             } label: {
                                 Label("Distance", systemImage: "ruler")
+                            }
+                            if !session.isTimed {
+                                LabeledContent {
+                                    TextField("h:mm:ss", text: $timeText)
+                                        .keyboardType(.numbersAndPunctuation)
+                                        .multilineTextAlignment(.trailing)
+                                        .frame(maxWidth: 110)
+                                } label: {
+                                    Label("Time", systemImage: "stopwatch")
+                                }
+                                if let seconds = session.loggedSeconds,
+                                   let pace = RaceTime.pace(seconds: seconds, kilometres: session.loggedKilometres ?? session.runningKilometres) {
+                                    LabeledContent("Pace", value: pace)
+                                }
                             }
                         }
                         Button {
@@ -307,6 +323,10 @@ struct RunSessionSheet: View {
                 }
                 .onAppear {
                     distanceText = session.loggedKilometres.map { RunSegment.formatKm($0).replacingOccurrences(of: " km", with: "") } ?? ""
+                    timeText = session.loggedSeconds.map(RaceTime.format) ?? ""
+                }
+                .onChange(of: timeText) { _, text in
+                    plan.setTime(session.id, seconds: text.isEmpty ? nil : RaceTime.parse(text))
                 }
                 .onChange(of: distanceText) { _, text in
                     let value = Double(text.replacingOccurrences(of: ",", with: "."))

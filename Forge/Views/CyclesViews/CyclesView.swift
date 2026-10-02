@@ -38,7 +38,7 @@ struct CyclesView: View {
                     RunPlansList(showingAddPlan: $showingAddRun)
                 }
             }
-            .navigationTitle("Cycles")
+            .navigationTitle("Training")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 // The empty states have their own add button.

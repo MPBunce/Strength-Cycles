@@ -21,7 +21,7 @@ struct ContentView: View {
                 .tag(0)
             CyclesView()
                 .tabItem {
-                    Label("Cycles", systemImage: "arrow.2.circlepath")
+                    Label("Training", systemImage: "figure.strengthtraining.traditional")
                 }
                 .tag(1)
             ProgressTabView()
@@ -41,5 +41,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [Cycles.self, Goal.self, Settings.self, CustomTemplate.self, DailyWorkItem.self, DailyWorkEntry.self, StretchEntry.self, RunPlan.self, RaceResult.self, Challenge.self], inMemory: true)
+        .modelContainer(for: [Cycles.self, Goal.self, Settings.self, CustomTemplate.self, DailyWorkItem.self, DailyWorkEntry.self, StretchEntry.self, RunPlan.self, RaceResult.self, LoggedRun.self, Challenge.self], inMemory: true)
 }

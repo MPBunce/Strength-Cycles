@@ -21,6 +21,7 @@ struct ForgeApp: App {
             StretchEntry.self,
             RunPlan.self,
             RaceResult.self,
+            LoggedRun.self,
             Challenge.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)

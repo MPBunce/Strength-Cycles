@@ -31,8 +31,7 @@ enum RaceDistance: String, Codable, CaseIterable, Identifiable {
         }
     }
 
-    /// Rough top-5% finish time across all finishers in large public race results.
-    /// Real cut-offs vary a lot by age, sex and course, so the user can change it.
+    /// Rough top-5% finish time across all finishers in large public races: the fixed goal time.
     var defaultTopFivePercentSeconds: Int {
         switch self {
         case .fiveK: return 21 * 60
@@ -41,9 +40,6 @@ enum RaceDistance: String, Codable, CaseIterable, Identifiable {
         case .marathon: return 200 * 60
         }
     }
-
-    /// UserDefaults key for the user's own target time.
-    var targetKey: String { "raceTarget.\(rawValue)" }
 }
 
 @Model
@@ -73,7 +69,42 @@ class RaceResult {
     }
 }
 
+/// A one-off run outside any plan.
+@Model
+class LoggedRun {
+    var date: Date = Date()
+    var kilometres: Double = 0
+    /// Optional finish time.
+    var seconds: Int? = nil
+
+    init(date: Date, kilometres: Double, seconds: Int?) {
+        self.date = date
+        self.kilometres = kilometres
+        self.seconds = seconds
+    }
+}
+
 enum RaceTime {
+    /// Parses "25:30" or "1:05:30" (or plain minutes, "45") into seconds.
+    static func parse(_ text: String) -> Int? {
+        let parts = text.split(separator: ":").map { Int($0.trimmingCharacters(in: .whitespaces)) }
+        guard !parts.isEmpty, parts.allSatisfy({ $0 != nil }) else { return nil }
+        let values = parts.compactMap { $0 }
+        switch values.count {
+        case 1: return values[0] * 60
+        case 2: return values[1] < 60 ? values[0] * 60 + values[1] : nil
+        case 3: return values[1] < 60 && values[2] < 60 ? values[0] * 3600 + values[1] * 60 + values[2] : nil
+        default: return nil
+        }
+    }
+
+    /// "5:12 /km" for a time over a distance.
+    static func pace(seconds: Int, kilometres: Double) -> String? {
+        guard kilometres > 0, seconds > 0 else { return nil }
+        let perKm = Int((Double(seconds) / kilometres).rounded())
+        return String(format: "%d:%02d /km", perKm / 60, perKm % 60)
+    }
+
     /// "21:30" or "1:36:00".
     static func format(_ seconds: Int) -> String {
         let h = seconds / 3600, m = (seconds % 3600) / 60, s = seconds % 60
