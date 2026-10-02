@@ -68,6 +68,31 @@ struct SettingsView: View {
                     Text("Existing cycles keep the unit they were created with.")
                 }
                 
+                // Daily Steps Section
+                Section {
+                    Stepper(value: Binding(
+                        get: { userSettings.dailyStepGoal },
+                        set: { newValue in updateSetting { userSettings.dailyStepGoal = newValue } }
+                    ), in: 1_000...50_000, step: 500) {
+                        // Value under the title: side by side with the stepper the row was too narrow.
+                        Label {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Daily Step Goal")
+                                Text("\(userSettings.dailyStepGoal.formatted()) steps")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                    .monospacedDigit()
+                            }
+                        } icon: {
+                            Image(systemName: "figure.walk")
+                        }
+                    }
+                } header: {
+                    Text("Steps")
+                } footer: {
+                    Text("Steps are read from Apple Health and shown on the Today tab.")
+                }
+                
                 // Equipment Section
                 Section {
                     Picker(selection: Binding(
@@ -102,31 +127,6 @@ struct SettingsView: View {
                     Text("Calculated weights round down to the nearest \(WeightConverter.format(rounding.increment)) \(userSettings.weightUnitString) (one smallest plate per side) and never go below the \(WeightConverter.format(rounding.barbell)) \(userSettings.weightUnitString) bar. Applies to new cycles.")
                 }
 
-                // Daily Steps Section
-                Section {
-                    Stepper(value: Binding(
-                        get: { userSettings.dailyStepGoal },
-                        set: { newValue in updateSetting { userSettings.dailyStepGoal = newValue } }
-                    ), in: 1_000...50_000, step: 500) {
-                        // Value under the title: side by side with the stepper the row was too narrow.
-                        Label {
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("Daily Step Goal")
-                                Text("\(userSettings.dailyStepGoal.formatted()) steps")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                                    .monospacedDigit()
-                            }
-                        } icon: {
-                            Image(systemName: "figure.walk")
-                        }
-                    }
-                } header: {
-                    Text("Steps")
-                } footer: {
-                    Text("Steps are read from Apple Health and shown on the Today tab.")
-                }
-                
                 // Training Maxes Section
                 Section {
                     TrainingMaxRow(
