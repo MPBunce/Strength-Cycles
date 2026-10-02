@@ -74,38 +74,97 @@ private struct RunPlanRow: View {
 private struct RunPlanSelectionSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
+    @Query(sort: \CustomRunPlan.createdAt) private var customPlans: [CustomRunPlan]
+    @State private var creating = false
+    @State private var editing: CustomRunPlan?
+    @State private var showingPlus = false
+    private var plus = ForgePlus.shared
 
     var body: some View {
         NavigationStack {
-            List(RunPlanTemplate.all) { template in
-                Button {
-                    context.insert(template.createPlan())
-                    dismiss()
-                } label: {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(template.name)
-                            .font(.headline)
-                            .foregroundStyle(.primary)
-                        Text(template.summary)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        Text(template.duration)
-                            .font(.caption2)
-                            .foregroundStyle(.blue)
+            List {
+                Section {
+                    ForEach(customPlans) { custom in
+                        planRow(name: custom.name,
+                                summary: custom.details.isEmpty ? nil : custom.details,
+                                duration: "\(custom.weekCount) \(custom.weekCount == 1 ? "week" : "weeks") · \(custom.runsPerWeek) runs a week") {
+                            context.insert(custom.createPlan())
+                            dismiss()
+                        }
+                        .swipeActions {
+                            Button("Delete", role: .destructive) { context.delete(custom) }
+                            Button("Edit") {
+                                if plus.isActive { editing = custom } else { showingPlus = true }
+                            }
+                            .tint(.blue)
+                        }
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .contentShape(Rectangle())
+                    Button {
+                        if plus.isActive { creating = true } else { showingPlus = true }
+                    } label: {
+                        HStack {
+                            Label("Create Running Plan", systemImage: plus.isActive ? "plus" : "lock")
+                            if !plus.isActive {
+                                Spacer()
+                                PlusBadge()
+                            }
+                        }
+                    }
+                } header: {
+                    Text("My Plans")
+                } footer: {
+                    if !customPlans.isEmpty {
+                        Text("Swipe a plan to edit or delete it.")
+                    }
                 }
-                .buttonStyle(.plain)
+
+                Section("Plans") {
+                    ForEach(RunPlanTemplate.all) { template in
+                        planRow(name: template.name, summary: template.summary, duration: template.duration) {
+                            context.insert(template.createPlan())
+                            dismiss()
+                        }
+                    }
+                }
             }
             .navigationTitle("Select a Running Plan")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(isPresented: $creating) {
+                RunPlanEditorView(plan: nil)
+            }
+            .navigationDestination(item: $editing) { custom in
+                RunPlanEditorView(plan: custom)
+            }
+            .navigationDestination(isPresented: $showingPlus) {
+                ForgePlusView()
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
                 }
             }
         }
+    }
+
+    private func planRow(name: String, summary: String?, duration: String, onSelect: @escaping () -> Void) -> some View {
+        Button(action: onSelect) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(name)
+                    .font(.headline)
+                    .foregroundStyle(.primary)
+                if let summary {
+                    Text(summary)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Text(duration)
+                    .font(.caption2)
+                    .foregroundStyle(.blue)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 }
 

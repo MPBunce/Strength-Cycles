@@ -21,6 +21,7 @@ struct ForgeApp: App {
             StretchEntry.self,
             RunPlan.self,
             RaceResult.self,
+            CustomRunPlan.self,
             LoggedRun.self,
             Challenge.self
         ])

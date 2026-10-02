@@ -21,13 +21,14 @@ The home tab for the current day.
 ### Training
 - Start a cycle from a built-in program: 5/3/1, 5/3/1 Boring But Big, nSuns (4, 5 and 6 day), Greyskull LP, Menzer, Arnold Split, Push Pull Legs, or Upper Lower (4 and 5 day).
 - 5/3/1 and nSuns calculate working weights from your training maxes. The other programs leave weights blank for you to fill in.
-- **Custom templates**: build your own program with named days and exercises prescribed as sets × reps, with an optional AMRAP last set. Find them under *My Templates* when adding a cycle; swipe to edit or delete.
+- **Custom templates** (Forge Plus): build your own program with named days and exercises prescribed as sets × reps, with an optional AMRAP last set. Find them under *My Templates* when adding a cycle; swipe to edit or delete.
 - Tick off sets as you go: tap once for done, twice for failed, three times to reset. AMRAP sets open a sheet to log the reps you hit.
 
 ### Running
 Under Training › Running, separate from strength cycles.
 
 - Plans: Couch to 5K, 5K to 10K and Half Marathon. Interval runs have a guided timer with spoken run/walk cues.
+- **Custom running plans** (Forge Plus): intervals, timed runs or distances, grouped into weeks.
 - Log distance and (for distance runs) time after each run; log single runs outside a plan.
 - Log race results for 5K, 10K, half and full marathon, with pace and personal bests.
 
@@ -45,6 +46,10 @@ Under Training › Running, separate from strength cycles.
 - Appearance: System, Light or Dark.
 
 A full in-app guide lives under Settings › How Forge Works.
+
+## Forge Plus
+
+Plus unlocks creating your own strength templates and running plans; everything else is free. Purchases aren't wired up yet: `ForgePlus.isActive` is the single switch, and development (DEBUG) builds have Plus on by default, with a toggle under Settings › Forge Plus.
 
 ## Requirements
 

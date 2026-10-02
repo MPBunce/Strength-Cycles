@@ -83,3 +83,33 @@ struct RunDistanceTests {
         #expect(tenK.last?.raceDistance == .tenK)
     }
 }
+
+struct CustomRunPlanTests {
+    @Test func customPlanGroupsRunsIntoWeeks() {
+        var intervals = CustomRun()
+        intervals.kind = .intervals
+        intervals.runSeconds = 60
+        intervals.walkSeconds = 90
+        intervals.repeats = 8
+        var steady = CustomRun()
+        steady.kind = .steady
+        steady.minutes = 20
+        var distance = CustomRun()
+        distance.kind = .distance
+        distance.kilometres = 5
+
+        let custom = CustomRunPlan(name: "Mine", runsPerWeek: 2, runs: [intervals, steady, distance])
+        #expect(custom.weekCount == 2)
+
+        let plan = custom.createPlan()
+        let sessions = plan.orderedSessions
+        #expect(sessions.count == 3)
+        #expect(sessions[0].week == 1 && sessions[0].number == 1)
+        #expect(sessions[1].week == 1 && sessions[1].number == 2)
+        #expect(sessions[2].week == 2 && sessions[2].number == 1)
+        #expect(sessions[0].summary == "Run 60 sec / walk 90 sec × 8")
+        #expect(sessions[1].summary == "Run 20 min")
+        #expect(sessions[2].summary == "Run 5 km")
+        #expect(sessions[2].runningKilometres == 5)
+    }
+}

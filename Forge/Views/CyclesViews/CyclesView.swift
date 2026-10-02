@@ -94,6 +94,8 @@ struct CycleSelectionSheet: View {
     @Environment(\.dismiss) var dismiss
     @State private var editingTemplate: CustomTemplate?
     @State private var creatingTemplate = false
+    @State private var showingPlus = false
+    private var plus = ForgePlus.shared
     
     private var userSettings: Settings {
         if let existingSettings = settings.first {
@@ -122,14 +124,22 @@ struct CycleSelectionSheet: View {
                         }
                         .swipeActions {
                             Button("Delete", role: .destructive) { context.delete(template) }
-                            Button("Edit") { editingTemplate = template }
-                                .tint(.blue)
+                            Button("Edit") {
+                                if plus.isActive { editingTemplate = template } else { showingPlus = true }
+                            }
+                            .tint(.blue)
                         }
                     }
                     Button {
-                        creatingTemplate = true
+                        if plus.isActive { creatingTemplate = true } else { showingPlus = true }
                     } label: {
-                        Label("Create Template", systemImage: "plus")
+                        HStack {
+                            Label("Create Template", systemImage: plus.isActive ? "plus" : "lock")
+                            if !plus.isActive {
+                                Spacer()
+                                PlusBadge()
+                            }
+                        }
                     }
                 } header: {
                     Text("My Templates")
@@ -150,6 +160,9 @@ struct CycleSelectionSheet: View {
                 }
             }
             .navigationTitle("Select a Cycle")
+            .navigationDestination(isPresented: $showingPlus) {
+                ForgePlusView()
+            }
             .navigationDestination(isPresented: $creatingTemplate) {
                 TemplateEditorView(template: nil)
             }
