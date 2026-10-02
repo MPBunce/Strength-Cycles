@@ -134,15 +134,26 @@ private struct StretchRoutineDetail: View {
                                 .foregroundStyle(.secondary)
                                 .frame(width: 20)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(stretch.name)
-                                Text(stretch.hold)
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                HStack(alignment: .firstTextBaseline) {
+                                    Text(stretch.name)
+                                    Spacer()
+                                    Text(stretch.hold)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                        .multilineTextAlignment(.trailing)
+                                }
+                                if !stretch.detail.isEmpty {
+                                    Text(stretch.detail)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
                             }
                         }
                     }
                 } footer: {
-                    Text(routine.summary + ". About \(routine.minutes) minutes.")
+                    Text([routine.summary + ". About \(routine.minutes) minutes.", routine.source]
+                        .filter { !$0.isEmpty }
+                        .joined(separator: "\n\n"))
                 }
 
                 Section {
@@ -179,28 +190,18 @@ private struct StretchRoutinePicker: View {
         NavigationStack {
             List {
                 Section {
-                    ForEach(StretchRoutine.all) { routine in
-                        let isChosen = chosenIDs.contains(routine.id)
-                        Button {
-                            toggle(routine.id)
-                        } label: {
-                            HStack(spacing: 12) {
-                                Image(systemName: isChosen ? "checkmark.circle.fill" : "circle")
-                                    .font(.title3)
-                                    .foregroundStyle(isChosen ? Color.accentColor : .secondary)
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(routine.name)
-                                        .foregroundStyle(.primary)
-                                    Text("\(routine.summary) · ~\(routine.minutes) min")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                }
-                            }
-                        }
-                        .tint(.primary)
+                    ForEach(StretchRoutine.standalone) { routine in
+                        routineRow(routine)
                     }
+                }
+                Section {
+                    ForEach(StartingStretching.levels) { routine in
+                        routineRow(routine)
+                    }
+                } header: {
+                    Text("Starting Stretching")
                 } footer: {
-                    Text("Chosen routines show on the Today tab every day.")
+                    Text("Pick the level that fits you; choosing one replaces the other. Chosen routines show on the Today tab every day.")
                 }
             }
             .navigationTitle("Stretching Routines")
@@ -214,11 +215,36 @@ private struct StretchRoutinePicker: View {
         .presentationDetents([.medium, .large])
     }
 
+    private func routineRow(_ routine: StretchRoutine) -> some View {
+        let isChosen = chosenIDs.contains(routine.id)
+        return Button {
+            toggle(routine.id)
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: isChosen ? "checkmark.circle.fill" : "circle")
+                    .font(.title3)
+                    .foregroundStyle(isChosen ? Color.accentColor : .secondary)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(routine.name)
+                        .foregroundStyle(.primary)
+                    Text("\(routine.summary) · ~\(routine.minutes) min")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .tint(.primary)
+    }
+
     private func toggle(_ id: String) {
         var ids = chosenIDs
         if let index = ids.firstIndex(of: id) {
             ids.remove(at: index)
         } else {
+            // Only one Starting Stretching level at a time.
+            if StartingStretching.isLevel(id) {
+                ids.removeAll(where: StartingStretching.isLevel)
+            }
             ids.append(id)
         }
         chosenStorage = ids.joined(separator: "\n")
