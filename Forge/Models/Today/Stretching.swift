@@ -65,21 +65,21 @@ struct StretchRoutine: Identifiable, Hashable {
     static let fiveStretches = StretchRoutine(
         id: "movementbydavid-5",
         name: "5 Stretches",
-        summary: "Hips, hamstrings, chest and lats",
-        minutes: 8,
+        summary: "Daily: hips, hamstrings, chest and lats",
+        minutes: 5,
         stretches: [
-            Stretch(name: "Pancake Stretch", hold: "60 sec",
+            Stretch(name: "Pancake Stretch", hold: "30 sec",
                     detail: "Sit with the legs wide and hinge forward from the hips with a flat back."),
-            Stretch(name: "Figure Four Stretch", hold: "60 sec each side",
+            Stretch(name: "Figure Four Stretch", hold: "30 sec each side",
                     detail: "Cross one ankle over the opposite knee and draw the legs in to open the hip."),
-            Stretch(name: "Hip Flexor Stretch", hold: "60 sec each side",
+            Stretch(name: "Hip Flexor Stretch", hold: "30 sec each side",
                     detail: "Half-kneeling lunge; squeeze the back glute and shift the hips forward."),
-            Stretch(name: "Chest Opening Stretch", hold: "60 sec",
+            Stretch(name: "Chest Opening Stretch", hold: "30 sec",
                     detail: "Open the arms back against a wall or doorway and let the chest stretch."),
-            Stretch(name: "Lat Stretch", hold: "60 sec each side",
+            Stretch(name: "Lat Stretch", hold: "30 sec each side",
                     detail: "Reach overhead onto a support and sink the hips back to lengthen the side of the back.")
         ],
-        source: "From MovementbyDavid's video \"Literally 5 Stretches is all you Need\". Watch it for form; hold times here are a starting point."
+        source: "From MovementbyDavid's video \"Literally 5 Stretches is all you Need\". Hold each for 30 seconds and do it every day. Watch the video for form."
     )
 }
 
