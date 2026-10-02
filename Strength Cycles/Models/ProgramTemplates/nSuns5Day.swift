@@ -48,19 +48,19 @@ class nSunsFiveDayProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Chin Ups",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Barbell Curls",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Tricep Push Downs",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     )
                 ],
                 completedDate: nil
@@ -87,13 +87,13 @@ class nSunsFiveDayProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Dumbbell Row",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Abs",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil
@@ -120,13 +120,13 @@ class nSunsFiveDayProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Rear Delt Flys",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Dumbbell Curls",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     )
                 ],
                 completedDate: nil
@@ -153,13 +153,13 @@ class nSunsFiveDayProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Dumbbell Row",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Abs",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil
@@ -186,19 +186,19 @@ class nSunsFiveDayProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Chin Ups",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Tricep Push Downs",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Barbell Curls",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                 ],
                 completedDate: nil

@@ -25,27 +25,27 @@ class MenzerProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Dips",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 6)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Incline Dumbbell Press",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 6)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Dumbbell Pullovers",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 6)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Supinated Lat Pulldowns",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 6)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Deadlift",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 6)
                     )
                 ],
                 completedDate: nil
@@ -59,22 +59,22 @@ class MenzerProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Squat",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Abs",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Calf Raises",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Hamstring Curls",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 8)
                     )
                 ],
                 completedDate: nil
@@ -88,27 +88,27 @@ class MenzerProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Dips",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 6)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Lateral Raises",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 6)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Rear Delt Flyes",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 6)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Barbell Curls",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Tricep Pushdowns",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 6)
                     )
                 ],
                 completedDate: nil
@@ -122,22 +122,22 @@ class MenzerProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Squat",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Abs",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Calf Raises",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Leg Extensions",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 8)
                     )
                 ],
                 completedDate: nil

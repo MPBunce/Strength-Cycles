@@ -14,8 +14,7 @@ struct ActivityView: View {
     private let daysInWeek = 7
     
     var body: some View {
-        NavigationView {
-            ScrollView {
+        ScrollView {
                 VStack(spacing: 20) {
                     // Title and stats
                     VStack(spacing: 8) {
@@ -109,7 +108,6 @@ struct ActivityView: View {
                     
                     Spacer()
                 }
-            }
         }
     }
     
@@ -252,9 +250,6 @@ struct ActivitySquare: View {
             .fill(isCompleted ? Color.green : Color(.systemGray5))
             .frame(width: 15, height: 15)
             .cornerRadius(3)
-            .onTapGesture {
-                showTooltip.toggle()
-            }
             .overlay(
                 // Tooltip
                 Group {

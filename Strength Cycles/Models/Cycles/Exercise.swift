@@ -53,7 +53,16 @@ class ExerciseSet {
     func reset() {
         completionStatus = .notStarted
     }
-    
+
+    /// Tap cycle used everywhere a set is toggled: not started -> done -> failed -> not started.
+    func cycleStatus() {
+        switch completionStatus {
+        case .notStarted: markAsCompleted()
+        case .completedSuccessfully: markAsFailed()
+        case .failed: reset()
+        }
+    }
+
     var isCompleted: Bool {
         return completionStatus != .notStarted
     }
@@ -87,6 +96,11 @@ class Exercise {
         )
     }
     
+    /// SwiftData does not preserve the order of to-many relationships, so always read sets through this.
+    var orderedSets: [ExerciseSet] {
+        sets.sorted { $0.setIndex < $1.setIndex }
+    }
+
     // MARK: - Set Management Methods
     func addSet(isEditable: Bool = true, isAmrap: Bool = false) -> ExerciseSet? {
         guard canAlterSets else { return nil }

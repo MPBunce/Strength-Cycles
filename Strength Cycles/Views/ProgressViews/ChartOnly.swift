@@ -11,7 +11,12 @@ import Charts
 
 struct ChartOnly: View {
     @Environment(\.modelContext) var context
-    @Query(sort: \Cycles.startDate, order: .forward) var cycles: [Cycles] // Changed to forward order
+    @Query(sort: \Cycles.startDate, order: .forward) var cycles: [Cycles]
+    @Query var settings: [Settings]
+    
+    /// Charts use the app's current unit; cycles logged in the other unit are converted.
+    private var showKilograms: Bool { settings.first?.usesKilograms ?? false }
+    private var unit: String { showKilograms ? "kg" : "lbs" }
 
     private let targetLifts = [
         "Overhead Press",
@@ -21,17 +26,13 @@ struct ChartOnly: View {
     ]
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    ForEach(targetLifts, id: \.self) { lift in
-                        liftProgressionChart(for: lift)
-                    }
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                ForEach(targetLifts, id: \.self) { lift in
+                    liftProgressionChart(for: lift)
                 }
-                .padding()
             }
-            .navigationTitle("Progress")
-            .navigationBarTitleDisplayMode(.inline)
+            .padding()
         }
     }
 
@@ -46,9 +47,11 @@ struct ChartOnly: View {
                 .bold()
             
             if progressionData.isEmpty {
-                Text("No data available")
+                Text("Tick off your \(lift) sets and mark the training day complete to start tracking.")
+                    .font(.subheadline)
                     .foregroundColor(.secondary)
-                    .padding(.vertical, 40)
+                    .multilineTextAlignment(.center)
+                    .padding(.vertical, 32)
                     .frame(maxWidth: .infinity)
             } else {
                 Chart(progressionData) { dataPoint in
@@ -73,7 +76,7 @@ struct ChartOnly: View {
                         AxisTick()
                         AxisValueLabel {
                             if let weight = value.as(Double.self) {
-                                Text("\(Int(weight)) lbs")
+                                Text("\(Int(weight)) \(unit)")
                             }
                         }
                     }
@@ -95,7 +98,7 @@ struct ChartOnly: View {
                             .font(.caption)
                             .foregroundColor(.secondary)
                         Spacer()
-                        Text("\(mostRecentWorkout.oneRM, specifier: "%.1f") lbs")
+                        Text("\(mostRecentWorkout.oneRM, specifier: "%.1f") \(unit)")
                             .font(.caption)
                             .bold()
                     }
@@ -109,7 +112,7 @@ struct ChartOnly: View {
                             .font(.caption)
                             .foregroundColor(.secondary)
                         Spacer()
-                        Text("\(personalBest.oneRM, specifier: "%.1f") lbs")
+                        Text("\(personalBest.oneRM, specifier: "%.1f") \(unit)")
                             .font(.caption)
                             .bold()
                             .foregroundColor(.green)
@@ -150,9 +153,11 @@ struct ChartOnly: View {
                 // Find all exercises for this lift in this workout
                 for exercise in trainingDay.day {
                     if exercise.name == lift {
-                        // Calculate 1RM for each set and find the maximum for this exercise
-                        for set in exercise.sets {
-                            if let weight = set.weight, let reps = set.reps, weight > 0, reps > 0 {
+                        // Only sets actually completed count; the planned numbers on skipped
+                        // or failed sets would otherwise show progress that never happened.
+                        for set in exercise.sets where set.wasSuccessful {
+                            if let loggedWeight = set.weight, let reps = set.reps, loggedWeight > 0, reps > 0 {
+                                let weight = convert(loggedWeight, fromKilograms: cycle.usesKilograms)
                                 let oneRM = calculate1RM(weight: weight, reps: reps)
                                 maxOneRMForWorkout = max(maxOneRMForWorkout, oneRM)
                             }
@@ -170,16 +175,12 @@ struct ChartOnly: View {
         // Sort all data points by date (oldest first) to ensure chronological order
         dataPoints.sort { $0.date < $1.date }
         
-        // Debug print to see what we're getting
-        print("DEBUG: Data points for \(lift) (\(dataPoints.count) workouts):")
-        for (index, point) in dataPoints.enumerated() {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .short
-            formatter.timeStyle = .short
-            print("  \(index + 1). Date: \(formatter.string(from: point.date)), 1RM: \(String(format: "%.1f", point.oneRM)) lbs")
-        }
-        
         return dataPoints
+    }
+    
+    private func convert(_ weight: Double, fromKilograms: Bool) -> Double {
+        if fromKilograms == showKilograms { return weight }
+        return showKilograms ? WeightConverter.lbsToKg(weight) : WeightConverter.kgToLbs(weight)
     }
     
     // MARK: - 1RM Calculation using Epley Formula

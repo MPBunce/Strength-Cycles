@@ -48,19 +48,19 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Chin Ups",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Dips",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Face Pulls",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil
@@ -87,13 +87,13 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Hanging Knee Raises",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Back Extensions",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     )
                 ],
                 completedDate: nil
@@ -120,25 +120,25 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Barbell Rows",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Tricep Extensions",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Barbell Curls",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Lateral Raises",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil
@@ -165,19 +165,19 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Walking Lunges",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 10)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Leg Curls",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Calf Raises",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(4, reps: 12)
                     )
                 ],
                 completedDate: nil
@@ -204,19 +204,19 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Chin Ups",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Dips",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Face Pulls",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil
@@ -243,13 +243,13 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Hanging Knee Raises",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Back Extensions",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     )
                 ],
                 completedDate: nil
@@ -276,25 +276,25 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Barbell Rows",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Tricep Extensions",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Barbell Curls",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Lateral Raises",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil
@@ -321,19 +321,19 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Walking Lunges",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 10)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Leg Curls",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Calf Raises",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(4, reps: 12)
                     )
                 ],
                 completedDate: nil
@@ -360,19 +360,19 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Chin Ups",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Dips",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Face Pulls",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil
@@ -399,13 +399,13 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Hanging Knee Raises",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Back Extensions",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     )
                 ],
                 completedDate: nil
@@ -432,25 +432,25 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Barbell Rows",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Tricep Extensions",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Barbell Curls",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Lateral Raises",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil
@@ -477,19 +477,19 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Walking Lunges",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 10)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Leg Curls",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Calf Raises",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(4, reps: 12)
                     )
                 ],
                 completedDate: nil
@@ -516,19 +516,19 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Chin Ups",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Dips",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Face Pulls",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil
@@ -555,13 +555,13 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Hanging Knee Raises",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Back Extensions",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     )
                 ],
                 completedDate: nil
@@ -588,25 +588,25 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Barbell Rows",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 8)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Tricep Extensions",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Barbell Curls",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Lateral Raises",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil
@@ -633,19 +633,19 @@ class FiveThreeOneBBBProgram: ProgramProtocol {
                         exerciseIndex: 2,
                         name: "Walking Lunges",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 10)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Leg Curls",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Calf Raises",
                         canAlterSets: true,
-                        sets: []
+                        sets: SetScheme.straight(4, reps: 12)
                     )
                 ],
                 completedDate: nil

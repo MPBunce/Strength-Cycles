@@ -26,32 +26,32 @@ class GreyskullLPProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Bench Press",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Squat",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Barbell Row",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Bicep Curl",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Tricep Pushdown",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Abs",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil
@@ -65,37 +65,37 @@ class GreyskullLPProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Overhead Press",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Weighted Pullup",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Deadlift",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Lateral Raise",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Rear Delt",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Split Squat",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 10)
                     ),
                     Exercise(
                         exerciseIndex: 6,
                         name: "Abs",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil
@@ -109,32 +109,32 @@ class GreyskullLPProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Bench Press",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Squat",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Barbell Row",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Bicep Curl",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Tricep Pushdown",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Abs",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil
@@ -148,37 +148,37 @@ class GreyskullLPProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Overhead Press",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Weighted Pullup",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Deadlift",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Lateral Raise",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Rear Delt",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Split Squat",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 10)
                     ),
                     Exercise(
                         exerciseIndex: 6,
                         name: "Abs",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil
@@ -192,32 +192,32 @@ class GreyskullLPProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Bench Press",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Squat",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Barbell Row",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Bicep Curl",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Tricep Pushdown",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Abs",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil
@@ -231,37 +231,37 @@ class GreyskullLPProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Overhead Press",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Weighted Pullup",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Deadlift",
-                        sets: []
+                        sets: SetScheme.lastSetAmrap(1, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Lateral Raise",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Rear Delt",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Split Squat",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 10)
                     ),
                     Exercise(
                         exerciseIndex: 6,
                         name: "Abs",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     )
                 ],
                 completedDate: nil

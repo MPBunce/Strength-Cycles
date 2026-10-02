@@ -40,175 +40,79 @@ struct SettingsView: View {
                 }
                 
                 // Units Section
-                Section("Units") {
-                    HStack {
-                        Image(systemName: "scalemass")
-                            .foregroundColor(.gray)
-                            .frame(width: 20)
-                        Text("Weight Unit")
-                            .foregroundColor(.gray)
-                        Spacer()
-                        Toggle("", isOn: .constant(userSettings.usesKilograms))
-                            .disabled(true)
-                            .labelsHidden()
-                        Text(userSettings.usesKilograms ? "kg" : "lbs")
-                            .foregroundColor(.gray)
-                            .font(.caption)
+                Section {
+                    Picker(selection: Binding(
+                        get: { userSettings.usesKilograms },
+                        set: { newValue in updateSetting { userSettings.usesKilograms = newValue } }
+                    )) {
+                        Text("lbs").tag(false)
+                        Text("kg").tag(true)
+                    } label: {
+                        Label("Weight Unit", systemImage: "scalemass")
                     }
+                } header: {
+                    Text("Units")
+                } footer: {
+                    Text("Existing cycles keep the unit they were created with.")
                 }
                 
                 // Training Maxes Section
-                Section("Training Maxes") {
+                Section {
                     TrainingMaxRow(
                         title: "Bench Press",
                         icon: "dumbbell",
                         value: Binding(
-                            get: { userSettings.benchPressMax },
+                            get: { displayValue(userSettings.benchPressMax) },
                             set: { newValue in
-                                updateSetting { userSettings.benchPressMax = newValue }
+                                updateSetting { userSettings.benchPressMax = userSettings.convertInputToStorageUnit(newValue) }
                             }
                         ),
-                        unit: userSettings.usesKilograms ? "kg" : "lbs"
+                        unit: userSettings.weightUnitString
                     )
+                    .id(userSettings.usesKilograms) // reload the text when the unit flips
                     
                     TrainingMaxRow(
                         title: "Squat",
                         icon: "dumbbell",
                         value: Binding(
-                            get: { userSettings.squatMax },
+                            get: { displayValue(userSettings.squatMax) },
                             set: { newValue in
-                                updateSetting { userSettings.squatMax = newValue }
+                                updateSetting { userSettings.squatMax = userSettings.convertInputToStorageUnit(newValue) }
                             }
                         ),
-                        unit: userSettings.usesKilograms ? "kg" : "lbs"
+                        unit: userSettings.weightUnitString
                     )
+                    .id(userSettings.usesKilograms) // reload the text when the unit flips
                     
                     TrainingMaxRow(
                         title: "Deadlift",
                         icon: "dumbbell",
                         value: Binding(
-                            get: { userSettings.deadliftMax },
+                            get: { displayValue(userSettings.deadliftMax) },
                             set: { newValue in
-                                updateSetting { userSettings.deadliftMax = newValue }
+                                updateSetting { userSettings.deadliftMax = userSettings.convertInputToStorageUnit(newValue) }
                             }
                         ),
-                        unit: userSettings.usesKilograms ? "kg" : "lbs"
+                        unit: userSettings.weightUnitString
                     )
+                    .id(userSettings.usesKilograms) // reload the text when the unit flips
                     
                     TrainingMaxRow(
                         title: "Overhead Press",
                         icon: "dumbbell",
                         value: Binding(
-                            get: { userSettings.overheadPressMax },
+                            get: { displayValue(userSettings.overheadPressMax) },
                             set: { newValue in
-                                updateSetting { userSettings.overheadPressMax = newValue }
+                                updateSetting { userSettings.overheadPressMax = userSettings.convertInputToStorageUnit(newValue) }
                             }
                         ),
-                        unit: userSettings.usesKilograms ? "kg" : "lbs"
+                        unit: userSettings.weightUnitString
                     )
-                }
-                
-                // Workout Settings
-                Section("Workout") {
-                    HStack {
-                        Image(systemName: "timer")
-                            .foregroundColor(.gray)
-                            .frame(width: 20)
-                        Text("Default Rest Time")
-                            .foregroundColor(.gray)
-                        Spacer()
-                        Menu("\(userSettings.defaultRestTime)s") {
-                            ForEach([60, 90, 120, 180, 300], id: \.self) { seconds in
-                                Button("\(seconds) seconds") {
-                                    // Disabled
-                                }
-                            }
-                        }
-                        .disabled(true)
-                        .foregroundColor(.gray)
-                    }
-                    
-                    HStack {
-                        Image(systemName: "speaker.wave.2")
-                            .foregroundColor(.gray)
-                            .frame(width: 20)
-                        Text("Rest Timer Sound")
-                            .foregroundColor(.gray)
-                        Spacer()
-                        Toggle("", isOn: .constant(userSettings.enableRestTimerSound))
-                            .disabled(true)
-                            .labelsHidden()
-                    }
-                }
-                
-                // Notifications Section
-                Section("Notifications") {
-                    HStack {
-                        Image(systemName: "bell")
-                            .foregroundColor(.gray)
-                            .frame(width: 20)
-                        Text("Workout Reminders")
-                            .foregroundColor(.gray)
-                        Spacer()
-                        Toggle("", isOn: .constant(userSettings.enableNotifications))
-                            .disabled(true)
-                            .labelsHidden()
-                    }
-                }
-                
-                // Data & Privacy Section
-                Section("Data & Privacy") {
-                    HStack {
-                        Image(systemName: "photo")
-                            .foregroundColor(.gray)
-                            .frame(width: 20)
-                        Text("Progress Photos")
-                            .foregroundColor(.gray)
-                        Spacer()
-                        Toggle("", isOn: .constant(userSettings.enableProgressPhotos))
-                            .disabled(true)
-                            .labelsHidden()
-                    }
-                    
-                    HStack {
-                        Image(systemName: "icloud")
-                            .foregroundColor(.gray)
-                            .frame(width: 20)
-                        Text("iCloud Sync")
-                            .foregroundColor(.gray)
-                        Spacer()
-                        Toggle("", isOn: .constant(userSettings.enableCloudSync))
-                            .disabled(true)
-                            .labelsHidden()
-                    }
-                }
-                
-                // Help & Support Section
-                Section("Help & Support") {
-                    HStack {
-                        Image(systemName: "questionmark.circle")
-                            .foregroundColor(.gray)
-                            .frame(width: 20)
-                        Text("Show Tutorial")
-                            .foregroundColor(.gray)
-                        Spacer()
-                        Toggle("", isOn: .constant(userSettings.showTutorial))
-                            .disabled(true)
-                            .labelsHidden()
-                    }
-                    
-                    Button(action: {
-                        // Disabled
-                    }) {
-                        HStack {
-                            Image(systemName: "arrow.clockwise")
-                                .foregroundColor(.gray)
-                                .frame(width: 20)
-                            Text("Reset to Defaults")
-                                .foregroundColor(.gray)
-                        }
-                    }
-                    .disabled(true)
+                    .id(userSettings.usesKilograms) // reload the text when the unit flips
+                } header: {
+                    Text("Training Maxes")
+                } footer: {
+                    Text("Used to calculate weights when you start a 5/3/1 or nSuns cycle. Changes apply to new cycles only.")
                 }
             }
             .navigationTitle("Settings")
@@ -217,6 +121,12 @@ struct SettingsView: View {
                 initializeDefaultSettingsIfNeeded()
             }
         }
+    }
+    
+    /// Training maxes are stored in lbs; show them in the chosen unit, to the nearest 0.1.
+    private func displayValue(_ lbs: Double) -> Double {
+        guard userSettings.usesKilograms else { return lbs }
+        return (WeightConverter.lbsToKg(lbs) * 10).rounded() / 10
     }
     
     // MARK: - Settings Management
@@ -294,7 +204,7 @@ struct TrainingMaxRow: View {
                 .frame(width: 80)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .onAppear {
-                    textValue = value == 0 ? "" : String(format: "%.1f", value)
+                    textValue = value == 0 ? "" : WeightConverter.format(value)
                 }
                 .onChange(of: textValue) { _, newValue in
                     if let doubleValue = Double(newValue) {
@@ -307,7 +217,7 @@ struct TrainingMaxRow: View {
                     if let doubleValue = Double(textValue) {
                         value = doubleValue
                     } else {
-                        textValue = value == 0 ? "" : String(format: "%.1f", value)
+                        textValue = value == 0 ? "" : WeightConverter.format(value)
                     }
                 }
             

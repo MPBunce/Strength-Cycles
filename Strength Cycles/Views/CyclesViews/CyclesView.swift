@@ -10,13 +10,8 @@ import SwiftData
 
 struct CyclesView: View {
     @Environment(\.modelContext) var context
-    @Query var settings: [Settings]
     @Query(sort: \Cycles.startDate, order: .reverse) var cycles: [Cycles]
-    @State private var selectedCycle: Cycles?
     @State private var isShowingItemSheet = false
-    
-    //Work around for refresh
-    @State private var refreshTrigger = UUID()
 
     var body: some View {
         NavigationStack {
@@ -96,7 +91,6 @@ struct CycleSelectionSheet: View {
                         let cycle = template.createCycle(with: userSettings)
                         
                         context.insert(cycle)
-                        print("Created cycle: \(cycle.id.uuidString)")
                         dismiss()
                     }
                 }

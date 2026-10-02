@@ -23,12 +23,12 @@ class FiveDayUpperLowerProgram: ProgramProtocol {
                 dayIndex: 0,
                 dayName: "Upper Body",
                 day: [
-                    Exercise(exerciseIndex: 0, name: "Bench Press", sets: []),
-                    Exercise(exerciseIndex: 1, name: "Barbell Rows", sets: []),
-                    Exercise(exerciseIndex: 2, name: "Overhead Press", sets: []),
-                    Exercise(exerciseIndex: 3, name: "Pull-ups", sets: []),
-                    Exercise(exerciseIndex: 4, name: "Barbell Curls", sets: []),
-                    Exercise(exerciseIndex: 5, name: "Tricep Extensions", sets: [])
+                    Exercise(exerciseIndex: 0, name: "Bench Press", sets: SetScheme.straight(4, reps: 6)),
+                    Exercise(exerciseIndex: 1, name: "Barbell Rows", sets: SetScheme.straight(3, reps: 8)),
+                    Exercise(exerciseIndex: 2, name: "Overhead Press", sets: SetScheme.straight(4, reps: 6)),
+                    Exercise(exerciseIndex: 3, name: "Pull-ups", sets: SetScheme.straight(3, reps: 8)),
+                    Exercise(exerciseIndex: 4, name: "Barbell Curls", sets: SetScheme.straight(3, reps: 12)),
+                    Exercise(exerciseIndex: 5, name: "Tricep Extensions", sets: SetScheme.straight(3, reps: 12))
                 ],
                 completedDate: nil
             ),
@@ -38,11 +38,11 @@ class FiveDayUpperLowerProgram: ProgramProtocol {
                 dayIndex: 1,
                 dayName: "Lower Body",
                 day: [
-                    Exercise(exerciseIndex: 0, name: "Squat", sets: []),
-                    Exercise(exerciseIndex: 1, name: "Romanian Deadlift", sets: []),
-                    Exercise(exerciseIndex: 2, name: "Leg Press", sets: []),
-                    Exercise(exerciseIndex: 3, name: "Leg Curls", sets: []),
-                    Exercise(exerciseIndex: 4, name: "Calf Raises", sets: [])
+                    Exercise(exerciseIndex: 0, name: "Squat", sets: SetScheme.straight(4, reps: 6)),
+                    Exercise(exerciseIndex: 1, name: "Romanian Deadlift", sets: SetScheme.straight(3, reps: 8)),
+                    Exercise(exerciseIndex: 2, name: "Leg Press", sets: SetScheme.straight(3, reps: 10)),
+                    Exercise(exerciseIndex: 3, name: "Leg Curls", sets: SetScheme.straight(3, reps: 12)),
+                    Exercise(exerciseIndex: 4, name: "Calf Raises", sets: SetScheme.straight(4, reps: 12))
                 ],
                 completedDate: nil
             ),
@@ -52,12 +52,12 @@ class FiveDayUpperLowerProgram: ProgramProtocol {
                 dayIndex: 2,
                 dayName: "Upper Body",
                 day: [
-                    Exercise(exerciseIndex: 0, name: "Incline Dumbbell Press", sets: []),
-                    Exercise(exerciseIndex: 1, name: "Cable Rows", sets: []),
-                    Exercise(exerciseIndex: 2, name: "Dumbbell Press", sets: []),
-                    Exercise(exerciseIndex: 3, name: "Lat Pulldowns", sets: []),
-                    Exercise(exerciseIndex: 4, name: "Hammer Curls", sets: []),
-                    Exercise(exerciseIndex: 5, name: "Overhead Tricep Extension", sets: [])
+                    Exercise(exerciseIndex: 0, name: "Incline Dumbbell Press", sets: SetScheme.straight(3, reps: 8)),
+                    Exercise(exerciseIndex: 1, name: "Cable Rows", sets: SetScheme.straight(3, reps: 8)),
+                    Exercise(exerciseIndex: 2, name: "Dumbbell Press", sets: SetScheme.straight(3, reps: 8)),
+                    Exercise(exerciseIndex: 3, name: "Lat Pulldowns", sets: SetScheme.straight(3, reps: 8)),
+                    Exercise(exerciseIndex: 4, name: "Hammer Curls", sets: SetScheme.straight(3, reps: 12)),
+                    Exercise(exerciseIndex: 5, name: "Overhead Tricep Extension", sets: SetScheme.straight(3, reps: 12))
                 ],
                 completedDate: nil
             ),
@@ -67,11 +67,11 @@ class FiveDayUpperLowerProgram: ProgramProtocol {
                 dayIndex: 3,
                 dayName: "Lower Body",
                 day: [
-                    Exercise(exerciseIndex: 0, name: "Deadlift", sets: []),
-                    Exercise(exerciseIndex: 1, name: "Front Squat", sets: []),
-                    Exercise(exerciseIndex: 2, name: "Walking Lunges", sets: []),
-                    Exercise(exerciseIndex: 3, name: "Leg Extensions", sets: []),
-                    Exercise(exerciseIndex: 4, name: "Seated Calf Raises", sets: [])
+                    Exercise(exerciseIndex: 0, name: "Deadlift", sets: SetScheme.straight(3, reps: 5)),
+                    Exercise(exerciseIndex: 1, name: "Front Squat", sets: SetScheme.straight(4, reps: 6)),
+                    Exercise(exerciseIndex: 2, name: "Walking Lunges", sets: SetScheme.straight(3, reps: 10)),
+                    Exercise(exerciseIndex: 3, name: "Leg Extensions", sets: SetScheme.straight(3, reps: 12)),
+                    Exercise(exerciseIndex: 4, name: "Seated Calf Raises", sets: SetScheme.straight(4, reps: 12))
                 ],
                 completedDate: nil
             ),
@@ -81,13 +81,13 @@ class FiveDayUpperLowerProgram: ProgramProtocol {
                 dayIndex: 4,
                 dayName: "Arms & Shoulders",
                 day: [
-                    Exercise(exerciseIndex: 0, name: "Pull-ups", sets: []),
-                    Exercise(exerciseIndex: 1, name: "Dips", sets: []),
-                    Exercise(exerciseIndex: 2, name: "Lateral Raises", sets: []),
-                    Exercise(exerciseIndex: 3, name: "Rear Delt Flys", sets: []),
-                    Exercise(exerciseIndex: 4, name: "EZ Bar Curls", sets: []),
-                    Exercise(exerciseIndex: 5, name: "Tricep Extensions", sets: []),
-                    Exercise(exerciseIndex: 6, name: "Face Pulls", sets: [])
+                    Exercise(exerciseIndex: 0, name: "Pull-ups", sets: SetScheme.straight(3, reps: 8)),
+                    Exercise(exerciseIndex: 1, name: "Dips", sets: SetScheme.straight(3, reps: 8)),
+                    Exercise(exerciseIndex: 2, name: "Lateral Raises", sets: SetScheme.straight(3, reps: 15)),
+                    Exercise(exerciseIndex: 3, name: "Rear Delt Flys", sets: SetScheme.straight(3, reps: 15)),
+                    Exercise(exerciseIndex: 4, name: "EZ Bar Curls", sets: SetScheme.straight(3, reps: 12)),
+                    Exercise(exerciseIndex: 5, name: "Tricep Extensions", sets: SetScheme.straight(3, reps: 12)),
+                    Exercise(exerciseIndex: 6, name: "Face Pulls", sets: SetScheme.straight(3, reps: 15))
                 ],
                 completedDate: nil
             )

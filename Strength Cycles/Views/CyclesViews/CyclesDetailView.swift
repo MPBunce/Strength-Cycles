@@ -3,8 +3,6 @@ import SwiftData
 
 struct CyclesDetailView: View {
     @Environment(\.modelContext) var context
-    @State private var isShowingItemSheet = false
-    @Query var settings: [Settings]
     @Query(sort: \Cycles.startDate, order: .reverse)
     private var cycles: [Cycles]
 
@@ -12,9 +10,7 @@ struct CyclesDetailView: View {
     @State private var selectedDayIndex: Int = 0
 
     private var selectedCycle: Cycles? {
-        let match = cycles.first { $0.id == cycleId }
-        print("Selected cycle for ID \(cycleId): \(String(describing: match?.template))")
-        return match
+        cycles.first { $0.id == cycleId }
     }
 
     private var validSelectedDayIndex: Int {
@@ -30,7 +26,6 @@ struct CyclesDetailView: View {
     }
 
     init(cycleId: UUID) {
-        print("Initializing CyclesDetailView with cycleId: \(cycleId)")
         self.cycleId = cycleId
         let predicate = #Predicate<Cycles> { cycle in
             cycle.id == cycleId
@@ -55,11 +50,9 @@ struct CyclesDetailView: View {
                 cycleNotFoundView
             }
         }
+        .environment(\.weightUnit, cycle?.weightUnit ?? "lbs")
         .navigationTitle(cycle?.template ?? "Cycle Detail")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $isShowingItemSheet) {
-            Text("Item Sheet Content")
-        }
     }
 
     private var emptyStateView: some View {
@@ -190,6 +183,7 @@ struct CyclesDetailView: View {
     // MARK: - Exercise Row View
     struct ExerciseRowView: View {
         let exercise: Exercise
+        @Environment(\.weightUnit) private var unit
         
         var body: some View {
             VStack(alignment: .leading, spacing: 8) {
@@ -220,56 +214,36 @@ struct CyclesDetailView: View {
                     }
                 }
                 
-                // Sets preview (show first few sets) - FIXED VERSION
+                // Preview of the first few sets, in set order
                 if !exercise.sets.isEmpty {
-                    VStack(spacing: 4) {
-                        // Get the first 3 sets safely
-                        let setsToShow = Array(exercise.sets.prefix(3))
-                        
-                        ForEach(setsToShow.indices, id: \.self) { index in
-                            let set = setsToShow[index]  // Now accessing the safe subarray
-                            HStack {
-                                Text("Set \(index + 1):")
+                    let orderedSets = exercise.orderedSets
+                    VStack(alignment: .leading, spacing: 4) {
+                        ForEach(Array(orderedSets.prefix(3).enumerated()), id: \.offset) { index, set in
+                            HStack(spacing: 8) {
+                                Text("Set \(index + 1)")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
+                                    .frame(width: 40, alignment: .leading)
                                 
-                                if let reps = set.reps, let weight = set.weight {
-                                    Text("\(reps) reps @ \(weight, specifier: "%.1f") lbs")
-                                        .font(.caption)
-                                        .foregroundColor(.primary)
-                                } else if let reps = set.reps {
-                                    Text("\(reps) reps")
-                                        .font(.caption)
-                                        .foregroundColor(.primary)
-                                } else if let weight = set.weight {
-                                    Text("\(weight, specifier: "%.1f") lbs")
-                                        .font(.caption)
-                                        .foregroundColor(.primary)
-                                } else {
-                                    Text("Not set")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
+                                Text(CyclesDetailView.setSummary(set, unit: unit))
+                                    .font(.caption)
+                                    .monospacedDigit()
+                                    .foregroundColor(set.reps == nil && set.weight == nil ? .secondary : .primary)
                                 
                                 Spacer()
                                 
                                 if set.isCompleted {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundColor(.green)
+                                    Image(systemName: set.wasSuccessful ? "checkmark.circle.fill" : "xmark.circle.fill")
+                                        .foregroundColor(set.wasSuccessful ? .green : .red)
                                         .font(.caption)
                                 }
                             }
                         }
                         
-                        // Show "and X more" if there are more than 3 sets
-                        if exercise.sets.count > 3 {
-                            HStack {
-                                Text("and \(exercise.sets.count - 3) more sets...")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                    .italic()
-                                Spacer()
-                            }
+                        if orderedSets.count > 3 {
+                            Text("+ \(orderedSets.count - 3) more")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                         }
                     }
                     .padding(.leading, 8)
@@ -280,6 +254,17 @@ struct CyclesDetailView: View {
     }
 
     // MARK: - Helper Methods
+    private static func setSummary(_ set: ExerciseSet, unit: String) -> String {
+        let reps = set.reps.map { "\($0)\(set.isAmrap ? "+" : "") reps" }
+        let weight = set.weight.map { "\(WeightConverter.format($0)) \(unit)" }
+        switch (reps, weight) {
+        case let (r?, w?): return "\(r) @ \(w)"
+        case let (r?, nil): return r
+        case let (nil, w?): return w
+        default: return "Not set"
+        }
+    }
+
     private func toggleDayCompletion(_ trainingDay: TrainingDay) {
         if trainingDay.completedDate != nil {
             trainingDay.completedDate = nil

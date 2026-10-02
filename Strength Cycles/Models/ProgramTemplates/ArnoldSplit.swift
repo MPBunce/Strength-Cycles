@@ -24,12 +24,12 @@ class ArnoldSplit: ProgramProtocol {
                 dayIndex: 0,
                 dayName: "Legs",
                 day: [
-                    Exercise(exerciseIndex: 0, name: "Squat", sets: []),
-                    Exercise(exerciseIndex: 1, name: "Romanian Deadlift", sets: []),
-                    Exercise(exerciseIndex: 2, name: "Leg Press", sets: []),
-                    Exercise(exerciseIndex: 3, name: "Leg Curls", sets: []),
-                    Exercise(exerciseIndex: 4, name: "Leg Extensions", sets: []),
-                    Exercise(exerciseIndex: 5, name: "Calf Raises", sets: [])
+                    Exercise(exerciseIndex: 0, name: "Squat", sets: SetScheme.straight(4, reps: 6)),
+                    Exercise(exerciseIndex: 1, name: "Romanian Deadlift", sets: SetScheme.straight(3, reps: 8)),
+                    Exercise(exerciseIndex: 2, name: "Leg Press", sets: SetScheme.straight(3, reps: 10)),
+                    Exercise(exerciseIndex: 3, name: "Leg Curls", sets: SetScheme.straight(3, reps: 12)),
+                    Exercise(exerciseIndex: 4, name: "Leg Extensions", sets: SetScheme.straight(3, reps: 12)),
+                    Exercise(exerciseIndex: 5, name: "Calf Raises", sets: SetScheme.straight(4, reps: 12))
                 ],
                 completedDate: nil
             ),
@@ -39,12 +39,12 @@ class ArnoldSplit: ProgramProtocol {
                 dayIndex: 1,
                 dayName: "Chest & Back",
                 day: [
-                    Exercise(exerciseIndex: 0, name: "Bench Press", sets: []),
-                    Exercise(exerciseIndex: 1, name: "Barbell Rows", sets: []),
-                    Exercise(exerciseIndex: 2, name: "Incline Dumbbell Press", sets: []),
-                    Exercise(exerciseIndex: 3, name: "Pull-ups", sets: []),
-                    Exercise(exerciseIndex: 4, name: "Dips", sets: []),
-                    Exercise(exerciseIndex: 5, name: "Cable Rows", sets: [])
+                    Exercise(exerciseIndex: 0, name: "Bench Press", sets: SetScheme.straight(4, reps: 6)),
+                    Exercise(exerciseIndex: 1, name: "Barbell Rows", sets: SetScheme.straight(3, reps: 8)),
+                    Exercise(exerciseIndex: 2, name: "Incline Dumbbell Press", sets: SetScheme.straight(3, reps: 8)),
+                    Exercise(exerciseIndex: 3, name: "Pull-ups", sets: SetScheme.straight(3, reps: 8)),
+                    Exercise(exerciseIndex: 4, name: "Dips", sets: SetScheme.straight(3, reps: 8)),
+                    Exercise(exerciseIndex: 5, name: "Cable Rows", sets: SetScheme.straight(3, reps: 8))
                 ],
                 completedDate: nil
             ),
@@ -54,12 +54,12 @@ class ArnoldSplit: ProgramProtocol {
                 dayIndex: 2,
                 dayName: "Arms & Shoulders",
                 day: [
-                    Exercise(exerciseIndex: 0, name: "Overhead Press", sets: []),
-                    Exercise(exerciseIndex: 1, name: "Barbell Curls", sets: []),
-                    Exercise(exerciseIndex: 2, name: "Close Grip Bench Press", sets: []),
-                    Exercise(exerciseIndex: 3, name: "Lateral Raises", sets: []),
-                    Exercise(exerciseIndex: 4, name: "Hammer Curls", sets: []),
-                    Exercise(exerciseIndex: 5, name: "Tricep Extensions", sets: [])
+                    Exercise(exerciseIndex: 0, name: "Overhead Press", sets: SetScheme.straight(4, reps: 6)),
+                    Exercise(exerciseIndex: 1, name: "Barbell Curls", sets: SetScheme.straight(3, reps: 12)),
+                    Exercise(exerciseIndex: 2, name: "Close Grip Bench Press", sets: SetScheme.straight(4, reps: 6)),
+                    Exercise(exerciseIndex: 3, name: "Lateral Raises", sets: SetScheme.straight(3, reps: 15)),
+                    Exercise(exerciseIndex: 4, name: "Hammer Curls", sets: SetScheme.straight(3, reps: 12)),
+                    Exercise(exerciseIndex: 5, name: "Tricep Extensions", sets: SetScheme.straight(3, reps: 12))
                 ],
                 completedDate: nil
             )

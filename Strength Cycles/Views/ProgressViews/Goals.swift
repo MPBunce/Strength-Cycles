@@ -3,7 +3,7 @@ import SwiftData
 
 struct GoalsView: View {
     @Environment(\.modelContext) var context
-    @Query var goals: [Goal]
+    @Query(sort: \Goal.order) var goals: [Goal]
     
     var body: some View {
         ScrollView {

@@ -8,6 +8,11 @@
 import SwiftUI
 import SwiftData
 
+extension EnvironmentValues {
+    /// Unit label ("lbs" or "kg") for the weights currently on screen.
+    @Entry var weightUnit: String = "lbs"
+}
+
 // MARK: - Unit Conversion Utilities
 struct WeightConverter {
     static func lbsToKg(_ lbs: Double) -> Double {
@@ -18,6 +23,13 @@ struct WeightConverter {
         return kg * 2.20462
     }
     
+    /// "65" rather than "65.0", but keeps real fractions like "67.5".
+    static func format(_ weight: Double) -> String {
+        weight.truncatingRemainder(dividingBy: 1) == 0
+            ? String(format: "%.0f", weight)
+            : String(format: "%.1f", weight)
+    }
+
     static func roundToAppropriateIncrement(_ weight: Double, isKilograms: Bool) -> Double {
         if isKilograms {
             // Round to nearest 2.5kg

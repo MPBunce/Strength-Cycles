@@ -26,32 +26,32 @@ class GarciaProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Weighted Pull Ups",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Bench Press",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Squat",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Close Grip Bench Press",
-                        sets: []
+                        sets: SetScheme.straight(4, reps: 6)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "EZ Bar Curls",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Barbell Row",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     )
                 ],
                 completedDate: nil
@@ -65,32 +65,32 @@ class GarciaProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Weighted Dips",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Overhead Press",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Deadlift",
-                        sets: []
+                        sets: SetScheme.straight(1, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Lateral Raises",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Rear Delt Flys",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Skullcrushers",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     )
                 ],
                 completedDate: nil
@@ -104,32 +104,32 @@ class GarciaProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Weighted Pull Ups",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Bench Press",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Squat",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Close Grip Bench Press",
-                        sets: []
+                        sets: SetScheme.straight(4, reps: 6)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "EZ Bar Curls",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Barbell Row",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     )
                 ],
                 completedDate: nil
@@ -143,32 +143,32 @@ class GarciaProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Weighted Dips",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Overhead Press",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Deadlift",
-                        sets: []
+                        sets: SetScheme.straight(1, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Lateral Raises",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Rear Delt Flys",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Skullcrushers",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     )
                 ],
                 completedDate: nil
@@ -182,32 +182,32 @@ class GarciaProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Weighted Pull Ups",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Bench Press",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Squat",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Close Grip Bench Press",
-                        sets: []
+                        sets: SetScheme.straight(4, reps: 6)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "EZ Bar Curls",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Barbell Row",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     )
                 ],
                 completedDate: nil
@@ -221,32 +221,32 @@ class GarciaProgram: ProgramProtocol {
                     Exercise(
                         exerciseIndex: 0,
                         name: "Weighted Dips",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 1,
                         name: "Overhead Press",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 2,
                         name: "Deadlift",
-                        sets: []
+                        sets: SetScheme.straight(1, reps: 5)
                     ),
                     Exercise(
                         exerciseIndex: 3,
                         name: "Lateral Raises",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 4,
                         name: "Rear Delt Flys",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 15)
                     ),
                     Exercise(
                         exerciseIndex: 5,
                         name: "Skullcrushers",
-                        sets: []
+                        sets: SetScheme.straight(3, reps: 12)
                     )
                 ],
                 completedDate: nil

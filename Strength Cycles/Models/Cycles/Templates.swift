@@ -46,6 +46,15 @@ struct Template: Identifiable {
         let program = programType.createProgram(with: settings)
         let trainingDays = program.generateDays(with: settings)
         
+        // Programs calculate in pounds (training maxes are stored in lbs); convert for kg users.
+        if settings.useKilograms {
+            for set in trainingDays.flatMap({ $0.day }).flatMap({ $0.sets }) {
+                if let lbs = set.weight {
+                    set.weight = WeightConverter.roundToAppropriateIncrement(WeightConverter.lbsToKg(lbs), isKilograms: true)
+                }
+            }
+        }
+        
         return Cycles(
             startDate: startDate,
             template: name,
@@ -117,14 +126,14 @@ extension Template {
                 id: "FiveThreeOneBasicProgram",
                 name: "5/3/1",
                 description: "4 Week 5/3/1 Program",
-                duration: "4 Weeks",
+                duration: "4 weeks",
                 programType: .fiveThreeOneBasicProgram
             ),
             Template(
                 id: "FiveThreeOneBBBProgram",
                 name: "5/3/1 Big But Boring",
                 description: "4 Week 5/3/1 BBB Program",
-                duration: "4 Weeks",
+                duration: "4 weeks",
                 programType: .fiveThreeOneBBBProgram
             ),
             
@@ -140,14 +149,14 @@ extension Template {
                 id: "GreySkull",
                 name: "Greyskull LP",
                 description: "Full Body 3x A Week",
-                duration: "2 Weeks",
+                duration: "2 weeks",
                 programType: .greySkull
             ),
             Template(
                 id: "GarciaProgram",
                 name: "Garcia Fullbody Program",
                 description: "Full Body A/B Split",
-                duration: "6 Days",
+                duration: "6 days",
                 programType: .garciaProgram
             ),
             Template(
@@ -198,14 +207,14 @@ extension Template {
             ),
             Template(
                 id: "upper_lower_four",
-                name: "Upper Lower Split",
+                name: "Upper Lower (4 Day)",
                 description: "4-day split alternating upper and lower body",
                 duration: "4 days",
                 programType: .upperLowerFourDay
             ),
             Template(
                 id: "upper_lower_five",
-                name: "Upper Lower Split",
+                name: "Upper Lower (5 Day)",
                 description: "5-day split alternating upper and lower body",
                 duration: "5 days",
                 programType: .upperLowerFiveDay
