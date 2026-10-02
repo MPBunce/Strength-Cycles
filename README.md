@@ -19,7 +19,7 @@ The home tab for the current day.
 - **Challenges**: one-off goals you tick off when done. Start from presets (Villain Challenge stages, 20-Minute Aerobic Solution, 60s dead hang) or write your own.
 
 ### Training
-- Start a cycle from a built-in program: 5/3/1, 5/3/1 Boring But Big, nSuns (4, 5 and 6 day), Greyskull LP, Garcia, Menzer, Arnold Split, Push Pull Legs, or Upper Lower (4 and 5 day).
+- Start a cycle from a built-in program: 5/3/1, 5/3/1 Boring But Big, nSuns (4, 5 and 6 day), Greyskull LP, Menzer, Arnold Split, Push Pull Legs, or Upper Lower (4 and 5 day).
 - 5/3/1 and nSuns calculate working weights from your training maxes. The other programs leave weights blank for you to fill in.
 - **Custom templates**: build your own program with named days and exercises prescribed as sets × reps, with an optional AMRAP last set. Find them under *My Templates* when adding a cycle; swipe to edit or delete.
 - Tick off sets as you go: tap once for done, twice for failed, three times to reset. AMRAP sets open a sheet to log the reps you hit.

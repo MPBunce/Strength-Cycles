@@ -75,7 +75,6 @@ enum ProgramType {
     
     case arnoldProgram
     case greySkull
-    case garciaProgram
     case menzer
 
     case nSuns4Days
@@ -111,8 +110,6 @@ enum ProgramType {
             return FiveThreeOneBasicProgram(benchTM: settings.bench, squatTM: settings.squat, deadliftTM: settings.deadlift, ohpTM: settings.press)
         case .greySkull:
             return GreyskullLPProgram()
-        case .garciaProgram:
-            return GarciaProgram()
         case .arnoldProgram:
             return ArnoldSplit()
 
@@ -154,13 +151,6 @@ extension Template {
                 description: "Full Body 3x A Week",
                 duration: "2 weeks",
                 programType: .greySkull
-            ),
-            Template(
-                id: "GarciaProgram",
-                name: "Garcia Fullbody Program",
-                description: "Full Body A/B Split",
-                duration: "6 days",
-                programType: .garciaProgram
             ),
             Template(
                 id: "classic-menzer",
