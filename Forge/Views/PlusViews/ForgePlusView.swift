@@ -65,6 +65,8 @@ struct ForgePlusView: View {
             Section("Included") {
                 Label("Create your own strength templates", systemImage: "figure.strengthtraining.traditional")
                 Label("Create your own running plans", systemImage: "figure.run")
+                Label("Swap exercises in any program", systemImage: "arrow.left.arrow.right")
+                Label("Add exercises to your training days", systemImage: "plus.rectangle.on.rectangle")
                 Label("Everything to come", systemImage: "plus.circle")
             }
 

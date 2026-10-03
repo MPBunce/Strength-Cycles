@@ -40,16 +40,18 @@ struct UserSettings {
 }
 
 // MARK: - Template Structure
-struct Template: Identifiable {
+struct Template: Identifiable, Hashable {
     let id: String
     let name: String
     let description: String
     let duration: String
     let programType: ProgramType
     
-    func createCycle(with settings: UserSettings, startDate: Date = Date()) -> Cycles {
+    /// `swaps` renames lifts for this cycle (Forge Plus), keyed by the program's name for each lift.
+    func createCycle(with settings: UserSettings, startDate: Date = Date(), swaps: [String: String] = [:]) -> Cycles {
         let program = programType.createProgram(with: settings)
         let trainingDays = program.generateDays(with: settings)
+        ExerciseSwaps.apply(swaps, to: trainingDays)
         
         // Programs return exact percentages of the training max; round them to loadable weights.
         for set in trainingDays.flatMap({ $0.day }).flatMap({ $0.sets }) {

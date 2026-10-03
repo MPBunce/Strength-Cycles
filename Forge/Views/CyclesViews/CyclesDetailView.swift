@@ -8,6 +8,9 @@ struct CyclesDetailView: View {
 
     let cycleId: UUID
     @State private var selectedDayIndex: Int = 0
+    @State private var addingExercise = false
+    @State private var showingPlus = false
+    private var plus = ForgePlus.shared
 
     private var selectedCycle: Cycles? {
         cycles.first { $0.id == cycleId }
@@ -53,6 +56,7 @@ struct CyclesDetailView: View {
         .environment(\.weightUnit, cycle?.weightUnit ?? "lbs")
         .navigationTitle(cycle?.template ?? "Cycle Detail")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(isPresented: $showingPlus) { ForgePlusView() }
     }
 
     private var emptyStateView: some View {
@@ -176,7 +180,40 @@ struct CyclesDetailView: View {
                         )) {
                             ExerciseRowView(exercise: exercise)
                         }
+                        .deleteDisabled(!plus.isActive)
                     }
+                    .onDelete { offsets in
+                        let exercises = sortedExercises(for: selectedDay)
+                        let removed = Set(offsets.map { exercises[$0].exerciseIndex })
+                        selectedDay.day.removeAll { removed.contains($0.exerciseIndex) }
+                    }
+                }
+
+                Section {
+                    Button {
+                        if plus.isActive { addingExercise = true } else { showingPlus = true }
+                    } label: {
+                        HStack {
+                            Label("Add Exercise", systemImage: plus.isActive ? "plus" : "lock")
+                            if !plus.isActive {
+                                Spacer()
+                                PlusBadge()
+                            }
+                        }
+                    }
+                } footer: {
+                    if plus.isActive {
+                        Text("Adds to this day only. Swipe an exercise to remove it. Open an exercise to add sets.")
+                    }
+                }
+                .sheet(isPresented: $addingExercise) {
+                    NavigationStack {
+                        AddExerciseView { name, sets, reps in
+                            let next = (selectedDay.day.map(\.exerciseIndex).max() ?? -1) + 1
+                            selectedDay.day.append(Exercise(exerciseIndex: next, name: name, sets: SetScheme.straight(sets, reps: reps)))
+                        }
+                    }
+                    .presentationDetents([.medium, .large])
                 }
             }
         }
@@ -287,5 +324,44 @@ struct CyclesDetailView: View {
 
     private func sortedExercises(for day: TrainingDay) -> [Exercise] {
         day.day.sorted(by: { $0.exerciseIndex < $1.exerciseIndex })
+    }
+}
+
+/// Forge Plus: add an exercise to one training day of a running cycle.
+private struct AddExerciseView: View {
+    let onAdd: (_ name: String, _ sets: Int, _ reps: Int) -> Void
+    @Environment(\.dismiss) private var dismiss
+    @State private var name = ""
+    @State private var sets = 3
+    @State private var reps = 10
+
+    var body: some View {
+        Form {
+            Section {
+                TextField("Exercise name", text: $name)
+                Stepper(value: $sets, in: 1...10) {
+                    LabeledContent("Sets", value: "\(sets)")
+                }
+                Stepper(value: $reps, in: 1...50) {
+                    LabeledContent("Reps", value: "\(reps)")
+                }
+            } footer: {
+                Text("Enter the weight on each set when you log it.")
+            }
+        }
+        .navigationTitle("Add Exercise")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel") { dismiss() }
+            }
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Add") {
+                    onAdd(name.trimmingCharacters(in: .whitespaces), sets, reps)
+                    dismiss()
+                }
+                .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
+            }
+        }
     }
 }

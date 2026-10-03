@@ -95,6 +95,7 @@ struct CycleSelectionSheet: View {
     @State private var editingTemplate: CustomTemplate?
     @State private var creatingTemplate = false
     @State private var showingPlus = false
+    @State private var startingTemplate: Template?
     private var plus = ForgePlus.shared
     
     private var userSettings: Settings {
@@ -151,10 +152,8 @@ struct CycleSelectionSheet: View {
                 
                 Section("Programs") {
                     ForEach(Template.loadTemplates()) { template in
-                        templateRow(name: template.name, description: template.description, duration: template.duration) {
-                            let userSettings = UserSettings(from: userSettings)
-                            context.insert(template.createCycle(with: userSettings))
-                            dismiss()
+                        templateRow(name: template.name, description: template.description, duration: template.programType.frequency) {
+                            startingTemplate = template
                         }
                     }
                 }
@@ -168,6 +167,12 @@ struct CycleSelectionSheet: View {
             }
             .navigationDestination(item: $editingTemplate) { template in
                 TemplateEditorView(template: template)
+            }
+            .navigationDestination(item: $startingTemplate) { template in
+                ProgramStartView(template: template, settings: UserSettings(from: userSettings)) { swaps in
+                    context.insert(template.createCycle(with: UserSettings(from: userSettings), swaps: swaps))
+                    dismiss()
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
