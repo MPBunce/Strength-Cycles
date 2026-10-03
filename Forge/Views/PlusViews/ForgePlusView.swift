@@ -14,7 +14,7 @@ struct ForgePlusView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 10) {
-                    Image(systemName: "hammer.fill")
+                    Image(systemName: "dumbbell.fill")
                         .font(.system(size: 30, weight: .light))
                     Text("Forge Plus")
                         .font(.largeTitle.weight(.light))

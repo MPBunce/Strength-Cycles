@@ -15,7 +15,7 @@ struct AboutView: View {
             VStack(spacing: 30) {
                 // App Icon and Title
                 VStack(spacing: 15) {
-                    Image(systemName: "hammer.fill")
+                    Image(systemName: "dumbbell.fill")
                         .font(.system(size: 60))
                         .foregroundColor(.blue)
                     
