@@ -46,7 +46,13 @@ struct ForgeApp: App {
         }
     }()
 
-    @State private var showingSplash = true
+    /// The quote shows on first launch only (and always in screenshot demo mode).
+    @State private var showingSplash: Bool = {
+        #if DEBUG
+        if DemoData.isEnabled { return true }
+        #endif
+        return !UserDefaults.standard.bool(forKey: PreferenceKeys.hasSeenSplash)
+    }()
     @AppStorage(PreferenceKeys.appearance) private var appearance = AppearanceMode.system.rawValue
 
     var body: some Scene {
@@ -62,6 +68,7 @@ struct ForgeApp: App {
             }
             .preferredColorScheme(AppearanceMode(rawValue: appearance)?.colorScheme)
             .task {
+                guard showingSplash else { return }
                 try? await Task.sleep(for: .seconds(3))
                 dismissSplash()
             }
@@ -70,6 +77,7 @@ struct ForgeApp: App {
     }
 
     private func dismissSplash() {
+        UserDefaults.standard.set(true, forKey: PreferenceKeys.hasSeenSplash)
         withAnimation(.easeInOut(duration: 0.6)) { showingSplash = false }
     }
 }

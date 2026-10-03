@@ -36,6 +36,8 @@ enum PreferenceKeys {
     static let trackedLifts = "trackedLifts"
     /// Stretching routines shown on the Today tab, stored as newline-separated IDs.
     static let stretchRoutines = "stretchRoutines"
+    /// Set once the launch quote has been shown, so it only appears on first launch.
+    static let hasSeenSplash = "hasSeenSplash"
 }
 
 /// A lift that can be charted, plus the exercise names in the app's templates that count as it.

@@ -13,6 +13,8 @@ struct TodayView: View {
     @State private var steps = StepCounter()
     /// Start of the current day; refreshed when the app comes back so logs roll over at midnight.
     @State private var today = Calendar.current.startOfDay(for: Date())
+    /// Health's permission prompt waits until the first-launch quote has gone.
+    @AppStorage(PreferenceKeys.hasSeenSplash) private var hasSeenSplash = false
 
     var body: some View {
         NavigationStack {
@@ -29,10 +31,14 @@ struct TodayView: View {
             }
             .navigationTitle("Today")
             .refreshable { await steps.refresh() }
-            .task { await steps.refresh() }
+            .task(id: hasSeenSplash) {
+                guard hasSeenSplash else { return }
+                await steps.refresh()
+            }
             .onChange(of: scenePhase) { _, phase in
                 guard phase == .active else { return }
                 today = Calendar.current.startOfDay(for: Date())
+                guard hasSeenSplash else { return }
                 Task { await steps.refresh() }
             }
         }
