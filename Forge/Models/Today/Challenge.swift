@@ -27,7 +27,16 @@ class Challenge {
         ("Villain Challenge 1: Stage 2", "3 sets of burpees, building toward 30 reps in 90 sec per set with 1 minute rest."),
         ("Villain Challenge 1: Stage 3", "2 × 50 burpees in 2:30 per set with 1 minute rest."),
         ("Villain Challenge 1: Stage 4", "1 × 100 burpees in 5:00."),
-        ("20-Minute Aerobic Solution", "20 minutes of cardio climbing an effort ladder from 5 to 10 out of 10, finishing with a cool-down."),
-        ("60s Dead Hang", "Hang from a bar for a full minute without letting go.")
+        ("60s Dead Hang", "Hang from a bar for a full minute without letting go."),
+        ("100 Push-ups in One Set", "Unbroken, chest to the floor every rep. Rest in the top position only."),
+        ("20 Strict Pull-ups", "Dead hang to chin over the bar, no kipping, in one set."),
+        ("2-Minute Plank", "Forearm plank, straight line from head to heels, for 2 minutes."),
+        ("5 Pistol Squats Each Leg", "Full-depth single-leg squats, heel down, no support."),
+        ("30s Handstand Hold", "Against a wall is fine. Arms locked, 30 seconds."),
+        ("Bodyweight Bench Press", "Bench your own bodyweight for a clean single."),
+        ("Double Bodyweight Deadlift", "Pull twice your bodyweight for one rep."),
+        ("Murph", "1 mile run, 100 pull-ups, 200 push-ups, 300 squats, 1 mile run. Split the middle part however you like."),
+        ("Deck of Cards", "Draw from a shuffled deck: the card's value in push-ups (face cards 10, aces 11). Clear the whole deck."),
+        ("10,000 Swings", "Dan John's challenge: 10,000 kettlebell swings over 4 weeks, about 500 a session, 5 sessions a week.")
     ]
 }
