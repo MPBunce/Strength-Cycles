@@ -5,7 +5,12 @@
 - `AppIcon-1024-Dark.png`, `AppIcon-1024-Tinted.png`: the iOS dark and tinted variants.
 
 ## Screenshots (`screenshots/`)
-iPhone 6.9" (1320 × 2868), the size App Store Connect requires; it scales them down for smaller iPhones. Upload in this order:
+Two sets with the same images:
+
+- `6.5-inch/`: 1284 × 2778. Use this if App Store Connect asks for 1242 × 2688 or 1284 × 2778.
+- `6.9-inch/`: 1320 × 2868, for the 6.9" display slot.
+
+App Store Connect scales these down for smaller iPhones. Upload in this order:
 
 1. `01-launch.png`: launch screen
 2. `02-today.png`: Today: steps and daily work
@@ -23,7 +28,9 @@ The screenshots use sample data from `Forge/DemoData.swift` (development builds 
 ```bash
 xcrun simctl status_bar booted override --time "9:41" --batteryState charged --batteryLevel 100
 xcrun simctl launch booted mpbunce.Strength-Cycles -ForgeDemoData -ForgeTab 2 -ForgeProgress Charts
-xcrun simctl io booted screenshot assets/screenshots/06-progress-charts.png
+xcrun simctl io booted screenshot assets/screenshots/6.9-inch/06-progress-charts.png
 ```
+
+Make the 6.5" copies with `swift assets/resize.swift assets/screenshots/6.9-inch assets/screenshots/6.5-inch` (scales to 1284 wide and trims a few pixels top and bottom).
 
 `-ForgeTab` is 0 Today, 1 Training, 2 Progress, 3 Settings. `-ForgeTraining running` opens the Running section; `-ForgeProgress` takes `Activity`, `Charts` or `Goals`.
