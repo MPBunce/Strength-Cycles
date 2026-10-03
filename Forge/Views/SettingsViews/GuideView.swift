@@ -14,7 +14,7 @@ struct GuideTopic: Identifiable {
     let sections: [(heading: String, body: String)]
 
     static let all: [GuideTopic] = [
-        GuideTopic(id: "today", title: "Today", icon: "sun.max", sections: [
+        GuideTopic(id: "today", title: "Today", icon: "calendar", sections: [
             ("Steps", "Your step count is read from Apple Health and compared with your daily goal (set it in Settings › Steps). Forge only reads steps; it never writes to Health. If it stays at zero, allow Forge to read Steps in the Health app under Sharing › Apps."),
             ("Daily Work", "Bodyweight exercises you do every day. Each one uses a method: Total reps (hit a number spread through the day), Ladder (1, 2, 3 … up to a peak rung) or Sets (a fixed number of sets). Use the + button to log reps quickly, or tap an exercise to set an exact count. Counts reset each day."),
             ("Stretching", "Choose routines to do each day: DeFranco's Agile 8, David's 5 Stretches (30 seconds each, daily), or Starting Stretching at one of three levels. Tap a routine to see how to do each stretch, and tick it off when done."),

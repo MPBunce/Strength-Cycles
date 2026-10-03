@@ -16,7 +16,7 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
             TodayView()
                 .tabItem {
-                    Label("Today", systemImage: "sun.max")
+                    Label("Today", systemImage: "calendar")
                 }
                 .tag(0)
             CyclesView()
