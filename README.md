@@ -52,7 +52,7 @@ A full in-app guide lives under Settings › How Forge Works.
 
 ## Forge Plus
 
-Plus unlocks creating your own strength templates and running plans; everything else is free. Purchases aren't wired up yet: `ForgePlus.isActive` is the single switch, and development (DEBUG) builds have Plus on by default, with a toggle under Settings › Forge Plus.
+Plus unlocks creating your own strength templates and running plans; everything else is free. It's a one-time, non-consumable in-app purchase with product ID `mpbunce.forge.plus`, bought and restored in Settings › Forge Plus. `Forge/Models/Plus/PlusStore.swift` uses StoreKit 2 to check what's owned at launch and on every App Store update (including refunds) and sets `ForgePlus.isActive`. Development (DEBUG) builds have Plus on by default, with a toggle under Settings › Forge Plus. `ForgeTests/ForgePlus.storekit` is a local StoreKit configuration used by the purchase test.
 
 ## Requirements
 

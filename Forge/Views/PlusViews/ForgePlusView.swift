@@ -2,13 +2,14 @@
 //  ForgePlusView.swift
 //  Forge
 //
-//  What Forge Plus includes. Purchases come later; development builds can preview it.
+//  What Forge Plus includes, with buying and restoring it.
 //
 
 import SwiftUI
 
 struct ForgePlusView: View {
     @Bindable private var plus = ForgePlus.shared
+    @Bindable private var store = PlusStore.shared
 
     var body: some View {
         List {
@@ -20,14 +21,45 @@ struct ForgePlusView: View {
                         .font(.largeTitle.weight(.light))
                     Text("Build your own programs: strength templates and running plans made the way you train.")
                         .foregroundStyle(.secondary)
-                    Text(plus.isActive ? "Unlocked" : "Coming soon")
-                        .font(.caption.weight(.semibold))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .background(Capsule().fill(.quaternary))
-                        .padding(.top, 4)
+                    if plus.isActive {
+                        Text("Unlocked")
+                            .font(.caption.weight(.semibold))
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 4)
+                            .background(Capsule().fill(.quaternary))
+                            .padding(.top, 4)
+                    }
                 }
                 .padding(.vertical, 8)
+            }
+
+            if !plus.isActive {
+                Section {
+                    Button {
+                        Task { await store.purchase() }
+                    } label: {
+                        HStack {
+                            Text(store.product.map { "Unlock Forge Plus for \($0.displayPrice)" } ?? "Unlock Forge Plus")
+                                .fontWeight(.semibold)
+                            Spacer()
+                            if store.isPurchasing { ProgressView() }
+                        }
+                    }
+                    .disabled(store.isPurchasing || store.isRestoring)
+
+                    Button {
+                        Task { await store.restore() }
+                    } label: {
+                        HStack {
+                            Text("Restore Purchases")
+                            Spacer()
+                            if store.isRestoring { ProgressView() }
+                        }
+                    }
+                    .disabled(store.isPurchasing || store.isRestoring)
+                } footer: {
+                    Text("A one-time purchase, not a subscription. It works on all your devices signed in with the same Apple Account.")
+                }
             }
 
             Section("Included") {
@@ -49,12 +81,21 @@ struct ForgePlusView: View {
             } header: {
                 Text("Developer")
             } footer: {
-                Text("Only in development builds. Unlocks Plus so you can test it before purchases exist.")
+                Text("Only in development builds. Unlocks Plus without buying it.")
             }
             #endif
         }
         .navigationTitle("Forge Plus")
         .navigationBarTitleDisplayMode(.inline)
+        .task { await store.loadProduct() }
+        .alert("Forge Plus", isPresented: Binding(
+            get: { store.errorMessage != nil },
+            set: { if !$0 { store.errorMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(store.errorMessage ?? "")
+        }
     }
 }
 

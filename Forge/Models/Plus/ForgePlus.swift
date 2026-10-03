@@ -2,8 +2,7 @@
 //  ForgePlus.swift
 //  Forge
 //
-//  What's free and what's part of Forge Plus. Purchases aren't wired up yet; when they are,
-//  they only need to set `ForgePlus.isActive`.
+//  Whether Forge Plus is unlocked. `PlusStore` sets this from App Store purchases.
 //
 
 import Foundation
@@ -15,7 +14,7 @@ final class ForgePlus {
 
     private static let key = "forgePlusActive"
 
-    /// Whether Plus features are unlocked. Set by purchases later, or the debug switch for now.
+    /// Whether Plus features are unlocked: set by `PlusStore`, or the developer switch in debug builds.
     var isActive: Bool {
         didSet { UserDefaults.standard.set(isActive, forKey: Self.key) }
     }

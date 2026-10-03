@@ -1,0 +1,40 @@
+{
+  "identifier" : "6F1C2A40-5B7E-4F0D-9C3A-2E8B7D1F4A11",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "6747400001",
+      "localizations" : [
+        {
+          "description" : "Create your own strength templates and running plans.",
+          "displayName" : "Forge Plus",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "mpbunce.forge.plus",
+      "referenceName" : "Forge Plus",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6747324339",
+    "_developerTeamID" : "69ML2GA87D",
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

@@ -43,6 +43,7 @@ struct GuideTopic: Identifiable {
         ]),
         GuideTopic(id: "plus", title: "Forge Plus", icon: "sparkles", sections: [
             ("What's included", "Forge Plus lets you create your own strength templates and running plans. Every built-in program, running plan and tracking feature stays free."),
+            ("Buying and restoring", "Forge Plus is a one-time purchase, not a subscription. Buy it in Settings › Forge Plus. On a new iPhone, or after reinstalling, tap Restore Purchases there to unlock it again."),
             ("Existing templates", "Templates and plans you've already made can always be started. Creating new ones and editing them needs Plus.")
         ]),
                 GuideTopic(id: "settings", title: "Settings & Weights", icon: "gear", sections: [

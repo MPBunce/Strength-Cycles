@@ -67,6 +67,7 @@ struct ForgeApp: App {
                 }
             }
             .preferredColorScheme(AppearanceMode(rawValue: appearance)?.colorScheme)
+            .task { PlusStore.shared.start() }
             .task {
                 guard showingSplash else { return }
                 try? await Task.sleep(for: .seconds(3))
