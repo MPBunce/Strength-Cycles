@@ -20,6 +20,7 @@ App Store Connect scales these down for smaller iPhones. Upload in this order:
 5. `05-progress-activity.png`: activity grids
 6. `06-progress-charts.png`: strength charts
 7. `07-progress-goals.png`: goals
+8. `08-plus.png`: Forge Plus (iPhone only; also use it as the in-app purchase's review screenshot)
 
 App Store Connect accepts up to 10 screenshots per size.
 
