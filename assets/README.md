@@ -5,10 +5,11 @@
 - `AppIcon-1024-Dark.png`, `AppIcon-1024-Tinted.png`: the iOS dark and tinted variants.
 
 ## Screenshots (`screenshots/`)
-Two sets with the same images:
+Three sets with the same images:
 
 - `6.5-inch/`: 1284 × 2778. Use this if App Store Connect asks for 1242 × 2688 or 1284 × 2778.
 - `6.9-inch/`: 1320 × 2868, for the 6.9" display slot.
+- `13-inch-ipad/`: 2064 × 2752, for the 13" iPad display slot (taken on an iPad Pro 13-inch simulator). App Store Connect scales these down for smaller iPads.
 
 App Store Connect scales these down for smaller iPhones. Upload in this order:
 
@@ -23,7 +24,7 @@ App Store Connect scales these down for smaller iPhones. Upload in this order:
 App Store Connect accepts up to 10 screenshots per size.
 
 ## Regenerating
-The screenshots use sample data from `Forge/DemoData.swift` (development builds only, kept in memory). On the iPhone 17 Pro Max simulator:
+The screenshots use sample data from `Forge/DemoData.swift` (development builds only, kept in memory). On the iPhone 17 Pro Max simulator (use an iPad Pro 13-inch simulator for `13-inch-ipad/`):
 
 ```bash
 xcrun simctl status_bar booted override --time "9:41" --batteryState charged --batteryLevel 100
