@@ -133,13 +133,15 @@ private struct StreakGrid: View {
 }
 
 private func streakConfiguration(_ metric: ActivityMetric, kind: String) -> some WidgetConfiguration {
-    StaticConfiguration(kind: kind, provider: StreakProvider(metric: metric)) { entry in
+    // A plain String: WidgetKit traps on interpolated (formatted) text in descriptions.
+    let description: String = metric.usesYearlyCount
+        ? "Days you \(metric.widgetVerb), with this year's total."
+        : "Days you \(metric.widgetVerb), with your current streak."
+    return StaticConfiguration(kind: kind, provider: StreakProvider(metric: metric)) { entry in
         StreakWidgetView(metric: metric, entry: entry)
     }
     .configurationDisplayName(metric.title)
-    .description(metric.usesYearlyCount
-                 ? "Days you \(metric.widgetVerb), with this year's total."
-                 : "Days you \(metric.widgetVerb), with your current streak.")
+    .description(description)
     .supportedFamilies([.systemMedium])
 }
 
