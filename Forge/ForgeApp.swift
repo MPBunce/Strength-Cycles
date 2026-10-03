@@ -25,10 +25,22 @@ struct ForgeApp: App {
             LoggedRun.self,
             Challenge.self
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        #if DEBUG
+        // Screenshot demo data lives in memory only, so it never touches the real store.
+        let inMemory = DemoData.isEnabled
+        #else
+        let inMemory = false
+        #endif
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: inMemory)
 
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            #if DEBUG
+            if DemoData.isEnabled {
+                MainActor.assumeIsolated { DemoData.seed(into: container.mainContext) }
+            }
+            #endif
+            return container
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }

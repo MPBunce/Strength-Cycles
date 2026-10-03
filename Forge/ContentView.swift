@@ -10,7 +10,7 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @State private var selectedTab = 0
+    @State private var selectedTab = DemoData.launchTab
 
     var body: some View {
         TabView(selection: $selectedTab) {

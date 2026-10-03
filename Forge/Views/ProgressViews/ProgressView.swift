@@ -4,7 +4,7 @@ import SwiftData
 /// The Progress tab: lift charts, a workout calendar and strength goals.
 /// (Named to avoid clashing with SwiftUI's built-in `ProgressView` spinner.)
 struct ProgressTabView: View {
-    @State private var selectedSection: ProgressSection = .activity
+    @State private var selectedSection: ProgressSection = ProgressSection(rawValue: DemoData.launchOption("ForgeProgress") ?? "") ?? .activity
     
     enum ProgressSection: String, CaseIterable, Identifiable {
         case activity = "Activity"

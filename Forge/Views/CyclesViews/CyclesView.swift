@@ -15,7 +15,7 @@ struct CyclesView: View {
         var id: Self { self }
     }
 
-    @State private var kind: Kind = .strength
+    @State private var kind: Kind = DemoData.launchOption("ForgeTraining") == "running" ? .running : .strength
     @State private var showingAddStrength = false
     @State private var showingAddRun = false
     @Query private var cycles: [Cycles]

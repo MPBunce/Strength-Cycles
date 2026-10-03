@@ -37,6 +37,14 @@ final class StepCounter {
 
     /// Asks for read access the first time (iOS only shows the prompt once), then loads the last week.
     func refresh() async {
+        #if DEBUG
+        if DemoData.isEnabled {
+            let totals = DemoData.steps(days: 7)
+            lastSevenDays = totals.keys.sorted().map { Day(date: $0, steps: totals[$0] ?? 0) }
+            state = .loaded
+            return
+        }
+        #endif
         guard HKHealthStore.isHealthDataAvailable() else {
             state = .unavailable
             return
@@ -54,6 +62,12 @@ final class StepCounter {
     /// Step totals per day (keyed by start of day) for any range, e.g. a month on the Activity grid.
     /// Returns an empty result if Health isn't available or access was declined.
     func dailySteps(from start: Date, to end: Date) async -> [Date: Int] {
+        #if DEBUG
+        if DemoData.isEnabled {
+            let days = (Calendar.current.dateComponents([.day], from: start, to: end).day ?? 0)
+            return DemoData.steps(days: max(days, 1))
+        }
+        #endif
         guard HKHealthStore.isHealthDataAvailable(), start < end else { return [:] }
         do {
             try await store.requestAuthorization(toShare: [], read: [stepType])
