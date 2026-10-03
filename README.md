@@ -34,9 +34,12 @@ Under Training › Running, separate from strength cycles.
 
 ### Progress
 - **Charts**: estimated one-rep max over time for squat, bench, deadlift and overhead press, using sets marked done on completed training days.
-- **Activity**: a calendar of completed training days.
+- **Activity**: GitHub-style grids of the last 16 weeks for Worked Out, Ran, Step Goal, Daily Work and Stretching. Tap one for its full history.
 - **Goals**: strength milestones that tick themselves off from logged sets, and running goals for each race distance, including a fixed top-5% time.
 - **Badges**: workouts and step days per year, kilometres run per year, and unbroken streaks for daily work and stretching.
+
+### Widgets
+A medium Home Screen widget for each Activity grid, showing this year's total or the current streak. Tapping one opens that habit's history.
 
 ### Settings
 - Weight unit (lbs or kg). Each cycle keeps the unit it was created with.
@@ -82,6 +85,8 @@ Forge/
     ├── CyclesViews/        Includes the custom template editor
     ├── ProgressViews/
     └── SettingsViews/
+ForgeWidget/                Streak widgets (WidgetKit extension)
+Shared/                     Code shared by the app and widgets: habit list and the App Group snapshot
 ```
 
 ## Data and privacy

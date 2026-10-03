@@ -9,42 +9,6 @@
 import SwiftUI
 import SwiftData
 
-enum ActivityMetric: CaseIterable, Identifiable {
-    case workout, running, steps, dailyWork, stretching
-
-    var id: Self { self }
-
-    var title: String {
-        switch self {
-        case .workout: return "Worked Out"
-        case .running: return "Ran"
-        case .steps: return "Step Goal"
-        case .dailyWork: return "Daily Work"
-        case .stretching: return "Stretching"
-        }
-    }
-
-    var icon: String {
-        switch self {
-        case .workout: return "dumbbell.fill"
-        case .running: return "figure.run"
-        case .steps: return "figure.walk"
-        case .dailyWork: return "checklist"
-        case .stretching: return "figure.flexibility"
-        }
-    }
-
-    var color: Color {
-        switch self {
-        case .workout: return .orange
-        case .running: return .red
-        case .steps: return .green
-        case .dailyWork: return .blue
-        case .stretching: return .purple
-        }
-    }
-}
-
 // MARK: - Completion records
 
 /// Works out which days each habit was completed from the app's data.
@@ -291,19 +255,8 @@ struct ActivityHistoryView: View {
         completed.filter { calendar.isDate($0, equalTo: Date(), toGranularity: component) }.count
     }
 
-    /// Days in a row up to today (or yesterday, so an unfinished today doesn't break it).
     private func currentStreak(_ completed: Set<Date>) -> Int {
-        var day = calendar.startOfDay(for: Date())
-        if !completed.contains(day) {
-            day = calendar.date(byAdding: .day, value: -1, to: day) ?? day
-        }
-        var streak = 0
-        while completed.contains(day) {
-            streak += 1
-            guard let previous = calendar.date(byAdding: .day, value: -1, to: day) else { break }
-            day = previous
-        }
-        return streak
+        ActivityStats.currentStreak(completed, calendar: calendar)
     }
 
     private func longestStreak(_ daysNewestFirst: [Date]) -> Int {

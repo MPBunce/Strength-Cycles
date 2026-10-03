@@ -6,43 +6,92 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		FA0000000000000000000008 /* ForgeWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FA0000000000000000000005 /* ForgeWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		36F5433E2DE7BEA700131A9C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 36F543262DE7BEA600131A9C /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 36F5432D2DE7BEA600131A9C;
-			remoteInfo = "Forge";
+			remoteInfo = Forge;
 		};
 		36F543482DE7BEA700131A9C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 36F543262DE7BEA600131A9C /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 36F5432D2DE7BEA600131A9C;
-			remoteInfo = "Forge";
+			remoteInfo = Forge;
+		};
+		FA000000000000000000000C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 36F543262DE7BEA600131A9C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FA0000000000000000000004;
+			remoteInfo = ForgeWidget;
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		FA000000000000000000002B /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				FA0000000000000000000008 /* ForgeWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		36F5432E2DE7BEA600131A9C /* Forge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Forge.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		36F5433D2DE7BEA700131A9C /* ForgeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ForgeTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		36F543472DE7BEA700131A9C /* ForgeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ForgeUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		36F5432E2DE7BEA600131A9C /* Forge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Forge.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		36F5433D2DE7BEA700131A9C /* ForgeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForgeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		36F543472DE7BEA700131A9C /* ForgeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForgeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA0000000000000000000005 /* ForgeWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ForgeWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		FA0000000000000000000007 /* Exceptions for "ForgeWidget" folder in "ForgeWidget" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = FA0000000000000000000004 /* ForgeWidget */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		36F543302DE7BEA600131A9C /* Forge */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Forge";
+			path = Forge;
 			sourceTree = "<group>";
 		};
 		36F543402DE7BEA700131A9C /* ForgeTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "ForgeTests";
+			path = ForgeTests;
 			sourceTree = "<group>";
 		};
 		36F5434A2DE7BEA700131A9C /* ForgeUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "ForgeUITests";
+			path = ForgeUITests;
+			sourceTree = "<group>";
+		};
+		FA0000000000000000000001 /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		FA0000000000000000000006 /* ForgeWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				FA0000000000000000000007 /* Exceptions for "ForgeWidget" folder in "ForgeWidget" target */,
+			);
+			path = ForgeWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -69,6 +118,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FA000000000000000000000A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -77,6 +133,8 @@
 			children = (
 				36F543302DE7BEA600131A9C /* Forge */,
 				36F543402DE7BEA700131A9C /* ForgeTests */,
+				FA0000000000000000000001 /* Shared */,
+				FA0000000000000000000006 /* ForgeWidget */,
 				36F5434A2DE7BEA700131A9C /* ForgeUITests */,
 				36F5432F2DE7BEA600131A9C /* Products */,
 			);
@@ -88,6 +146,7 @@
 				36F5432E2DE7BEA600131A9C /* Forge.app */,
 				36F5433D2DE7BEA700131A9C /* ForgeTests.xctest */,
 				36F543472DE7BEA700131A9C /* ForgeUITests.xctest */,
+				FA0000000000000000000005 /* ForgeWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,18 +161,21 @@
 				36F5432A2DE7BEA600131A9C /* Sources */,
 				36F5432B2DE7BEA600131A9C /* Frameworks */,
 				36F5432C2DE7BEA600131A9C /* Resources */,
+				FA000000000000000000002B /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				FA000000000000000000000D /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				36F543302DE7BEA600131A9C /* Forge */,
+				FA0000000000000000000001 /* Shared */,
 			);
-			name = "Forge";
+			name = Forge;
 			packageProductDependencies = (
 			);
-			productName = "Forge";
+			productName = Forge;
 			productReference = 36F5432E2DE7BEA600131A9C /* Forge.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -133,10 +195,10 @@
 			fileSystemSynchronizedGroups = (
 				36F543402DE7BEA700131A9C /* ForgeTests */,
 			);
-			name = "ForgeTests";
+			name = ForgeTests;
 			packageProductDependencies = (
 			);
-			productName = "ForgeTests";
+			productName = ForgeTests;
 			productReference = 36F5433D2DE7BEA700131A9C /* ForgeTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -156,12 +218,35 @@
 			fileSystemSynchronizedGroups = (
 				36F5434A2DE7BEA700131A9C /* ForgeUITests */,
 			);
-			name = "ForgeUITests";
+			name = ForgeUITests;
 			packageProductDependencies = (
 			);
-			productName = "ForgeUITests";
+			productName = ForgeUITests;
 			productReference = 36F543472DE7BEA700131A9C /* ForgeUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		FA0000000000000000000004 /* ForgeWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA000000000000000000000E /* Build configuration list for PBXNativeTarget "ForgeWidget" */;
+			buildPhases = (
+				FA0000000000000000000009 /* Sources */,
+				FA000000000000000000000A /* Frameworks */,
+				FA000000000000000000000B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				FA0000000000000000000001 /* Shared */,
+				FA0000000000000000000006 /* ForgeWidget */,
+			);
+			name = ForgeWidget;
+			packageProductDependencies = (
+			);
+			productName = ForgeWidget;
+			productReference = FA0000000000000000000005 /* ForgeWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -203,6 +288,7 @@
 				36F5432D2DE7BEA600131A9C /* Forge */,
 				36F5433C2DE7BEA700131A9C /* ForgeTests */,
 				36F543462DE7BEA700131A9C /* ForgeUITests */,
+				FA0000000000000000000004 /* ForgeWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -223,6 +309,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		36F543452DE7BEA700131A9C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FA000000000000000000000B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -253,6 +346,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FA0000000000000000000009 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -265,6 +365,11 @@
 			isa = PBXTargetDependency;
 			target = 36F5432D2DE7BEA600131A9C /* Forge */;
 			targetProxy = 36F543482DE7BEA700131A9C /* PBXContainerItemProxy */;
+		};
+		FA000000000000000000000D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FA0000000000000000000004 /* ForgeWidget */;
+			targetProxy = FA000000000000000000000C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -505,7 +610,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Forge";
+				TEST_TARGET_NAME = Forge;
 			};
 			name = Debug;
 		};
@@ -522,7 +627,59 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Forge";
+				TEST_TARGET_NAME = Forge;
+			};
+			name = Release;
+		};
+		FA000000000000000000000F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ForgeWidget/ForgeWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
+				DEVELOPMENT_TEAM = 69ML2GA87D;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ForgeWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Forge;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "mpbunce.Strength-Cycles.Widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FA0000000000000000000010 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ForgeWidget/ForgeWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
+				DEVELOPMENT_TEAM = 69ML2GA87D;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ForgeWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Forge;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "mpbunce.Strength-Cycles.Widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -561,6 +718,15 @@
 			buildConfigurations = (
 				36F543582DE7BEA700131A9C /* Debug */,
 				36F543592DE7BEA700131A9C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FA000000000000000000000E /* Build configuration list for PBXNativeTarget "ForgeWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA000000000000000000000F /* Debug */,
+				FA0000000000000000000010 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

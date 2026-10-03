@@ -11,6 +11,8 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var selectedTab = DemoData.launchTab
+    /// Set when a streak widget is tapped, to open that habit's history.
+    @State private var openedMetric: ActivityMetric?
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -24,7 +26,7 @@ struct ContentView: View {
                     Label("Training", systemImage: "figure.strengthtraining.traditional")
                 }
                 .tag(1)
-            ProgressTabView()
+            ProgressTabView(openedMetric: $openedMetric)
                 .tabItem {
                     Label("Progress", systemImage: "chart.bar")
                 }
@@ -34,6 +36,12 @@ struct ContentView: View {
                     Label("Settings", systemImage: "gear")
                 }
                 .tag(3)
+        }
+        .syncsActivityWidgets()
+        .onOpenURL { url in
+            guard let metric = ActivityMetric(url: url) else { return }
+            selectedTab = 2
+            openedMetric = metric
         }
     }
 }

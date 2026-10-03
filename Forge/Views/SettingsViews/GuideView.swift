@@ -38,6 +38,7 @@ struct GuideTopic: Identifiable {
             ("Activity", "Each habit has a grid of the last 16 weeks, one square per day, filled in on days you did it: Worked Out, Ran, Step Goal, Daily Work and Stretching. Tap a card for its full history, stats and badges."),
             ("Badges", "Workouts and step-goal days are counted per calendar year. Running badges count kilometres run this year. Daily Work and Stretching badges are for unbroken streaks. Yearly counts reset on January 1."),
             ("Charts", "Estimated one-rep max over time, from sets marked done on completed training days. Tap Lifts to choose which lifts are charted, from the Greyskull LP exercise index."),
+            ("Widgets", "Each Activity grid has a medium Home Screen widget. Touch and hold the Home Screen, tap Edit › Add Widget, and search for Forge. Widgets update when you leave the app; tap one to open that habit's history."),
             ("Goals", "Strength goals like a 225 lb bench tick themselves off when you log a completed set at the target weight. Running goals tick off when you finish each distance, and when you run a fixed top-5% time: 5K in 21:00, 10K in 44:00, half in 1:36:00, marathon in 3:20:00.")
         ]),
         GuideTopic(id: "plus", title: "Forge Plus", icon: "sparkles", sections: [

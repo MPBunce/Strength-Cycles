@@ -9,11 +9,6 @@
 import SwiftUI
 
 extension ActivityMetric {
-    /// Workouts and steps are counted per year; daily habits are about unbroken streaks.
-    var usesYearlyCount: Bool {
-        self == .workout || self == .running || self == .steps
-    }
-
     /// Running badges are kilometres this year rather than days.
     var badgesUseDistance: Bool { self == .running }
 
